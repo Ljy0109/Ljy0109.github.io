@@ -16,30 +16,25 @@
   <meta name="author" content="Mr.Juan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="从人为设定特征到深度特征的图像匹配：综述摘要：作为各种视觉应用中的一项基本和关键任务，图像匹配可以识别并对应两幅或多幅图像中相同或相似的结构&#x2F;内容。在过去的几十年中，图像匹配方法的数量和多样性不断增加，特别是近年来随着深度学习技术的发展。然而，对于不同场景和任务要求的特定应用，哪种方法是合适的选择，以及如何设计在准确性、鲁棒性和效率方面具有优异性能的更好的图像匹配方法，这可能会留下一些">
+    <meta name="description" content="作为各种视觉应用中的一项基本和关键任务，图像匹配可以识别并对应两幅或多幅图像中相同或相似的结构&#x2F;内容。在过去的几十年中，图像匹配方法的数量和多样性不断增加，特别是近年来随着深度学习技术的发展。然而，对于不同场景和任务要求的特定应用，哪种方法是合适的选择，以及如何设计在准确性、鲁棒性和效率方面具有优异性能的更好的图像匹配方法，这可能会留下一些悬而未决的问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从人为设定特征到深度特征的图像匹配：综述-翻译(一)">
+<meta property="og:title" content="从手工特征到深度特征的图像匹配：综述-翻译(一)">
 <meta property="og:url" content="http://example.com/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/index.html">
 <meta property="og:site_name" content="Blog of Mr.Juan">
-<meta property="og:description" content="从人为设定特征到深度特征的图像匹配：综述摘要：作为各种视觉应用中的一项基本和关键任务，图像匹配可以识别并对应两幅或多幅图像中相同或相似的结构&#x2F;内容。在过去的几十年中，图像匹配方法的数量和多样性不断增加，特别是近年来随着深度学习技术的发展。然而，对于不同场景和任务要求的特定应用，哪种方法是合适的选择，以及如何设计在准确性、鲁棒性和效率方面具有优异性能的更好的图像匹配方法，这可能会留下一些">
+<meta property="og:description" content="作为各种视觉应用中的一项基本和关键任务，图像匹配可以识别并对应两幅或多幅图像中相同或相似的结构&#x2F;内容。在过去的几十年中，图像匹配方法的数量和多样性不断增加，特别是近年来随着深度学习技术的发展。然而，对于不同场景和任务要求的特定应用，哪种方法是合适的选择，以及如何设计在准确性、鲁棒性和效率方面具有优异性能的更好的图像匹配方法，这可能会留下一些悬而未决的问题。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%A0%87%E9%A2%98.png">
-<meta property="og:image" content="http://example.com/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
-<meta property="og:image" content="http://example.com/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%9B%BE%E6%95%B0%E6%8D%AE.png">
-<meta property="og:image" content="http://example.com/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%B5%81%E5%BD%A2%E6%95%B0%E6%8D%AE.png">
-<meta property="og:image" content="http://example.com/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%9B%BE%E6%95%B0%E6%8D%AE2.png">
-<meta property="og:image" content="http://example.com/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%AD%AA%E7%94%9F%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.png">
+<meta property="og:image" content="http://example.com/img/%E6%A0%87%E9%A2%982.png">
 <meta property="article:published_time" content="2022-05-23T11:33:41.000Z">
-<meta property="article:modified_time" content="2022-05-24T01:48:21.984Z">
+<meta property="article:modified_time" content="2022-05-24T04:20:24.406Z">
 <meta property="article:author" content="Mr.Juan">
 <meta property="article:tag" content="图像匹配">
 <meta property="article:tag" content="综述">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%A0%87%E9%A2%98.png">
+<meta name="twitter:image" content="http://example.com/img/%E6%A0%87%E9%A2%982.png">
   
   
   
-  <title>从人为设定特征到深度特征的图像匹配：综述-翻译(一) - Blog of Mr.Juan</title>
+  <title>从手工特征到深度特征的图像匹配：综述-翻译(一) - Blog of Mr.Juan</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -204,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="从人为设定特征到深度特征的图像匹配：综述-翻译(一)"></span>
+            <span id="subtitle" data-typed-text="从手工特征到深度特征的图像匹配：综述-翻译(一)"></span>
           
         </div>
 
@@ -289,12 +284,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">从人为设定特征到深度特征的图像匹配：综述-翻译(一)</h1>
+            <h1 style="display: none">从手工特征到深度特征的图像匹配：综述-翻译(一)</h1>
             
             <div class="markdown-body">
               
-              <p><img src="/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%A0%87%E9%A2%98.png" srcset="/img/loading.gif" lazyload></p>
-<h1 id="从人为设定特征到深度特征的图像匹配：综述"><a href="#从人为设定特征到深度特征的图像匹配：综述" class="headerlink" title="从人为设定特征到深度特征的图像匹配：综述"></a>从人为设定特征到深度特征的图像匹配：综述</h1><h1 id="摘要："><a href="#摘要：" class="headerlink" title="摘要："></a>摘要：</h1><p>作为各种视觉应用中的一项基本和关键任务，图像匹配可以识别并对应两幅或多幅图像中相同或相似的结构&#x2F;内容。在过去的几十年中，图像匹配方法的数量和多样性不断增加，特别是近年来随着深度学习技术的发展。然而，对于不同场景和任务要求的特定应用，哪种方法是合适的选择，以及如何设计在<strong>准确性、鲁棒性和效率方面</strong>具有优异性能的更好的图像匹配方法，这可能会留下一些悬而未决的问题。这鼓励我们对这些经典和最新技术进行全面和系统的审查和分析。沿着基于特征的图像匹配管道，我们首先介绍了<strong>特征检测、描述和匹配技术</strong>，从手工制作的方法到可训练的方法，并分析了这些方法在理论和实践上的发展。其次，简要介绍了几种典型的基于图像匹配的应用，全面了解了图像匹配的意义。此外，我们还通过对代表性数据集的大量实验，对这些经典技术和最新技术进行了全面和客观的比较。最后，我们总结了图像匹配技术的现状，并对未来的工作进行了深入的讨论和展望。该调查可作为（但不限于）图像匹配及相关领域研究人员和工程师的参考。</p>
+              <p><img src="/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%A0%87%E9%A2%98.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="从人为设定特征到深度特征的图像匹配：综述-翻译"><a href="#从人为设定特征到深度特征的图像匹配：综述-翻译" class="headerlink" title="从人为设定特征到深度特征的图像匹配：综述-翻译"></a>从人为设定特征到深度特征的图像匹配：综述-翻译</h1><h1 id="摘要："><a href="#摘要：" class="headerlink" title="摘要："></a>摘要：</h1><p>作为各种视觉应用中的一项基本和关键任务，图像匹配可以识别并对应两幅或多幅图像中相同或相似的结构&#x2F;内容。在过去的几十年中，图像匹配方法的数量和多样性不断增加，特别是近年来随着深度学习技术的发展。然而，对于不同场景和任务要求的特定应用，哪种方法是合适的选择，以及如何设计在<strong>准确性、鲁棒性和效率方面</strong>具有优异性能的更好的图像匹配方法，这可能会留下一些悬而未决的问题。这鼓励我们对这些经典和最新技术进行全面和系统的审查和分析。沿着基于特征的图像匹配管道，我们首先介绍了<strong>特征检测、描述和匹配技术</strong>，从手工制作的方法到可训练的方法，并分析了这些方法在理论和实践上的发展。其次，简要介绍了几种典型的基于图像匹配的应用，全面了解了图像匹配的意义。此外，我们还通过对代表性数据集的大量实验，对这些经典技术和最新技术进行了全面和客观的比较。最后，我们总结了图像匹配技术的现状，并对未来的工作进行了深入的讨论和展望。该调查可作为（但不限于）图像匹配及相关领域研究人员和工程师的参考。</p>
 <h1 id="关键词："><a href="#关键词：" class="headerlink" title="关键词："></a>关键词：</h1><p>图像匹配、图匹配、特征匹配、配准、手工特征、深度学习</p>
 <h1 id="相关链接："><a href="#相关链接：" class="headerlink" title="相关链接："></a>相关链接：</h1><p><a target="_blank" rel="noopener" href="https://link.springer.com/article/10.1007/s11263-020-01359-2">原文及参考文献下载地址</a></p>
 <p><a target="_blank" rel="noopener" href="https://image-matching-workshop.github.io/leaderboard/">Fourth Workshop on Image Matching: Local Features &amp; Beyond (image-matching-workshop.github.io)</a></p>
@@ -311,7 +306,7 @@
 </ul>
 <p>现有的调查集中在图像匹配任务的不同部分，无法涵盖过去十年的文献。例如，早期的评论 (Zitova和Flusser 2003; Tuytelaars和Mikolajczyk 2008; Strecha等人。2008; Aan æ s等人。2012; Heinly等人。2012; Awrangjeb等人。2012;Lietal。2015) 通常关注手工制作的方法，这不足以为研究基于CNN的方法提供有价值的参考。最近的评论涉及可训练的技术，但它们仅涵盖图像匹配社区的单个部分，要么关注检测器 (Huang等人。2018; Lenc和Vedaldi 2014)，要么关注描述符 (Balntas等人。2017; Schonberger等人。2017) 或特定的匹配任务 (Ferrante和Paragios 2017；haskins等人2020; Yan等人2016b; Maiseli等人2017)，以及许多其他人更关注相关应用 (Fan等人2019; Guo等人2016; Zheng等人2018; Piasco等人2018)。在本调查中，我们旨在提供对现有图像匹配方法的最新，全面的总结和评估，尤其是对于最近引入的基于学习的方法。更重要的是，我们对现有文献中缺少的主流方法进行了详细的评估和分析</p>
 <p>本次调查主要关注基于特征的匹配，尽管补丁匹配、点集配准以及其他相关的匹配任务也进行了回顾。下图是该文的结构图; 第2节和第3节分别描述了从手工方法到可训练方法的特征检测和描述技术。补丁匹配被归类为特征描述域，并且还审查了3-D点集特征。在第4节所示，我们提出了不同的匹配方法，包括基于区域的图像匹配，纯点集配准，图像描述符相似性匹配和不匹配去除，图匹配以及基于学习的方法。第5节和第6节分别介绍了基于图像匹配的视觉应用程序和评估指标，包括性能比较。在第7节我们总结并讨论未来可能的发展。</p>
-<p><img src="/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="2-特征检测"><a href="#2-特征检测" class="headerlink" title="2. 特征检测"></a>2. 特征检测</h1><p>早期的图像特征是手动注释的，在一些低质量的图像匹配中仍然使用。随着计算机视觉的发展和对自动匹配方法的要求，已经引入了许多特征检测方法来从图像中提取稳定且独特的特征。</p>
 <h2 id="2-1-特征检测器概述"><a href="#2-1-特征检测器概述" class="headerlink" title="2.1 特征检测器概述"></a>2.1 特征检测器概述</h2><p>检测到的特征表示图像或现实世界中的特定语义结构，可以分为<strong>角特征</strong>（Moravec 1977；Harrisetal. 1988；Smith 和 Brady 1997；Rosten 和 Drummond 2006；Rublee 等 2011）、<strong>斑点特征</strong>（Lowe 2004 ; Bay等人，2006; Agrawal等人， 2008;Yi 等人，2016), <strong>线&#x2F;边</strong> (Harris等人，1988; Smith and Brady 1997; Canny 1987; Perona and Malik 1990), 以及<strong>形态区域特征</strong> (Matas等人，2004 年；Mikolajczyk 等人，2005 年）。 但是，用于匹配的最流行的特征是点（也称为关键点或兴趣点）。 与线和区域特征相比，点易于提取和定义，其形式可大致分为<strong>角点</strong>和<strong>斑点</strong>。</p>
 <p>一个好的兴趣点必须容易找到，理想情况下计算速度快，因为一个好位置的兴趣点对于进一步的特征描述和匹配是至关重要的。为了促进**(i)<strong>匹配性，</strong>(ii)<strong>后续应用的能力，以及</strong>(iii)<strong>匹配效率和减少存储需求，提出了许多可靠的特性(Zitova和弗卢瑟2003；图特拉尔和米科拉奇克2008)，包括重复性、不变性、鲁棒性和效率。</strong>特征检测的常见思想是构造一个特征响应来区分突出的点、线和区域，以及平面和非独特的图像区域。这种想法随后可以分为梯度、强度、二阶导数、轮廓曲率、区域分割和基于学习的检测器。**下面，我们将对这些方法的特征检测器进行全面的介绍，重点关注基于学习的方法，以指导研究人员了解传统的和可训练的检测器如何工作，并深入了解它们的优点和缺点。</p>
@@ -458,15 +453,15 @@
 <p><strong>非欧几里得数据：</strong></p>
 <p>它是一类<strong>不具有平移不变性</strong>的数据。这类数据以其中的一个为节点，其邻居节点的数量可能不同。常见这类数据有知识图谱、社交网络、化学分子结构等等。</p>
 <p>非欧几里德结构的样本总得来说有两大类型，分别是<strong>图(Graph)数据</strong>和**流形数据( manifolds)**，如下图所示:</p>
-<p><img src="/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%9B%BE%E6%95%B0%E6%8D%AE.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%B5%81%E5%BD%A2%E6%95%B0%E6%8D%AE.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%9B%BE%E6%95%B0%E6%8D%AE.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E6%B5%81%E5%BD%A2%E6%95%B0%E6%8D%AE.png" srcset="/img/loading.gif" lazyload></p>
 <p>这两类数据有个特点就是，排列不整齐，比较的随意。</p>
 <p>具体体现在：对于数据中的某个点，难以定义出其邻居节点出来，或者是不同节点的邻居节点的数量是不同的，这个其实是一个特别麻烦的问题，因为这样就意味着难以在这类型的数据上定义出和图像等数据上相同的卷积操作出来，而且因为每个样本的节点排列可能都不同，比如在生物医学中的分子筛选中，显然这个是一个Graph数据的应用，但是我们都明白，不同的分子结构的原子连接数量，方式可能都是不同的，因此难以定义出其欧几里德距离出来，这个是和我们的欧几里德结构数据明显不同的。因此这类型的数据不能看成是在欧几里德样本空间中的一个样本点了，而是要想办法将其嵌入(embed)到合适的欧几里德空间后再进行度量。而我们现在流行的 <strong>Graph Neural Network（GNN）</strong> 便可以进行这类型的操作。</p>
 <p>另外，欧几里德结构数据所谓的“排列整齐”也可以视为是一种特殊的非欧几里德结构数据，比如说是一种特殊的Graph数据，如下图所示：</p>
-<p><img src="/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%9B%BE%E6%95%B0%E6%8D%AE2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%9B%BE%E6%95%B0%E6%8D%AE2.png" srcset="/img/loading.gif" lazyload></p>
 <p>因此，用Graph Neural Network的方法同样可以应用在欧几里德结构数据上，事实上，只要是赋范空间中的数据，都可以建立数据节点与数据节点之间的某种关联，都可以尝试用非欧几里德结构数据的深度方法进行实验。</p>
 <h2 id="3-Siamese-network"><a href="#3-Siamese-network" class="headerlink" title="3. Siamese network"></a>3. Siamese network</h2><p>Siamese network就是“连体的神经网络”，神经网络的“<strong>连体”</strong>是通过<strong>共享权值</strong>来实现的，如下图所示。</p>
-<p><img src="/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%AD%AA%E7%94%9F%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/%E5%AD%AA%E7%94%9F%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.png" srcset="/img/loading.gif" lazyload></p>
 <p>一般用于比较两个输入的相似度。</p>
 
               
@@ -493,7 +488,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>从人为设定特征到深度特征的图像匹配：综述-翻译(一)</div>
+      <div>从手工特征到深度特征的图像匹配：综述-翻译(一)</div>
       <div>http://example.com/2022/05/23/从人为设定特征到深度特征的图像匹配：综述-翻译/</div>
     </div>
     <div class="license-meta">
@@ -539,12 +534,6 @@
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2022/05/18/%E6%96%87%E7%AB%A0%E9%A2%98%E7%9B%AE/" title="文章题目">
-                        <span class="hidden-mobile">文章题目</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
