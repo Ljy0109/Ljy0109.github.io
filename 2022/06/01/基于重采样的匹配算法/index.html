@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Juan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="RANSAC算法及其变种MAGSAC++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于重采样的匹配算法笔记">
+<meta property="og:url" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Blog of Mr.Juan">
+<meta property="og:description" content="RANSAC算法及其变种MAGSAC++">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E4%BE%8B%E5%AD%90.png">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B52.png">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5.png">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B53.png">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B54.png">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E4%BC%AA%E4%BB%A3%E7%A0%811.png">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E4%BC%AA%E4%BB%A3%E7%A0%812.png">
+<meta property="og:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%9D%87%E5%8C%80%E5%88%86%E5%B8%83.jpg">
+<meta property="article:published_time" content="2022-06-01T11:05:00.000Z">
+<meta property="article:modified_time" content="2022-06-01T11:16:51.685Z">
+<meta property="article:author" content="Mr.Juan">
+<meta property="article:tag" content="图像匹配">
+<meta property="article:tag" content="学习笔记，RANSAC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E4%BE%8B%E5%AD%90.png">
+  
+  
+  
+  <title>基于重采样的匹配算法笔记 - Blog of Mr.Juan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Juan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="基于重采样的匹配算法笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Juan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-01 19:05" pubdate>
+          2022年6月1日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          84 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">基于重采样的匹配算法笔记</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="基于重采样的匹配算法笔记"><a href="#基于重采样的匹配算法笔记" class="headerlink" title="基于重采样的匹配算法笔记"></a>基于重采样的匹配算法笔记</h1><h1 id="1-RANSAC-随机抽样一致"><a href="#1-RANSAC-随机抽样一致" class="headerlink" title="1. RANSAC 随机抽样一致"></a>1. RANSAC 随机抽样一致</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xrwang/archive/2011/03/09/ransac-1.html">随机抽样一致性算法（RANSAC）</a></p>
+<p>它可以从一组包含“局外点”的观测数据集中，通过迭代方式估计数学模型的参数。它是一种不确定的算法——它有一定的概率得出一个合理的结果；为了提高概率必须提高迭代次数。</p>
+<p>RANSAC最本质的目标是拟合曲线。</p>
+<h2 id="1-1-步骤"><a href="#1-1-步骤" class="headerlink" title="1.1 步骤"></a>1.1 步骤</h2><p>一个简单的例子是从一组观测数据中找出合适的2维直线。假设观测数据中包含局内点和局外点，其中局内点近似的被直线所通过，而局外点远离于直线。简单的最小二乘法不能找到适应于局内点的直线，原因是最小二乘法尽量去适应包括局外点在内的所有点。相反，RANSAC能得出一个仅仅用局内点计算出模型，并且概率还足够高。但是，RANSAC并不能保证结果一定正确，为了保证算法有足够高的合理概率，我们必须小心的选择算法的参数。</p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E4%BE%8B%E5%AD%90.png" srcset="/img/loading.gif" lazyload></p>
+<ol>
+<li>从样本集中随机选取一组可以计算模型参数的子样本（如果拟合线性则是两个点，若是抛物线则是三个点），计算得到的模型参数</li>
+<li>判断模型参数的质量（判断该模型下的局内点与局外点，局内点越多说明模型越好）</li>
+<li>重复上述步骤，记录质量最好的模型；满足迭代条件时退出（达到迭代次数）</li>
+</ol>
+<h2 id="1-2-相关参数"><a href="#1-2-相关参数" class="headerlink" title="1.2 相关参数"></a>1.2 相关参数</h2><p>p表示迭代过程中出现好的模型的概率（即用于计算模型参数的点均为局内点）</p>
+<p>w&#x3D;局内点的数目&#x2F;数据点的总数目(w未知)</p>
+<p>计算模型参数需要n个点：</p>
+<p>​		n个点中至少有一个点为局外点的概率：$1-w^n$</p>
+<p>则：<br>$$<br>1-p&#x3D;(1-w^n)^k<br>$$<br>k为迭代次数，则当k趋向于无穷大时，p趋向于1</p>
+<h2 id="1-3-优缺点"><a href="#1-3-优缺点" class="headerlink" title="1.3 优缺点"></a>1.3 优缺点</h2><p>RANSAC的优点是它能鲁棒的估计模型参数。例如，它能从包含大量局外点的数据集中估计出高精度的参数。</p>
+<p>RANSAC的缺点是它计算参数的迭代次数没有上限；如果设置迭代次数的上限，得到的结果可能不是最优的结果，甚至可能得到错误的结果。RANSAC只有一定的概率得到可信的模型，概率与迭代次数成正比。</p>
+<p>RANSAC的另一个缺点是它要求设置跟问题相关的阀值。</p>
+<p>RANSAC只能从特定的数据集中估计出一个模型，如果存在两个（或多个）模型，RANSAC不能找到别的模型。</p>
+<h2 id="1-4-RANSAC去除错误匹配点对"><a href="#1-4-RANSAC去除错误匹配点对" class="headerlink" title="1.4 RANSAC去除错误匹配点对"></a>1.4 RANSAC去除错误匹配点对</h2><p>设原图像提取出的特征点为$T&#x3D;{t_1,t_2,..}$，待匹配图像提取出的特征点为$S&#x3D;{s_1,s_2,..}$</p>
+<p>通过特征点描述符进行匹配后得到匹配点对集：$match&#x3D;{t_1,s_1;t_2,s_2;..}$</p>
+<ol>
+<li>随机在匹配点对集中选取n个参数（拟合线性则为2，抛物线则为3，等等）</li>
+<li>计算模型参数得到$f(t)$</li>
+<li>将剩余的t代入$f(t)$中计算$s’$，然后计算$s与s’$的误差，若小于设定阈值，则为局内点，以此判断模型的好坏</li>
+<li>重复上述步骤，记录质量最好的模型；满足迭代条件时退出（达到迭代次数）</li>
+</ol>
+<h2 id="1-5-RANSAC计算单应性矩阵"><a href="#1-5-RANSAC计算单应性矩阵" class="headerlink" title="1.5 RANSAC计算单应性矩阵"></a>1.5 RANSAC计算单应性矩阵</h2><p><strong>单应性矩阵：</strong></p>
+<p>两个不同视角的图像上的点对的齐次坐标可以用一个射影变换表述，即：x1 &#x3D; H*x2</p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B52.png" srcset="/img/loading.gif" lazyload></p>
+<p>其中H即为单应性矩阵</p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5.png" srcset="/img/loading.gif" lazyload></p>
+<p>为了增加平移变换，将二维坐标的点（x，y）变为齐次坐标系（x，y，z）</p>
+<p>则单应性矩阵具体写为：</p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B53.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B54.png" srcset="/img/loading.gif" lazyload></p>
+<p>将z1设为1，则有8个方程需要求解，所以至少需要4对点。根据RANSAC去除错误点对后的$match’$对矩阵求解即可。</p>
+<p>需要注意的是，这种单应性矩阵只适合刚性变换的图像，当图像出现非刚性变换时效果不好。</p>
+<h1 id="2-MAGSAC-边缘化样本一致"><a href="#2-MAGSAC-边缘化样本一致" class="headerlink" title="2. MAGSAC 边缘化样本一致"></a>2. MAGSAC 边缘化样本一致</h1><p><a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_CVPR_2019/html/Barath_MAGSAC_Marginalizing_Sample_Consensus_CVPR_2019_paper.html">CVPR 2019 Open Access Repository (thecvf.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_32907491/article/details/104727665"> MAGSAC：Marginalizing Sample Consensus</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/danini/magsac">danini&#x2F;magsac: The MAGSAC algorithm for robust model fitting without using an inlier-outlier threshold (github.com)</a></p>
+<h2 id="2-1-符号定义"><a href="#2-1-符号定义" class="headerlink" title="2.1 符号定义"></a>2.1 符号定义</h2><ul>
+<li>$P$：数据点集</li>
+<li>$\theta$：模型参数</li>
+<li>$I$：内点选择器函数</li>
+<li>$F$：拟合函数</li>
+<li>$\tau(\sigma)$：内外点区分阈值（异常值阈值）</li>
+<li>$\sigma$：噪声标准差</li>
+<li>$D$：残差函数</li>
+<li>$Q$：模型质量函数</li>
+<li>$m$：最小样本量</li>
+<li>$\sigma_{max}$：最大噪声标准差（用户定义的最大噪声标度）</li>
+</ul>
+<p>数据点集$P&#x3D;{p\ |\ p\in \R^k,k\in\N_{&gt;0}}$，其中k是维度。</p>
+<p>内点集 $\mathcal{I}\subseteq P$</p>
+<p>要拟合的模型由其参数向量$\theta\in\Theta$表示，其中$\Theta&#x3D;{\theta\ |\ \theta\in\R^d,d\in\N_{&gt;0}}$是流形，例如，所有可能的2D线中，d是模型的尺寸，例如d &#x3D; 2 用于 2D 线（角度和偏移）。</p>
+<p>拟合函数$F$：$P^<em>\to \Theta$，从$n\geq m$点中计算模型参数，其中$P^</em>&#x3D;exp(P)$是 P 的幂集，m 是拟合模型的最小点数，例如m &#x3D; 2 用于 2D 线。请注意，F 是根据输入集应用不同估计量的组合函数，例如，如果 n &#x3D; m 则为最小方法，否则为最小二乘拟合。</p>
+<p>残差函数$D:\Theta\times P\to\R$是点到模型的残差函数（？）</p>
+<p>内点选择器函数$I:P^<em>\times\Theta\times\R\to P^</em>$给定模型$\theta$和阈值$\sigma$后选择的内点。例如，如果考虑原始的 RANSAC 方法，则<br>$$<br>I_{RANSAC}(\theta,\sigma,P)&#x3D;{p\in P|D(\theta,p)&lt;\sigma}<br>$$<br>模型质量函数$Q:P^*\times\Theta\times\R\to\R$更高的质量被解释为更好的模型。</p>
+<p>对于RANSAC，则<br>$$<br>Q_{RANSAC}(\theta,\sigma,P)&#x3D;|I(\theta,\sigma,P)|<br>$$</p>
+<h2 id="2-3-边缘化样本一致"><a href="#2-3-边缘化样本一致" class="headerlink" title="2.3 边缘化样本一致"></a>2.3 边缘化样本一致</h2><p>在本节中，提出了一种称为MAGSAC的方法，该方法从类似RANSAC的鲁棒模型估计中消除了阈值参数。</p>
+<h3 id="2-3-1-sigma-边缘化"><a href="#2-3-1-sigma-边缘化" class="headerlink" title="2.3.1 $\sigma$边缘化"></a>2.3.1 $\sigma$边缘化</h3><p>让我们假设噪声$\sigma$是具有密度函数$f(σ)$的随机变量，并让我们为模型$ θ $在$ σ $上边缘化定义一个新的质量函数，如下所示：<br>$$<br>Q^*(\theta,P)&#x3D;\int Q(\theta,\sigma,P)f(\sigma)d\sigma<br>$$<br>在没有先验信息的情况下，我们假设 σ 是均匀分布的，$\sigma\sim\mathcal{U}(0,\sigma_{max})$，于是有<br>$$<br>Q^*(\theta,P)&#x3D;\frac{1}{\sigma_{max}}\int_0^{\sigma_{max}} Q(\theta,\sigma,P)d\sigma<br>$$<br>举个例子，对于普通的RANSAC，用$ Q(\theta,\sigma,P)$表示内点数，其中$\sigma$是内外点阈值，${D(\theta,p_i)}<em>{i&#x3D;1}^{|P|}$是模型$ θ $的距离，使得$0\leq D(\theta,p_1)&lt;D(\theta,p_2)&lt;..&lt;D(\theta,p_K)&lt;\sigma</em>{max}&lt;D(\theta,p_{K+1})&lt;…&lt;D(\theta,p_{|P|})$，则我们得到一个质量函数：（内点个数K - 内点残差的归一化）<br>$$<br>Q^*(\theta,P)&#x3D;K-\frac{1}{\sigma_{max}}\sum_{k&#x3D;1}^K D(\theta,p_k)&#x3D;\sum_{k&#x3D;1}^K(1-\frac{D(\theta,p_k)}{\sigma_{max}})<br>$$<br>假设内点和外点的分布是均匀的$(内点\sim\mathcal{U}(0,\sigma);外点\sim\mathcal{U}(0,l))$,利用$θ$模型的对数似然性作为其质量函数Q，我们得到:（？）<br>$$<br>Q^*(\theta,P)&#x3D;K(\mathrm{ln}\frac{l}{\sigma_{max}}+1)-\frac{1}{\sigma_{max}}\sum_{k&#x3D;1}^KD(\theta,p_k)(1+\mathrm{ln}\frac{l}{D(\theta,p_k)})-|P|\mathrm{ln}l<br>$$<br>通常，内点的残差被计算为在某个 ρ 维空间中与模型的<strong>欧几里德距离</strong>。 如果假设沿该 ρ 维空间的每个轴的距离误差是独立的并且具有相同方差$ σ^2 $的正态分布，则$（残差）^2&#x2F;σ^2 $具有 ρ 自由度的卡方分布。 所以，<br>$$<br>g(r|\sigma)&#x3D;2C(\rho)\sigma^{-\rho}exp(-r^2&#x2F;2\sigma^2)r^{\rho-1}<br>$$<br>是内点残差的密度,且<br>$$<br>C(\rho)&#x3D;\frac{1}{2^{\rho&#x2F;2}\Gamma(\rho&#x2F;2)}<br>$$<br>其中<br>$$<br>\Gamma(a)&#x3D;\int_0^{+\infty}t^{a-1}exp(-t)dt<br>$$<br>在MAGSAC中，内点的残差由密度分布$g(r|\sigma)$描述，外点由区间$[0,l]$上的均匀分布描述。</p>
+<p>请注意，对于图像，$l$ 可以设置为图像对角线(?)。 内点-异常值阈值$\tau(\sigma)$设置为密度分布$g(r|\sigma)$的 0.95 或 0.99 分位数。因此，给定 $σ$ 的模型 $θ$ 的可能性为<br>$$<br>L(\theta,P|\sigma)&#x3D;\frac{1}{l^{|P|-|\mathcal{I}(\sigma)|}}\Pi_{p\in\mathcal{I}(\sigma)}\big[2C(\rho)\sigma^{-\rho}exp(\frac{-D^2(\theta,p)}{2\sigma^2})D^{\rho-1}(\theta,p)\big]<br>$$<br>对于给定σ，MAGSAC使用模型θ的对数似然作为其质量函数，如下所示:<br>$$<br>Q(\theta,\sigma,P)&#x3D;\mathrm{ln}L(\theta,P|\sigma)<br>$$<br>因此，σ上边缘化的质量函数如下：<br>$$<br>Q^*_{MAGSAC}(\theta,P)&#x3D;\frac{1}{\sigma_{max}}\int_0^{\sigma_{max}}\mathrm{ln}L(\theta,P|\sigma)d\sigma\<br>\approx-|P|\mathrm{ln}l+\frac{1}{\sigma_{max}}\sum_{i&#x3D;1}^K<a href="%5Csigma_i-%5Csigma_%7Bi-1%7D">i(\mathrm{ln}2C(\rho)l-\rho\mathrm{ln}\sigma_i)-\frac{R_i}{\sigma_i^2}+(\rho-1)Lr_i</a><br>$$<br>其中，${D(\theta,p_i)}<em>{i&#x3D;1}^{|P|}$是模型$\theta$的距离，$\sigma_0&#x3D;0$且<br>$$<br>0\leq D(\theta,p_1)&#x3D;\tau(\sigma_1)&lt;D(\theta,p_2)&#x3D;\tau(\sigma_2)&lt;…\&lt;D(\theta,p_K)&#x3D;\tau(\sigma_K)&lt;\tau(\sigma</em>{max})&lt;D(\theta,p_{K+1}&lt;…&lt;D(\theta,p_{|P|}),\R_i&#x3D;\frac{1}{2}\sum_{j&#x3D;1}^iD(\theta,p_j)^2 \Lr_i&#x3D;\sum_{j&#x3D;1}^i\mathrm{ln}D(\theta,p_j)<br>$$<br>因此，所提出的新质量函数 $Q^*_{MAGSAC}$ 不依赖于手动设置的噪声水平 σ。</p>
+<h3 id="2-3-2-σ-一致模型拟合"><a href="#2-3-2-σ-一致模型拟合" class="headerlink" title="2.3.2 $σ$-一致模型拟合"></a>2.3.2 $σ$-一致模型拟合</h3><p>由于没有一组可用于改进从最小样本获得的模型的内点，因此我们建议使用加权最小二乘拟合，其中权重是内点的点概率。</p>
+<p>假设给定从最小样本估计的模型 $θ$。使$\theta_\sigma&#x3D;F(I(\theta,\sigma,P))$为使用输入模型$\theta$周围的$\tau(\sigma)$选定的内部集合$I(\theta,\sigma,P)$所隐含的模型.</p>
+<p>则点$p\in P$在给定模型$\theta_\sigma$内的概率是：<br>$$<br>L(p|\theta_\sigma,\sigma)&#x3D;2C(\rho)\sigma^{-\rho}D^{\rho-1}(\theta_\sigma,p)exp(\frac{-D^2(\theta_\sigma,p)}{2\sigma^2})<br>$$<br>为了找到一个可能成为内点的点，使得比 σ 更边缘化，使用与以前相同的方法:<br>$$<br>L(p|\theta)\approx \frac{2C(\rho)}{\sigma_{max}}\sum_{i&#x3D;1}^K(\sigma_i-\sigma_{i-1})\sigma_I^{-\rho}D^{\rho-1}(\theta_\sigma,p)exp(\frac{-D^2(\theta_\sigma,p)}{2\sigma_i^2})<br>$$<br>使用加权最小二乘法估计改进模型$\theta_{MAGSAC}^*$，其中点$p\in P$的权重是$L(p|\theta)$</p>
+<h3 id="2-3-3-终止标准"><a href="#2-3-3-终止标准" class="headerlink" title="2.3.3 终止标准"></a>2.3.3 终止标准</h3><p>没有一个独立的集合，因此，至少一个粗略估计的独立比率，使得RANSAC的标准终止准则不适用，其如下:<br>$$<br>k(\theta,\sigma,P)&#x3D;\frac{\mathrm{ln}(1-\eta)}{\mathrm{ln}(1-(\frac{|I(\theta,\sigma,P|)}{|P|})^m)}<br>$$<br>其中 k 是迭代次数，$η$ 是手动设置的结果置信度，m 是估计所需的最小样本的大小，$|I(θ, σ, P)| $是迄今为止最好的模型的内点数。(与RANSAC类似)</p>
+<p>为了在不使用特定$σ$的情况下确定k，将其边缘化是一个简单的选择，类似于模型质量。具体如下：<br>$$<br>k^*(P,\theta)&#x3D;\frac{1}{\sigma_{max}}\int_0^{\sigma_{max}}k(\theta,\sigma,P)d\sigma\<br>\approx\frac{1}{\sigma_{max}}\sum_{i&#x3D;1}^{k}\frac{(\sigma_i-\sigma_{i-1})\mathrm{ln}(1-\eta)}{\mathrm{ln}(1-(\frac{I(\theta,\sigma_i,P)|}{|P|})^m)}<br>$$<br>因此，在过程中计算MAGSAC所需的迭代次数，并在找到新的sofar-the-best模型时进行更新，类似于RANSAC。</p>
+<h2 id="2-4-使用-σ-一致的算法"><a href="#2-4-使用-σ-一致的算法" class="headerlink" title="2.4 使用 σ 一致的算法"></a>2.4 使用 σ 一致的算法</h2><p>在本节中，我们提出了两种应用 σ 一致的算法。 首先，MAGSAC 将结合提议的边缘化方法、加权最小二乘法和终止标准进行讨论。 其次，提出了一个后处理步骤，该步骤适用于每个鲁棒估计器的输出。 在实验中，它总是在处理时间没有明显恶化的情况下改进输入模型，最多增加几毫秒。</p>
+<h3 id="2-4-1-加快程序"><a href="#2-4-1-加快程序" class="headerlink" title="2.4.1 加快程序"></a>2.4.1 加快程序</h3><p>由于普通的 MAGSAC 会多次应用最小二乘拟合，因此隐含的计算复杂度会相当高。 因此，我们提出了加速该过程的技术。为了避免不必要的操作，我们引入了一个 $\sigma_{max}$ 值，并且在优化过程中只使用小于$\sigma_{max}的\sigma$。这个 $\sigma_{max}$ 可以设置为一个相当大的值，例如 10 个像素。在结果表明$\sigma_{max}$太低的情况下，例如如果残差的密度模式接近$\sigma_{max}$，则可以使用更高的值重复计算。</p>
+<p>我们没有计算每个$\sigma_i$的$\theta_{\sigma_{i}}$，而是将这些$\sigma$的范围统一划分为d个分区。因此，处理后的 σ集如下：<br>$$<br>\sigma_1+(\sigma_{max}-\sigma_1)&#x2F;d,\sigma_1+2(\sigma_{max}-\sigma_1),..,\sigma_1+(d-1)(\sigma_{max}-\sigma_1)&#x2F;d,\sigma_{max}<br>$$<br>通过这种简化，最小二乘拟合的数量从 K 下降到 d，其中 d ≪ K。在实验中，d 设置为 10。</p>
+<p>此外，正如为 USAC 提出的那样，有几种方法可以提前跳过对没有机会比以前最好的模型更好的模型的评估。为此，我们应用带有$\tau_{ref}$ 阈值的 SPRT。阈值$\tau_{ref}$不用于模型评估或内部选择步骤，而仅用于在不必要时跳过应用 σ 一致。在实验中，$\tau_{ref}$设置为 1 个像素。</p>
+<p>最后，σ-consensus 的并行实现可以直接在 GPU 或多个 CPU 上完成，在不同的线程上评估每个 σ。在我们的 C++ 实现中，它运行在多个 CPU 内核上。</p>
+<h3 id="2-4-2-sigma-一致算法"><a href="#2-4-2-sigma-一致算法" class="headerlink" title="2.4.2 $\sigma$一致算法"></a>2.4.2 $\sigma$一致算法</h3><p>建议的 σ 一致在算法1中进行了描述，输入参数为：数据点（P）、初始模型参数（θ）、用户定义的分区数（d）和σ的限制（$\sigma_{max}$）。</p>
+<p>作为第一步，该算法采用比初始模型更接近的点$\tau(\sigma_{max})$（第一行）。函数 $\tau$返回由输入$\sigma$参数隐含的阈值。在 $\chi^2$分布的情况下， $τ(σ) &#x3D; 3.64σ$。 然后对内点的残差进行排序，因此，在${\sigma_i}_{i&#x3D;1}^{|\mathcal{I}|}$中，$\sigma_i&lt;\sigma_j\Leftrightarrow i&lt;j$。</p>
+<p>在$\mathcal{I}<em>{ord}$中，点的索引按顺序排列，以反映${\sigma_i}</em>{i&#x3D;1}^{|\mathcal{I}|}$，于是$\sigma_i&#x3D;D(\theta,\mathcal{I}_{ord,i})&#x2F;3.64$（第二行）。</p>
+<p>在第3行和第4行中，权重初始化为零，$\sigma_{max}$设置为max（${\sigma_i}_{i&#x3D;1}^{|\mathcal{I}|}$）。然后计算当前σ范围。例如，要处理的第一个范围是$[\sigma_1,\sigma_1+\delta_\sigma]$。</p>
+<p>请注意，$\sigma_1$&#x3D; 0，因为在距模型零距离处至少有 m 个点。循环从第一个点运行到最后一个点，并且由于$\mathcal{I}_{ord}$是有序的，因此每个后续点都比之前的点离模型更远。直到当前范围的末尾，即分区，没有达到（第 7 行），它一个接一个地收集点（第 8 行）。超过当前范围的边界后，使用之前收集的所有点（第 10 行）计算$\theta_\sigma$。然后，对于每个点，权重由隐含概率更新（第 12 行）。最后，算法跳转到下一个范围（第 13 行）。在为每个点计算权重之后，应用加权最小二乘拟合来获得边缘化模型参数（第 14 行）。</p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E4%BC%AA%E4%BB%A3%E7%A0%811.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-4-3-MAGSAC"><a href="#2-4-3-MAGSAC" class="headerlink" title="2.4.3 MAGSAC"></a>2.4.3 MAGSAC</h3><p>用σ-一致优化每个估计模型的MAGSAC程序见算法2.首先，它将模型质量初始化为零，并将所需的迭代次数初始化为$\infty$（第一行）。在每次迭代中，它选择一个最小样本（第 3 行），将模型拟合到所选点（第 4 行）验证它（第 5 行）并应用 σ-consensus 以获得在 σ 上边缘化的参数（第 6 行）。验证步骤包括简并度测试和停止评估模型的测试，如果没有机会比之前迄今为止最好的测试更好，例如通过SPRT测试。注意，对于SPRT，当计算与当前模型的距离时，验证步骤也包括在σ-一致性中（Alg.1中的第1行）。最后，计算模型质量（第8行），如果需要（第9行），则更新迄今为止的最佳模型和所需迭代次数（第10行）。作为对时间敏感的应用程序中的后处理步骤，σ 一致是优化RANSAC输出的一种可能选择，而不是对内点应用最小二乘拟合。在这种情况下，σ 共识仅应用一次，从而改善了结果，而t不会明显恶化。</p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E4%BC%AA%E4%BB%A3%E7%A0%812.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="3-MAGSAC"><a href="#3-MAGSAC" class="headerlink" title="3. MAGSAC++"></a>3. MAGSAC++</h1><p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9156822">IEEE Xplore Full-Text PDF:</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/56344498af8c">MAGSAC++：一种快速、可靠、准确、鲁棒的估计器</a></p>
+<h1 id="4-NMRC-通过邻域流形实现鲁棒特征匹配"><a href="#4-NMRC-通过邻域流形实现鲁棒特征匹配" class="headerlink" title="4.  NMRC 通过邻域流形实现鲁棒特征匹配"></a>4.  NMRC 通过邻域流形实现鲁棒特征匹配</h1><p><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S0924271621002963?via=ihub">通过邻域流形表示共识进行鲁棒特征匹配 - ScienceDirect</a></p>
+<h1 id="5-GMS"><a href="#5-GMS" class="headerlink" title="5. GMS"></a>5. GMS</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/He3he3he/article/details/109530095">GMS算法_</a></p>
+<p><a target="_blank" rel="noopener" href="https://download.csdn.net/download/weixin_42134038/18558062?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-download-2~default~BlogCommendFromBaidu~Paid-1-18558062-blog-109530095.pc_relevant_antiscanv3&depth_1-utm_source=distribute.pc_relevant.none-task-download-2~default~BlogCommendFromBaidu~Paid-1-18558062-blog-109530095.pc_relevant_antiscanv3&utm_relevant_index=1">GMS-Feature-Correspondence:GMS特征对应算法的C++实现_</a></p>
+<h1 id="补充内容"><a href="#补充内容" class="headerlink" title="补充内容"></a>补充内容</h1><h1 id="1-对极约束"><a href="#1-对极约束" class="headerlink" title="1. 对极约束"></a>1. 对极约束</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014709760/article/details/88059000">2D-2D：对极约束</a></p>
+<h1 id="2-基本矩阵"><a href="#2-基本矩阵" class="headerlink" title="2. 基本矩阵"></a>2. 基本矩阵</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/kokerf/article/details/72191054">基本矩阵、本质矩阵和单应矩阵</a></p>
+<h1 id="3-残差和误差"><a href="#3-残差和误差" class="headerlink" title="3. 残差和误差"></a>3. 残差和误差</h1><p>误差是观察值与真实值之间的差。经典测验理论（CTT）的基本假设是：X&#x3D;T+E。也就是说，观察值等于真值加上误差。</p>
+<p>残差是观察值与模型估计值之间的差。以回归分析为例，回归方程y&#x3D;b0+b1x，当知道b0和b1时这就是一个真实的回归模型。比如y&#x3D;2+3x。取一个数值（1,2），则模型估计值为y&#x3D;2+3×1&#x3D;5。残差为2-5&#x3D;-3。因此，只要有一个确定的取值以及模型，则模型肯定有一个估计值，也就有一个残差了。</p>
+<h1 id="4-均匀分布"><a href="#4-均匀分布" class="headerlink" title="4. 均匀分布"></a>4. 均匀分布</h1><p>在相同长度间隔的分布概率是等可能的。 均匀分布由两个参数a和b定义，它们是数轴上的最小值和最大值，通常缩写为$U（a，b）$。</p>
+<p><img src="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/%E5%9D%87%E5%8C%80%E5%88%86%E5%B8%83.jpg" srcset="/img/loading.gif" lazyload></p>
+<h1 id="5-卡方分布"><a href="#5-卡方分布" class="headerlink" title="5. 卡方分布"></a>5. 卡方分布</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/anshuai_aw1/article/details/82735201"> 三大抽样分布：卡方分布，t分布和F分布的简单理解</a></p>
+<p>设$X_1,X_2,..,X_n\ \ i.i.d.\sim N(0,1)$，令$X&#x3D;\sum_{i&#x3D;1}^{n}X_i^2$，则称X是自由度为n的卡方变量，其分布称为卡方分布，记为$X\sim \chi_n^2$</p>
+<p>设随机变量 X 是自由度为 n 的 χ2 随机变量, 则其概率密度函数为<br>$$<br>g_n(x)&#x3D;<br>\begin{cases}<br>\frac{1}{2^{n&#x2F;2}\Gamma(n&#x2F;2)}x^{n&#x2F;2-1}exp(-x&#x2F;2)&amp;,x&gt;0\<br>0&amp;,x\leq0<br>\end{cases}<br>$$</p>
+<h1 id="6-边缘化"><a href="#6-边缘化" class="headerlink" title="6. 边缘化"></a>6. 边缘化</h1><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1096441">概率论之概念解析：边缘化（Marginalisation）</a></p>
+<p>边缘化是一种方法，它要求对一个变量的可能值求和，以确定另一个变量的边缘贡献。这个定义可能听起来有点抽象，让我们用一个例子来说明这一点。</p>
+<p>假设我们对天气如何影响英国人的幸福这一话题感兴趣。我们可以把它写成**P(幸福|天气)**，即给定天气类型的情况下一个人的幸福水平的概率是多少。</p>
+<p>假设我们有测量一个人幸福所需的设备和定义，并记录了一个人所在的英格兰和另一个人所在的苏格兰的天气情况。现在，通常来说苏格兰人比英格兰人更幸福。问题是，人们总是有国籍的，所以在测量中我不能摆脱这个因素。所以我们实际测量的是P(幸福，国家|天气)，即我们同时关注<strong>幸福和国家</strong>。</p>
+<p>边缘化告诉我们，如果我们把所有国家的可能性都加起来，我们可以计算出我们想要的数量(记住，<strong>英国是由三个部分组成的:英格兰、苏格兰和威尔士</strong>)，即P(<strong>幸福，国家&#x3D;英格兰|天气</strong>)+ P(<strong>幸福，国家&#x3D;苏格兰|天气</strong>)+ P(<strong>幸福，国家&#x3D;威尔士|天气</strong>)。</p>
+<p>而就是这样！边缘化告诉我们，<strong>只要把一些概率加起来就能得到所需的概率量</strong>。一旦我们计算出了答案(它可以是一个单个值或一个分布)，我们就可以得到我们想要的任何属性(推理)。</p>
+<h1 id="7-条件概率密度"><a href="#7-条件概率密度" class="headerlink" title="7. 条件概率密度"></a>7. 条件概率密度</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV16L4y1q7MW?spm_id_from=333.337.search-card.all.click">【概率论与数理统计】一个视频让你明白分布函数，概率密度函数，分布律，联合概率密度，联合分布函数，联合分布律，边缘概率密度，边缘分布函数都是什么意义和概念</a></p>
+<p>条件概率密度函数：<br>$$<br>\begin{cases}<br>f_{X|Y}(x|y)&#x3D;\frac{f(x,y)}{f_Y(y)}\<br>f_{Y|X}(y|x)&#x3D;\frac{f(x,y)}{f_X(x)}<br>\end{cases}<br>$$<br>边缘概率密度函数：<br>$$<br>\begin{cases}<br>f_{X}(x)&#x3D;\int{f(x,y)}dy\<br>f_{Y}(y)&#x3D;\int{f(x,y)}dx<br>\end{cases}<br>$$</p>
+<h1 id="8-复合概率密度函数"><a href="#8-复合概率密度函数" class="headerlink" title="8. 复合概率密度函数"></a>8. 复合概率密度函数</h1><p>已知X的概率密度为$f_X(x)$，若有Y&#x3D;f(x)，求Y的概率密度：</p>
+<p>记X的累计概率为$F_X(x)$，Y的累计概率为$F_Y(y)$，则<br>$$<br>F_Y(y)&#x3D;P{Y\leq y}&#x3D;P{f(X)\leq y}&#x3D;P{X\leq f^{-1}(y)}&#x3D;F_X(f^{-1}(y))\<br>\Rightarrow f_Y(y)&#x3D;\frac{dF_X(f^{-1}(y))}{dy}&#x3D;f_X(f^{-1}(y))\times (f^{-1}(y))’<br>$$</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/">#图像匹配</a>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%8CRANSAC/">#学习笔记，RANSAC</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基于重采样的匹配算法笔记</div>
+      <div>http://example.com/2022/06/01/基于重采样的匹配算法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Juan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月1日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/24/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%BB%BC%E8%BF%B02/" title="图像匹配综述翻译(2)：应用&amp;后续发展">
+                        <span class="hidden-mobile">图像匹配综述翻译(2)：应用&amp;后续发展</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        MathJax = {
+          tex    : {
+            inlineMath: { '[+]': [['$', '$']] }
+          },
+          loader : {
+            load: ['ui/lazy']
+          },
+          options: {
+            renderActions: {
+              findScript    : [10, doc => {
+                document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                  const display = !!node.type.match(/; *mode=display/);
+                  const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                  const text = document.createTextNode('');
+                  node.parentNode.replaceChild(text, node);
+                  math.start = { node: text, delim: '', n: 0 };
+                  math.end = { node: text, delim: '', n: 0 };
+                  doc.math.push(math);
+                });
+              }, '', false],
+              insertedScript: [200, () => {
+                document.querySelectorAll('mjx-container').forEach(node => {
+                  let target = node.parentNode;
+                  if (target.nodeName.toLowerCase() === 'li') {
+                    target.parentNode.classList.add('has-jax');
+                  }
+                });
+              }, '', false]
+            }
+          }
+        };
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.0/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
