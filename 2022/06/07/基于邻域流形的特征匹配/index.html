@@ -23,18 +23,19 @@
 <meta property="og:site_name" content="Blog of Mr.Juan">
 <meta property="og:description" content="使用邻域流形表示来去除错误匹配点对">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/title.png">
 <meta property="og:image" content="http://example.com/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%841.png">
 <meta property="og:image" content="http://example.com/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84.png">
 <meta property="og:image" content="http://example.com/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/%E5%9B%BE3.png">
 <meta property="og:image" content="http://example.com/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/alg1.png">
 <meta property="article:published_time" content="2022-06-07T08:01:00.000Z">
-<meta property="article:modified_time" content="2022-06-14T08:11:19.901Z">
+<meta property="article:modified_time" content="2022-07-14T11:07:14.850Z">
 <meta property="article:author" content="Mr.Juan">
 <meta property="article:tag" content="学习笔记">
 <meta property="article:tag" content="NMRC">
 <meta property="article:tag" content="邻域流形">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%841.png">
+<meta name="twitter:image" content="http://example.com/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/title.png">
   
   
   
@@ -296,7 +297,8 @@
             
             <div class="markdown-body">
               
-              <h1 id="nmrc-基于邻域流形表示一致性的鲁棒特征匹配"><a class="markdownIt-Anchor" href="#nmrc-基于邻域流形表示一致性的鲁棒特征匹配"></a> NMRC 基于邻域流形表示一致性的鲁棒特征匹配</h1>
+              <p><img src="/2022/06/07/%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E6%B5%81%E5%BD%A2%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/title.png" srcset="/img/loading.gif" lazyload alt="title"></p>
+<h1 id="nmrc-基于邻域流形表示一致性的鲁棒特征匹配"><a class="markdownIt-Anchor" href="#nmrc-基于邻域流形表示一致性的鲁棒特征匹配"></a> NMRC 基于邻域流形表示一致性的鲁棒特征匹配</h1>
 <p><a target="_blank" rel="noopener" href="https://pdf.sciencedirectassets.com/271826/1-s2.0-S0924271621X00123/1-s2.0-S0924271621002963/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBgaCXVzLWVhc3QtMSJHMEUCID%2F%2BbFakjf5e5TUQgJwQoOoa%2FoxalcSzgdy9i%2B7jqsnVAiEAtWIytGh96EUE%2BFzkZFQcUVIP0IZTTN5f5x5hLlHO1hMq0gQIEBAEGgwwNTkwMDM1NDY4NjUiDDNaVjue8eMEA7HvKiqvBGcExev7rRNXHoKeQXuuRvjHEi5qge1ftsBrWhkgUtImD7L91MRxCZrhw4sJcO0yCsfqCt0iNWts8XHuOK757pUazViCo%2Bc2MZG3HiVUZm2iajXNSSddq96m8%2FcRxQXdXjxQnzB6OVyUuQncEKXQenNz9qbIkgZt4pvE8LSxYiSh%2BmfYAF5t13mIQH33oGC3b8uoOuRmh1g9SGhP7CzufhRepnozKvfNhutO1jWWVx%2FcxV5KkQe3BtEj1Wt4J1YXv8t9dQaNB2aEnsN%2BsEFYA9FXm%2F0CvJ9SLwuQGtxgVZKUAHMUtxGWN3T8avfmbVyQYHVx27oPRYOQiT66odr46cu8OcOB13pJBq6m3KrIgTSk0hoH7dPhWe3ySFQ%2BJ6FLJlWSUhSXhPYLT8TTWNk2zCqGxgBGl3f3WCzM%2F50FdpUH57m%2BsSUFKflevxAlSrTfjVjI9hai7uaB6sFQEPDp1rC3fVxU0jiLtwuBWvswuwUq17xUYRhXnwxeX%2FNSxeoyisHfavDLVi3PbVMEcVYZDcQjrxrW43kQ3%2FDs3yhAixzs5H9%2BCkaIvONS3giKJC%2BgtmHam59DCrz9gQ%2FcPkI6WOGsZ0HIqjFSj2QS3BvSLfprZ6xpzOCB3RZCLP4SU9EzrXWWlVbUWz%2FgSEmms39cZsngiC0wMKemysdtTAe6wVOkhY7S%2F4XPzohrnO5inbv%2BSEdU1C02GHCj4TkckoDeSMAk5meBQNOfKoRDJIc3zBgwv9%2FRlAY6qQHv04a9Z8WsdAQqmWET5Ghc1JIysyKQ15%2FnpBiPi%2F%2FJKCu%2FH43uB5jXLwvSft7Px91aAVV3roh%2FIhhoPycBGg305mk1PlA4ownkmwfZQp3wZ5JhHpoSmpdjsRfxHNW6XB15b87y%2BarWp%2BJem6muH0d%2Fx3jFOo4Sw6oR4BV1IDC1qvFcOtbyfMEf0%2Bs22FNAfZFiHNTh6He%2BBoV5nlYpUzLQcyNwGoRYOWwS&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20220530T083520Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=300&amp;X-Amz-Credential=ASIAQ3PHCVTY3EGQUTUQ%2F20220530%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=b060b597fb9c17bbb41cdfd85d441fe6ad2d9a1307966c8e9e616ba8a6af4da4&amp;hash=56f279c01863d399772468c3cc16f96c32d6e83db04f2977b2d1dde9cb4dcc01&amp;host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&amp;pii=S0924271621002963&amp;tid=spdf-150c8256-3cae-4db6-8138-a2d8cb83166c&amp;sid=39032be5495c7949b038d4e6cc6e2a4ca33agxrqa&amp;type=client&amp;ua=54525253505d055051&amp;rr=713622c23ec58b36">Robust feature matching via neighborhood manifold representation consensus (sciencedirectassets.com)</a></p>
 <h1 id="1背景"><a class="markdownIt-Anchor" href="#1背景"></a> 1.背景</h1>
 <p>除了之前提到的重采样等方法外，最近还研究了许多松弛方法。此类方法通过假设局部结构一致性或分段平滑约束来执行正确匹配的稳健估计。例如，<strong>局部保持匹配 (LPM)</strong> (Ma et al., 2019) 试图保持潜在真实匹配的局部邻域结构。<strong>局部结构一致性约束 (LSCC)</strong> (Shao et al., 2020) 使用新的局部结构描述符评估每个对应关系以消除不匹配。<strong>基于网格的运动统计 (GMS)</strong> (Bian et al., 2020) 将平滑度约束封装为区域中一定数量对应关系的统计似然性，并利用基于网格的方案来加速计算。<strong>最小相对运动熵 (MRME)</strong> (Shao et al., 2021) 将特征匹配问题转化为局部相对运动一致性估计，为此制定了相对线性运动和相对角运动。</p>
@@ -486,6 +488,12 @@ W_i^y=(W_{i1}^y,...,w_{iK}^y)\in \mathbb{R}^{1\times K}\tag{2}
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/07/13/Locality%20Preserving%20Matching%20%E5%B1%80%E9%83%A8%E4%BF%9D%E6%8C%81%E5%8C%B9%E9%85%8D/" title="Locality Preserving Matching 局部保持匹配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Locality Preserving Matching 局部保持匹配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
