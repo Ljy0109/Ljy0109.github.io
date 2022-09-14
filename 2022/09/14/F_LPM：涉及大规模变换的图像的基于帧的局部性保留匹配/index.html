@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Juan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="（2022）使用邻域一致性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配">
+<meta property="og:url" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/index.html">
+<meta property="og:site_name" content="Blog of Mr.Juan">
+<meta property="og:description" content="（2022）使用邻域一致性">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-14T14:03:00.000Z">
+<meta property="article:modified_time" content="2022-09-14T14:31:06.701Z">
+<meta property="article:author" content="Mr.Juan">
+<meta property="article:tag" content="NMRC">
+<meta property="article:tag" content="邻域拓扑一致">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配 - Blog of Mr.Juan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Juan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Juan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-14 22:03" pubdate>
+          2022年9月14日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="f_lpm涉及大规模变换的图像的基于帧的局部性保留匹配"><a class="markdownIt-Anchor" href="#f_lpm涉及大规模变换的图像的基于帧的局部性保留匹配"></a> F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</h1>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要：</h1>
+<p>特征匹配是指在两组局部特征之间建立可靠的对应关系，这是遥感应用中必不可少的方法，例如图像配准和镶嵌。在本文中，提出了一种简单而有效的方法，称为基于帧的局部保存匹配（F-LPM），用于鲁棒的遥感图像匹配。我们主要关注那些涉及大规模几何变换（例如，极端缩放）的图像对。我们方法的关键思想是挖掘框架知识，例如尺度不变特征变换（SIFT）等常见特征所隐含的特征方向和尺度。框架知识是免费获得的，我们发现它在特征匹配中具有重要意义，特别是对于我们的重点——大规模几何变换。与其他最先进的方法相比，所提出的方法可以轻松处理几何挑战和高异常值比例，并显着提高性能。</p>
+<p>关键词：特征匹配、框架知识、错配去除、异常值剔除、遥感图像、尺度不变特征变换（SIFT）。</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1. 引言</h1>
+<p>特征匹配是摄影测量和遥感中的一个基本且具有挑战性的问题。其目标是在不同时间 [1]、从不同视角 [2] 或以不同分辨率 [3] 和模式 [4] 捕获的两幅图像之间建立可靠的特征对应关系。它对遥感任务的数量具有重要意义，例如图像配准[5]、图像融合[6]、图像拼接[7]和基于图像的定位[8]。它还广泛用于计算机视觉 [9]、[10] 和医学图像分析 [11]。特征匹配已经研究了几十年，最近，深度学习也被用于这项任务[12]、[13]，表现出有希望的性能。尽管在过去的几十年中取得了长足的进步，但由于缩放、旋转、视点变化、辐射失真和噪声的影响，特征匹配仍然是一项具有挑战性且不适定的任务[4]。因此，开发更强大的图像匹配算法 [1]、[4]、[5] 至关重要。</p>
+<p>特征匹配被认为具有组合性质[1]，[5]。例如，将第一个点集中的 N 个点匹配到另一个点集中的 N 个点将导致总共 N！安排，复杂度太高。为了解决这个问题，一种流行的策略是使用基于描述符的相似性约束[14]建立一组假定的对应关系。这种方法在第二个特征集中为第一个点集中的每个特征搜索具有最相似描述符的特征[14]。目前，已经提出了许多用于遥感图像的鲁棒局部描述符，以建立令人满意的假定匹配集[8]，[15]-[17]。然而，由于它们的模糊性（尤其是在涉及相似图案的图像中），不可避免地会出现很大比例的错误匹配[10]、[18]、[19]。因此，此时的匹配任务归结为在假定的匹配中选择正确的匹配，即内点，并拒绝错误的匹配，即异常点。</p>
+<p>几何约束 [5] 是根据正确匹配是全局或局部几何一致的事实而开发的。例如，来自多个视图的正确特征匹配通常遵循某种全局变换，如透视变换。利用几何约束的方法有很多种，可以分为两类——参数方法和非参数方法[20]。这两个类别的分类取决于它们对两个特征点集之间的几何变换的建模。参数化方法假设特征点经过一定的参数化变换，例如刚性、仿射或透视。在这一类中，鲁棒估计器，如 RANSAC [21]、MLESAC [22]、PROSAC [23] 等，应该是最经典和最受欢迎的估计器，它们已经被研究了很长时间。 RANSAC [21] 是一种假设和验证方法，它不断地对一些对应关系进行采样以生成一个暂定的参数模型，并通过计算相干对应数量来评估模型的质量。 RANSAC 对迭代次数和阈值敏感。提出了一些流行的 RANSAC 变体来解决这些问题，例如 MLESAC [22]、PROSAC [23] 和 MAGSAC [24]。另一种参数方法是统计回归方法[25]-[29]。李等人。 [28] 提出了一种用于遥感图像特征匹配的 lq 回归估计器，并获得了稳健且有希望的结果。吴等人。 [27] 还提出了一种基于加权总最小二乘的稳健回归估计器。</p>
+<p>参数化方法严重依赖于其预定义的参数化模型，并且在转换为非刚性时无效。因此，非参数方法大多被提出来解决这些问题[1]。例如，非参数插值方法 [18]、[30] 通过假设运动平滑度来插值非参数函数以检测异常值。这些方法通常具有三次复杂度，导致计算成本高。因此，它们很难在实时应用中使用。一些图匹配在遥感图像配准中的非参数方法中也起着重要作用[31]。这种代表性的方法包括图位移[32]、光谱匹配[33]和模式搜索[34]。</p>
+<p>最近，基于邻域共识的方法对异常值拒绝产生了越来越大的影响。邻域一致性衡量两个匹配特征的两个邻域之间的一定一致性，以评估正确性。最早的邻域共识思想是在 1990 年代提出的[35]，当时也被称为半局部约束。它被用作在使用诸如尺度不变特征变换 (SIFT) [10]、[19] 等描述符建立假定匹配后执行的预过滤步骤。</p>
+<p>在过去几年中，已经提出了许多最先进的方法，例如 GMS [19]、局部保存匹配 (LPM) [10]、引导局部保存匹配 (GLPM) [1] 和最近的密集匹配工作很少[36]，[37]。通常，这些方法在邻域结构和拓扑（内点的）在变换前后相似的共识假设下选择匹配。马等人。 [5] 开发了一种称为局部线性变换的局部几何约束来衡量邻居局部结构的一致性。 GMS 通过将运动平滑假设建模为统计测量来选择置信对应。因此，共识是通过对应的两个点的邻域之间的相交邻居的数量来衡量的[19]。在最近的密集匹配工作[37]中也可以看到类似的想法，其中李等人。尝试解决显着的类内变化和在建立密集对应关系时缺乏密集注释的问题。 [38] 中提出了一种并行设计的异常值检测方法，该方法通过分层自适应仿射验证来拒绝异常值。在[39]中提出了一种兼容特定的方法，它搜索兼容的邻居来衡量共识，并显示出良好的鲁棒性但效率低。此外，[40] 中引入的局部性保留已被证明在衡量邻域共识方面非常有效 [1]、[10]、[41]。与 GMS 中的共识相比，局部性保留不仅衡量了相交邻居的数量，而且还评估了拓扑结构。 LPM 假设由于物理约束，应保留转换后的相邻对应关系的分布和拓扑。</p>
+<p>尽管已经取得了很大进展，但异常值拒绝仍然是鲁棒图像匹配中的一个挑战[4]。由于两个原因，这个问题在遥感图像匹配中特别具有挑战性。首先，由于噪声、云层覆盖或辐射畸变，遥感图像的离群率可能非常高。其次，遥感图像可能涉及大规模的几何变换，从而增加了处理难度。</p>
+<p>为了解决上述挑战，我们提出了一种基于框架的邻域共识方法。我们方法的关键思想是挖掘框架知识，例如特征方向和共同特征附加的尺度。框架知识通常是免费获得的，我们发现它在特征匹配中具有重要意义，特别是对于涉及大规模几何变换和重异常值的遥感图像。</p>
+<p>我们首先总结了流行的尺度和方向不变特征的共同特征——方向和尺度知识——然后基于这些知识开发了一种几何鲁棒异常值剔除方法。我们的方法受到局部性保存思想的启发[10]，我们使用框架知识重新设计了 LPM 方法的所有关键问题。我们将我们的方法命名为基于帧的 LPM (F-LPM)。</p>
+<ul>
+<li>
+<p>我们发现框架知识非常重要。知识免费提供，我们将框架知识融入流行的局部性保存模型中。</p>
+</li>
+<li>
+<p>我们提出了一种新颖的基于框架的邻域构建方法，该方法对极端缩放（高达五倍）和异常值率（高达 97%）具有鲁棒性。此外，它不需要多尺度实现。</p>
+</li>
+<li>
+<p>我们通过利用框架知识开发新的共识措施，对极端几何变换和异常值具有显着的鲁棒性。</p>
+</li>
+</ul>
+<p>在剩下的部分中，我们首先在第二部分介绍这项工作的动机和初步。然后，我们在第三节中详细描述了所提出的方法。最后，我们在第四节中测试该提议，并在第五节中得出结论。请注意，我们使用内点来表示来自正确匹配的匹配特征，使用异常值来表示来自错误匹配的匹配特征。本文使用的主要符号如表一所示。代码将在 <a target="_blank" rel="noopener" href="https://github.com/shenliang16/F-LPM">https://github.com/shenliang16/F-LPM</a> 上提供。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/NMRC/">#NMRC</a>
+      
+        <a href="/tags/%E9%82%BB%E5%9F%9F%E6%8B%93%E6%89%91%E4%B8%80%E8%87%B4/">#邻域拓扑一致</a>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</div>
+      <div>http://example.com/2022/09/14/F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Juan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月14日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/13/NHT/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
