@@ -16,12 +16,12 @@
   <meta name="author" content="Mr.Juan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="（2022）使用邻域一致性">
+    <meta name="description" content="（2022）LPM的变体，关注大尺度的缩放，提出了一种KNN的变体，使其可以在大缩放中寻找到合适的邻域点">
 <meta property="og:type" content="article">
-<meta property="og:title" content="F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配">
+<meta property="og:title" content="F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配">
 <meta property="og:url" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/index.html">
 <meta property="og:site_name" content="Blog of Mr.Juan">
-<meta property="og:description" content="（2022）使用邻域一致性">
+<meta property="og:description" content="（2022）LPM的变体，关注大尺度的缩放，提出了一种KNN的变体，使其可以在大缩放中寻找到合适的邻域点">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/title.png">
 <meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic1.png">
@@ -68,17 +68,18 @@
 <meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic12.png">
 <meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic13.png">
 <meta property="article:published_time" content="2022-09-14T14:03:00.000Z">
-<meta property="article:modified_time" content="2022-09-15T02:50:58.664Z">
+<meta property="article:modified_time" content="2024-02-27T07:36:47.820Z">
 <meta property="article:author" content="Mr.Juan">
-<meta property="article:tag" content="NMRC">
 <meta property="article:tag" content="邻域拓扑一致">
-<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="F-LPM">
+<meta property="article:tag" content="特征匹配">
+<meta property="article:tag" content="论文翻译">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/title.png">
   
   
   
-  <title>F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配 - Blog of Mr.Juan</title>
+  <title>F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配 - Blog of Mr.Juan</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -146,7 +147,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Mr.Juan</strong>
+      <strong>Mr.Y</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -247,7 +248,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配"></span>
+            <span id="subtitle" data-typed-text="F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配"></span>
           
         </div>
 
@@ -332,7 +333,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</h1>
+            <h1 style="display: none">F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</h1>
             
             <div class="markdown-body">
               
@@ -548,7 +549,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
   
   
 
@@ -563,11 +564,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/NMRC/">#NMRC</a>
-      
         <a href="/tags/%E9%82%BB%E5%9F%9F%E6%8B%93%E6%89%91%E4%B8%80%E8%87%B4/">#邻域拓扑一致</a>
       
-        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+        <a href="/tags/F-LPM/">#F-LPM</a>
+      
+        <a href="/tags/%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/">#特征匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
       
     </div>
   
@@ -579,7 +582,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</div>
+      <div>F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</div>
       <div>http://example.com/2022/09/14/F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配/</div>
     </div>
     <div class="license-meta">
@@ -622,12 +625,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2023/02/27/%E8%8D%89%E7%A8%BF/LPI%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E7%9A%84%E5%B1%80%E9%83%A8%E5%B0%84%E5%BD%B1%E4%B8%8D%E5%8F%98%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/09/13/NHT/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2022/09/11/LAP%EF%BC%9A%E5%85%B7%E6%9C%89%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%B1%80%E9%83%A8%E4%BB%BF%E5%B0%84%E4%BF%9D%E7%95%99%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/" title="LAP：具有运动一致性的局部仿射保留遥感图像特征匹配">
+                        <span class="hidden-mobile">LAP：具有运动一致性的局部仿射保留遥感图像特征匹配</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
