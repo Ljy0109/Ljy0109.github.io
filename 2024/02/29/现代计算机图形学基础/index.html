@@ -1,0 +1,1219 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Juan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="现代计算机图形学基础 https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1X7411F744?p&#x3D;9&amp;spm_id_from&#x3D;pageDriver&amp;vd_source&#x3D;6790d22f4f1ac65edf671d785399c0fe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="现代计算机图形学基础">
+<meta property="og:url" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Blog of Mr.Juan">
+<meta property="og:description" content="现代计算机图形学基础 https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1X7411F744?p&#x3D;9&amp;spm_id_from&#x3D;pageDriver&amp;vd_source&#x3D;6790d22f4f1ac65edf671d785399c0fe">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%8Ecv.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%981.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%982.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%983.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%984.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%986.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%985.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%981.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%982.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%983.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%984.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%985.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E4%BA%A4%E5%9D%90%E6%A0%87%E5%85%AC%E5%BC%8F.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B51.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B52.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B53.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B54.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B55.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B56.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A21.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A22.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A23.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A24.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A213.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A25.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A28.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A29.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A210.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A211.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A212.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A214.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A215.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A216.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%961.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%962.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%963.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%985.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%964.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%969.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%968.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%967.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%966.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%968.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9610.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9612.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9613.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9614.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9615.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9616.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9617.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9618.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9619%E3%80%81.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9620.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9621.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9622.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B24.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B21.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B22.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B23.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B25.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B26.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B27.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B210.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B29.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B28.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B211.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B212.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B213.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B214.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B215.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B216.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B218.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B219.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B220.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B221.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B222.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B223.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B224.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B225.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B226.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B227.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B228.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B229.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B230.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B232.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B231.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B239.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B238.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B240.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B241.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B242.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B243.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B244.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B245.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B246.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B249.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B250.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B251.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B252.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B253.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B254.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B255.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B256.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B257.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B258.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B260.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B233.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B234.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B236.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B235.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B237.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%87%A0%E4%BD%951.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%87%A0%E4%BD%952.jpg">
+<meta property="og:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%87%A0%E4%BD%953.jpg">
+<meta property="article:published_time" content="2024-02-29T10:18:00.000Z">
+<meta property="article:modified_time" content="2024-02-29T12:49:37.430Z">
+<meta property="article:author" content="Mr.Juan">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="计算机图形学">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%8Ecv.jpg">
+  
+  
+  
+  <title>现代计算机图形学基础 - Blog of Mr.Juan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="现代计算机图形学基础"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Juan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-29 18:18" pubdate>
+          2024年2月29日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">现代计算机图形学基础</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="现代计算机图形学基础"><a class="markdownIt-Anchor" href="#现代计算机图形学基础"></a> 现代计算机图形学基础</h1>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%8Ecv.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>四大部分：光栅化、几何、光线追踪、模拟动画</p>
+<h1 id="1-线性代数基础知识"><a class="markdownIt-Anchor" href="#1-线性代数基础知识"></a> 1 线性代数基础知识</h1>
+<p>向量写作<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>a</mi><mo stretchy="true">→</mo></mover></mrow><annotation encoding="application/x-tex">\overrightarrow{a}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9525600000000001em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9525600000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span class="svg-align" style="top:-3.43056em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="height:0.522em;min-width:0.888em;"><svg width="400em" height="0.522em" viewbox="0 0 400000 522" preserveaspectratio="xMaxYMin slice"><path d="M0 241v40h399891c-47.3 35.3-84 78-110 128
+-16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
+ 11 8 0 13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7
+ 39-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85
+-40.5-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+ 151.7 139 205zm0 0v40h399900v-40z"/></svg></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∥</mi><mover accent="true"><mi>a</mi><mo stretchy="true">→</mo></mover><mi mathvariant="normal">∥</mi></mrow><annotation encoding="application/x-tex">\|\overrightarrow{a}\|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.20256em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9525600000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span class="svg-align" style="top:-3.43056em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="height:0.522em;min-width:0.888em;"><svg width="400em" height="0.522em" viewbox="0 0 400000 522" preserveaspectratio="xMaxYMin slice"><path d="M0 241v40h399891c-47.3 35.3-84 78-110 128
+-16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
+ 11 8 0 13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7
+ 39-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85
+-40.5-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+ 151.7 139 205zm0 0v40h399900v-40z"/></svg></span></span></span></span></span></span><span class="mord">∥</span></span></span></span>是向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>a</mi><mo stretchy="true">→</mo></mover></mrow><annotation encoding="application/x-tex">\overrightarrow{a}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9525600000000001em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9525600000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span class="svg-align" style="top:-3.43056em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="height:0.522em;min-width:0.888em;"><svg width="400em" height="0.522em" viewbox="0 0 400000 522" preserveaspectratio="xMaxYMin slice"><path d="M0 241v40h399891c-47.3 35.3-84 78-110 128
+-16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
+ 11 8 0 13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7
+ 39-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85
+-40.5-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+ 151.7 139 205zm0 0v40h399900v-40z"/></svg></span></span></span></span></span></span></span></span></span>的长度，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>a</mi><mo>^</mo></mover><mo>=</mo><mover accent="true"><mi>a</mi><mo stretchy="true">→</mo></mover><mi mathvariant="normal">/</mi><mi mathvariant="normal">∥</mi><mover accent="true"><mi>a</mi><mo stretchy="true">→</mo></mover><mi mathvariant="normal">∥</mi></mrow><annotation encoding="application/x-tex">\hat{a}=\overrightarrow{a}/\|\overrightarrow{a}\|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;">^</span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.20256em;vertical-align:-0.25em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9525600000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span class="svg-align" style="top:-3.43056em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="height:0.522em;min-width:0.888em;"><svg width="400em" height="0.522em" viewbox="0 0 400000 522" preserveaspectratio="xMaxYMin slice"><path d="M0 241v40h399891c-47.3 35.3-84 78-110 128
+-16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
+ 11 8 0 13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7
+ 39-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85
+-40.5-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+ 151.7 139 205zm0 0v40h399900v-40z"/></svg></span></span></span></span></span></span><span class="mord">/</span><span class="mord">∥</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9525600000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span class="svg-align" style="top:-3.43056em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="height:0.522em;min-width:0.888em;"><svg width="400em" height="0.522em" viewbox="0 0 400000 522" preserveaspectratio="xMaxYMin slice"><path d="M0 241v40h399891c-47.3 35.3-84 78-110 128
+-16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
+ 11 8 0 13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7
+ 39-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85
+-40.5-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+ 151.7 139 205zm0 0v40h399900v-40z"/></svg></span></span></span></span></span></span><span class="mord">∥</span></span></span></span>是单位向量，也就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>a</mi><mo stretchy="true">→</mo></mover></mrow><annotation encoding="application/x-tex">\overrightarrow{a}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9525600000000001em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9525600000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">a</span></span></span><span class="svg-align" style="top:-3.43056em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="height:0.522em;min-width:0.888em;"><svg width="400em" height="0.522em" viewbox="0 0 400000 522" preserveaspectratio="xMaxYMin slice"><path d="M0 241v40h399891c-47.3 35.3-84 78-110 128
+-16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
+ 11 8 0 13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7
+ 39-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85
+-40.5-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+ 151.7 139 205zm0 0v40h399900v-40z"/></svg></span></span></span></span></span></span></span></span></span>的方向</p>
+<p>在坐标系下向量可以写作$ \bold{A} = \left( \begin{matrix} x\ y \end{matrix} \right)<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">和</mi></mrow><annotation encoding="application/x-tex">和</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;vertical-align:0em;"></span><span class="mord cjk_fallback">和</span></span></span></span> \bold{A}^T = (x,y)$</p>
+<h2 id="11-向量乘法"><a class="markdownIt-Anchor" href="#11-向量乘法"></a> 1.1 向量乘法</h2>
+<h3 id="111-向量点乘"><a class="markdownIt-Anchor" href="#111-向量点乘"></a> 1.1.1 向量点乘</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%981.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%982.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%983.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%984.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>向量点乘在图形学中的主要两个作用是</p>
+<ol>
+<li>
+<p>获得两个向量间的夹角。进一步说，可以通过点乘的值判断两个向量的接近程度，或是向量的方向是否一致。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%986.jpg" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+<li>
+<p>将一个向量投影到另一个向量中</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%985.jpg" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+</ol>
+<p>点积的应用：判断物体反光</p>
+<h3 id="112-向量叉乘"><a class="markdownIt-Anchor" href="#112-向量叉乘"></a> 1.1.2 向量叉乘</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%981.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E7%82%B9%E4%B9%982.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>叉乘不满足乘法交换律</p>
+<p>叉乘的作用：使用两个向量可以建立一个三位坐标系</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%983.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%984.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>叉乘的作用：</p>
+<ol>
+<li>使用两个向量可以建立一个三位坐标系</li>
+<li>在建立好的坐标系中，可以通过叉积来判断两个向量的左右关系</li>
+<li>判断某向量或某点是否在一个区域的内部或外部。比如三角形，方法是将目标向量与三个边向量进行叉乘，如果在叉积的符号相同，则说明在内部。（适合任意凸多边形）</li>
+</ol>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%985.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="12-正交坐标公式"><a class="markdownIt-Anchor" href="#12-正交坐标公式"></a> 1.2 正交坐标公式</h2>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E4%BA%A4%E5%9D%90%E6%A0%87%E5%85%AC%E5%BC%8F.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="13-矩阵"><a class="markdownIt-Anchor" href="#13-矩阵"></a> 1.3 矩阵</h2>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B51.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>相乘结果的矩阵中的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span></span></span></span>元素等于第i行的A与第j列的B相乘相加</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B52.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B53.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B54.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B55.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="131-向量的点积和叉乘写成矩阵形式"><a class="markdownIt-Anchor" href="#131-向量的点积和叉乘写成矩阵形式"></a> 1.3.1 向量的点积和叉乘写成矩阵形式</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9F%A9%E9%98%B56.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="2-变换-transformation"><a class="markdownIt-Anchor" href="#2-变换-transformation"></a> 2 变换 Transformation</h1>
+<h2 id="21-线性变换"><a class="markdownIt-Anchor" href="#21-线性变换"></a> 2.1 线性变换</h2>
+<h3 id="211-缩放变换-scale-transform"><a class="markdownIt-Anchor" href="#211-缩放变换-scale-transform"></a> 2.1.1 缩放变换 Scale Transform</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A21.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="212-反射变换-reflection-transformation"><a class="markdownIt-Anchor" href="#212-反射变换-reflection-transformation"></a> 2.1.2 反射变换 Reflection transformation</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A22.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="213-切向变换-shear-matrix"><a class="markdownIt-Anchor" href="#213-切向变换-shear-matrix"></a> 2.1.3 切向变换 Shear Matrix</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A23.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="214-旋转变换-rotation-transform"><a class="markdownIt-Anchor" href="#214-旋转变换-rotation-transform"></a> 2.1.4 旋转变换 Rotation Transform</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A24.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>旋转矩阵的一个特殊性质</strong>：</p>
+<p>旋转矩阵的逆=旋转矩阵的转置，也就是说旋转矩阵是正交矩阵</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A213.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="215-线性变换"><a class="markdownIt-Anchor" href="#215-线性变换"></a> 2.1.5 线性变换</h3>
+<p>上述提到的四种变换类型均可以写成以下这种形式。也将可以用这种形式表示的变换统称为线性变换</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A25.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="22-仿射变换"><a class="markdownIt-Anchor" href="#22-仿射变换"></a> 2.2 仿射变换</h2>
+<h3 id="221-平移变换和齐次坐标"><a class="markdownIt-Anchor" href="#221-平移变换和齐次坐标"></a> 2.2.1 平移变换和齐次坐标</h3>
+<p>平移变换不能直接用上述矩阵的形式表达，于是引入了第三维度和齐次坐标。并将上述线性变化和平移变换统称为仿射变换</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A28.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>注意：整合到三维矩阵后，应该是先线性变换在平移</strong></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A29.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="222-逆变换-inverse-transform"><a class="markdownIt-Anchor" href="#222-逆变换-inverse-transform"></a> 2.2.2 逆变换 Inverse Transform</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A210.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="223-变换的组合"><a class="markdownIt-Anchor" href="#223-变换的组合"></a> 2.2.3 变换的组合</h3>
+<p>将变换分解为基本变换，然后根据先后顺序依次左乘（最先的在最右边）变换矩阵</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A211.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="224-三维变换"><a class="markdownIt-Anchor" href="#224-三维变换"></a> 2.2.4 三维变换</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A212.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="23-观测变换-viewing-transformation"><a class="markdownIt-Anchor" href="#23-观测变换-viewing-transformation"></a> 2.3 观测变换 Viewing transformation</h2>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A214.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="231-视图变换-viewcamera-transformation"><a class="markdownIt-Anchor" href="#231-视图变换-viewcamera-transformation"></a> 2.3.1 视图变换 View/Camera transformation</h3>
+<h3 id="232-投影变换-projection-transformation"><a class="markdownIt-Anchor" href="#232-投影变换-projection-transformation"></a> 2.3.2 投影变换 Projection transformation</h3>
+<p>投影变换分为正交投影和透视投影。这两者的区别在于是否存在透视点。</p>
+<p>以一个正方形为例子。在正交投影中，正方形的所有边都应该是平行或者垂直的，没有透视点。但是在透视投影中，正方形的边会指向一个透视点。</p>
+<p>正交投影常用于工程视图中，而透视投影才是符合人眼看到的视图。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A215.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8F%98%E6%8D%A216.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="3-三角形光栅化-rasterization"><a class="markdownIt-Anchor" href="#3-三角形光栅化-rasterization"></a> 3 三角形光栅化 Rasterization</h1>
+<p>光栅化 Rasterize = 将图像画在具有一组离散像素的屏幕上</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%961.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="31-三角形-基本形状单元-foundamental-shape-primitives"><a class="markdownIt-Anchor" href="#31-三角形-基本形状单元-foundamental-shape-primitives"></a> 3.1 三角形 - 基本形状单元 foundamental shape primitives</h2>
+<p>为什么是三角形？</p>
+<ul>
+<li>最基本的多边形
+<ul>
+<li>任意多边形都可以拆分为多个多边形</li>
+</ul>
+</li>
+</ul>
+<p>三角形的性质：</p>
+<ul>
+<li>三角形的内部一定在一个平面内</li>
+<li>三角形的内外非常好判断 -&gt; 使用向量叉乘</li>
+<li>三角形内部点的像素值可以通过顶点的插值表示</li>
+</ul>
+<h2 id="32-如何在屏幕中画一个三角形"><a class="markdownIt-Anchor" href="#32-如何在屏幕中画一个三角形"></a> 3.2 如何在屏幕中画一个三角形</h2>
+<p>一种直观的方法是使用像素点中心坐标是否在三角形内部来判断，在内部则像素点置为1。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%962.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>程序化表示为</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%963.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><code>inside()</code>函数的作用是判断像素点是否在三角形内部，函数的判断依据可以使用向量叉积的符号是否相同。</p>
+<p>如下图所示。判断时，三角形的三边向量应该按照相同方向指定，即顺时针或逆时针。然后将三个顶点依次指向目标点。若目标点在三角形内部，那么由顶点指向目标点的向量始终位于边向量的同侧。即向量叉积的符号相同。</p>
+<p>如果目标点在边上，则自己定义。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%90%91%E9%87%8F%E5%8F%89%E4%B9%985.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="321-三角形的包围盒-bounding-box"><a class="markdownIt-Anchor" href="#321-三角形的包围盒-bounding-box"></a> 3.2.1 三角形的包围盒 Bounding Box</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%964.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>由三角形的三个顶点坐标划分出来的蓝色区域称为三角形的包围盒。也就是说只有在包围盒内部的像素点才参与三角形内外点的判断。</p>
+<h2 id="33-反走样-抗锯齿-anti-aliasing"><a class="markdownIt-Anchor" href="#33-反走样-抗锯齿-anti-aliasing"></a> 3.3 反走样 抗锯齿 anti-aliasing</h2>
+<p>走样的定义：两个截然不同的信号用相同的采样方法会得到相同的采样信号。</p>
+<p>如下图。蓝色和黑色是两种信号，使用空白点进行采样。采样出来的结果相同。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%969.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="331-采样问题-sampling-artifacts"><a class="markdownIt-Anchor" href="#331-采样问题-sampling-artifacts"></a> 3.3.1 采样问题 Sampling Artifacts</h3>
+<p>采样问题的本质的信号变化的频率太快了，但是采样的速度跟不上信号的变化.</p>
+<p>相同的采样频率，随着信号的频率越高，虚线所表示的采样信号越不符合实际的信号。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%968.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="3311-锯齿-jaggies"><a class="markdownIt-Anchor" href="#3311-锯齿-jaggies"></a> 3.3.1.1 锯齿 Jaggies</h4>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%967.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="3312-摩尔纹"><a class="markdownIt-Anchor" href="#3312-摩尔纹"></a> 3.3.1.2 摩尔纹</h4>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%966.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="3313-车轮错觉"><a class="markdownIt-Anchor" href="#3313-车轮错觉"></a> 3.3.1.3 车轮错觉</h4>
+<p>人眼观看快速旋转的车轮时会发现车轮倒转的现象。这是人眼在时间方面的错误采样</p>
+<h3 id="332-反走样的方法"><a class="markdownIt-Anchor" href="#332-反走样的方法"></a> 3.3.2 反走样的方法</h3>
+<p>在采样之前先对信号做模糊处理，也就是低通滤波。</p>
+<p>回顾采样问题的本质：采样的频率跟不上信号变化的频率。</p>
+<p>因此做低通滤波过滤掉高频信号，从本质上解决问题。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%968.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="3321-如何理解图像的高频信息"><a class="markdownIt-Anchor" href="#3321-如何理解图像的高频信息"></a> 3.3.2.1 如何理解图像的高频信息</h4>
+<p>图像的高频信息一般是指物体的轮廓边界。</p>
+<p>**轮廓为什么是高频的？**因为轮廓一般带有显著的像素值突变。</p>
+<p>像素值突变可以类比为一个方波。如下图。用傅里叶变化来表示方波需要低频信号和高频信号的累加。</p>
+<p>所以严格说，像素值突变是低频信号和高频信号的结合。</p>
+<p>**如何来衡量像素点的高频程度？**使用梯度值</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9610.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>为什么傅里叶变换的频谱图总是会有一个十字线？</p>
+<p>因为图像边界总是突变的，将图像重复上下左右铺开，会发现图像左边界和右边界往往是不连续的。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9612.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="3322-空域与频域的卷积"><a class="markdownIt-Anchor" href="#3322-空域与频域的卷积"></a> 3.3.2.2 空域与频域的卷积</h4>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9613.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>卷积核在空域和频域上的联系</strong></p>
+<p>右边可以理解为一个mask，只保留原频谱图中mask的部分</p>
+<p>考虑两个极端情况：卷积核只有一个像素点大、卷积核和图像一样大</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9614.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9615.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="3323-如何理解采样"><a class="markdownIt-Anchor" href="#3323-如何理解采样"></a> 3.3.2.3 如何理解采样</h4>
+<p><strong>采样就是在重复原始信号的频谱</strong></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9616.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>所谓走样，就是采样的频率跟不上信号的频率。反应到频谱中，就是采样信号的频谱发生了重叠。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9617.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>因此，反走样就是去除信号的高频部分。</strong></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9618.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9619%E3%80%81.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="3324-实际反走样的操作"><a class="markdownIt-Anchor" href="#3324-实际反走样的操作"></a> 3.3.2.4 实际反走样的操作</h4>
+<h5 id="33241-ssaa超采样反走样"><a class="markdownIt-Anchor" href="#33241-ssaa超采样反走样"></a> 3.3.2.4.1 SSAA（超采样反走样）</h5>
+<p>对一个像素值进行模糊处理，也就是平均化。下图中黑色部分是三角形内部的区域。</p>
+<p>但是这样将一个像素当作连续空间来计算平均值太过消耗计算资源。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9620.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>对一个像素值进行模糊处理，也就是平均化。</p>
+<h5 id="33242-msaa多重采样反走样-multisample-anti-aliasing"><a class="markdownIt-Anchor" href="#33242-msaa多重采样反走样-multisample-anti-aliasing"></a> 3.3.2.4.2 MSAA(多重采样反走样 Multisample anti aliasing)</h5>
+<p>为了降低计算消耗，将像素点分为多个小像素点（采样点）。也就是将一个像素点的连续空间离散化。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9621.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%85%89%E6%A0%85%E5%8C%9622.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="34-总结"><a class="markdownIt-Anchor" href="#34-总结"></a> 3.4 总结</h2>
+<p>抗锯齿方法的代价</p>
+<ul>
+<li>成倍增加了计算量</li>
+</ul>
+<p>除了MSAA外，另外里程碑的方法有：（GAMES104课程）</p>
+<ul>
+<li>FXAA (Fast Approximate AA) 快速近似抗锯齿 -&gt; 与增加样本数无关，是获得锯齿图像后的后处理 。大致为，将图像渲染出来，然后边缘检测，对检测到的边缘进行模糊 （Z-buffer？）</li>
+<li>TAA (Temporal AA) 与图像匹配有关，将MSAA空域分布的采样点改为了时间上的分布，通过图像匹配将像素时间上的改变联系起来，然后进行量化。也就是前一帧的像素值会影响后一帧的像素值。类似视觉暂留。</li>
+</ul>
+<p>超分辨率问题</p>
+<h1 id="4-着色-shading"><a class="markdownIt-Anchor" href="#4-着色-shading"></a> 4 着色 Shading</h1>
+<h2 id="41-画家算法"><a class="markdownIt-Anchor" href="#41-画家算法"></a> 4.1 画家算法</h2>
+<p>画家算法是先渲染远处的物体，在依次渲染近处的物体，最后完整的画出图像。</p>
+<h2 id="42-深度缓存-z-buffer"><a class="markdownIt-Anchor" href="#42-深度缓存-z-buffer"></a> 4.2 深度缓存 Z-buffer</h2>
+<p>当场景中物体的深度关系比较复杂时，画家算法处理起来就会很麻烦。（顶点可见性判断时目前最通用的算法？）</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B24.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>为了处理这种情况，Z-buffer将每个像素作为对象，同时生成两张图。一张表示当前像素的深度，一张表示像素的颜色信息。右图中，颜色越深说明深度越小。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B21.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B22.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B23.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>时间复杂度的比较</strong></p>
+<p>画家算法需要对同一个的像素点位置的不同像素点深度进行排序，所以是O(n*log n)</p>
+<p>Z-buffer只需要像素点深度最小的值，所以是O(n)</p>
+<p><strong>Z-buffer的性质</strong>：渲染时对图像中同一坐标的不同深度的像素点是没有渲染的先后顺序，因为最后肯定是深度最小的像素点。因为这种<strong>无序性</strong>，Z-buffer可以部署到GPU上。</p>
+<p><strong>Z-buffer一定处理不了透明物体</strong></p>
+<h2 id="43-一个简单的着色模型-冯氏反射模型-blinn-phong-reflectance-model"><a class="markdownIt-Anchor" href="#43-一个简单的着色模型-冯氏反射模型-blinn-phong-reflectance-model"></a> 4.3 一个简单的着色模型-冯氏反射模型 (Blinn-Phong Reflectance Model)</h2>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B25.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>变量定义：</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B26.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>着色是局部的，只考虑颜色、光照的反射，不考虑阴影。（表面的明暗变化不等于阴影）</p>
+<h3 id="431-漫反射-diffuse-term"><a class="markdownIt-Anchor" href="#431-漫反射-diffuse-term"></a> 4.3.1 漫反射 Diffuse Term</h3>
+<p>反射回来的光均匀分布在任意方向。有就是说漫反射的表面颜色在任意方向看都是一样的。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B27.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="4311-光的接收"><a class="markdownIt-Anchor" href="#4311-光的接收"></a> 4.3.1.1 光的接收</h4>
+<p>物体表面接收光的能量与光线方向和表面法线的夹角的余弦值成正比。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B210.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="4312-光的传播"><a class="markdownIt-Anchor" href="#4312-光的传播"></a> 4.3.1.2 光的传播</h4>
+<p>点光源向外传播的能量可以看作是一圈一圈的球壳。能量均匀分布在球壳上。球壳随半径扩大，但是能量总值不变。所以能量与半径r的平方成反比。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B29.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="4313-漫反射公式"><a class="markdownIt-Anchor" href="#4313-漫反射公式"></a> 4.3.1.3 漫反射公式</h4>
+<p><strong>漫反射的着色独立于观测视角</strong></p>
+<p>单位向量n与l点乘表示<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">cos(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault">s</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span>，当为负值时，说明光线从物体表面之下照射过来，所以令其为零。</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">k_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>表示物体表面吸收能量的程度，为1则是不吸收，那么是最亮的，为0则是全吸收，是最暗的。如果是一个rgb三通道向量，则表示出了物体表面吸收rbg的程度。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B28.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B211.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="432-高光-specular-term"><a class="markdownIt-Anchor" href="#432-高光-specular-term"></a> 4.3.2 高光 Specular Term</h3>
+<p><strong>高光依赖于观测方向</strong></p>
+<p>如果观测向量v和反射向量R接近，则会看到高光。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B212.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B213.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>注意公式中存在一个指数p，这反映了对夹角<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span></span></span></span>的容忍度。</p>
+<p>从下图可以看出，不加指数的话，夹角到90°才不会看到高光，这明显不符合常识。因此，模型中常将指数p设为100到200.</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B214.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B215.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="433-环境光-ambient-term"><a class="markdownIt-Anchor" href="#433-环境光-ambient-term"></a> 4.3.3 环境光 Ambient Term</h3>
+<p>这个模型将环境光视为一个常数，与任何向量都无关。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B216.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="434-完整的冯氏反射模型"><a class="markdownIt-Anchor" href="#434-完整的冯氏反射模型"></a> 4.3.4 完整的冯氏反射模型</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B218.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="44-着色频率"><a class="markdownIt-Anchor" href="#44-着色频率"></a> 4.4 着色频率</h2>
+<p>下图中。左边的图，着色应用在三角形的面。中间的图，着色应用在平面的顶点，对顶点进行插值来填充平面。右边的图，着色应用在每个像素上。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B219.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="441-平面着色-flat-shading"><a class="markdownIt-Anchor" href="#441-平面着色-flat-shading"></a> 4.4.1 平面着色 Flat shading</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B220.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="442-顶点着色高洛德着色gouraud-shading"><a class="markdownIt-Anchor" href="#442-顶点着色高洛德着色gouraud-shading"></a> 4.4.2 顶点着色（高洛德着色）Gouraud shading</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B221.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="443-像素着色-phong-shading"><a class="markdownIt-Anchor" href="#443-像素着色-phong-shading"></a> 4.4.3 像素着色 Phong shading</h3>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B222.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B223.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="444-着色频率的两个问题"><a class="markdownIt-Anchor" href="#444-着色频率的两个问题"></a> 4.4.4 着色频率的两个问题</h3>
+<h4 id="4441-怎么知道逐顶点着色的顶点法线是什么"><a class="markdownIt-Anchor" href="#4441-怎么知道逐顶点着色的顶点法线是什么"></a> 4.4.4.1 怎么知道逐顶点着色的顶点法线是什么</h4>
+<p>平面的顶点是多个三角形平面的交点，于是一个简单的方法就是将与顶点相邻的所有平面的法向量求平均，就得到顶点的法向量了。改进就是加权平均。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B224.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="4442-怎么知道逐像素着色的像素法线是什么"><a class="markdownIt-Anchor" href="#4442-怎么知道逐像素着色的像素法线是什么"></a> 4.4.4.2 怎么知道逐像素着色的像素法线是什么</h4>
+<p>计算顶点法线后通过插值来计算像素法线。常用重心插值（barycentric interpolation）</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B225.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="45-图像管线实时渲染管线-graphics-pipeline"><a class="markdownIt-Anchor" href="#45-图像管线实时渲染管线-graphics-pipeline"></a> 4.5 图像管线\实时渲染管线 Graphics Pipeline</h2>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B226.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>着色器编写网站</strong>：<a target="_blank" rel="noopener" href="https://www.shadertoy.com/">Shadertoy BETA</a></p>
+<p>Shader 的水非常深！！！</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B227.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="46-纹理映射-texture-map"><a class="markdownIt-Anchor" href="#46-纹理映射-texture-map"></a> 4.6 纹理映射 Texture map</h2>
+<p>对于同一个着色模型，不同物体会有不同的颜色，这件事本质上是因为物体的漫反射系数不同，再进一步说就是物体的纹理不同。一个物体本身的不同区域的纹理也会不同。因此，纹理映射是想将一个物体的纹理表示出来。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B228.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>下图就是将一个物体展开成一个平面，这个平面是有一个纹理坐标系表示，坐标轴为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(u,v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span>，取值在[0, 1]。坐标中的颜色表示漫反射系数的值。坐标系中的每一个点也叫<strong>纹素</strong></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B229.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B230.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>另一个纹理映射的例子</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B232.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B231.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>虽然在纹理坐标系下，每块之间的纹理不是连续的，但是在实际渲染中看不出来。这取决于纹理的设计，要四方连续，无缝贴图。（Wang Tilling还是undecidable的，关于Veritasium的视频）</p>
+<h3 id="461-纹理映射存在的问题"><a class="markdownIt-Anchor" href="#461-纹理映射存在的问题"></a> 4.6.1 纹理映射存在的问题</h3>
+<h4 id="4611-纹理放大"><a class="markdownIt-Anchor" href="#4611-纹理放大"></a> 4.6.1.1 纹理放大</h4>
+<p>直观理解就是低分辨率的图放到高分辨率的屏幕中，会出现模糊。</p>
+<p>解决方法，插值。最近邻插值、双线性插值、双三次插值</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B239.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B238.jpg" srcset="/img/loading.gif" lazyload alt="双次线性插值"></p>
+<h4 id="4612-纹理太大或者说纹理太细"><a class="markdownIt-Anchor" href="#4612-纹理太大或者说纹理太细"></a> 4.6.1.2 纹理太大或者说纹理太细</h4>
+<p>纹理太密集，再使用之前提到的渲染管线、重心插值，则会出现摩尔纹</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B240.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>出现的原因：一个像素覆盖了多个纹素（纹理表达的单位），多个纹素求平均得到一个像素的纹素，这显然有问题。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B241.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h5 id="46121-三线性插值-mipmap"><a class="markdownIt-Anchor" href="#46121-三线性插值-mipmap"></a> 4.6.1.2.1 三线性插值 Mipmap</h5>
+<p>这就好像是先模糊再采样，还是先采样再模糊，见3.3.2.3节。因此这个问题出现的原因可以理解为现在纹素坐标系进行了采样，再在像素坐标系进行了模糊，这显然不如先模糊再采样。那么应该怎么先模糊呢，那就是在纹素坐标系进行模糊处理，但是在一张图中，由于透视原因，一个像素点包含的纹素个数是不固定的，因此，纹素的模糊程度也是不固定的。所以要使用图像金字塔（Mipmap）来存储不同程度模糊的纹素信息。这属于点查询问题和区域查询问题。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B242.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>如何快速计算某一个像素点对于的纹素模糊程度呢？通过像素点覆盖的纹素区域的大小来判断。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B243.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>D是Mipmap的下采样层数.</p>
+<p>下图是纹素模糊程度的可视化，也就是不同下采样层数（D）对应的位置。可以看出这个变化是不连续的。</p>
+<p>这有两个原因，一是L可能不是2的次数，比如L可能是3。二是纹素本身也是离散的，所以像素点对应到纹素图中也需要插值。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B244.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>这两个问题解决方法都是插值。问题一使用层与层之间的插值。问题二使用纹素点之间的插值。</p>
+<p>这个方法称为 三线性插值 Trilinear Interpolation</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B245.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B246.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>但是Mipmap 三线性插值存在过度模糊的问题。问题在于Mipmap只能查询一个正方形的区域，将像素区域进行了正方形的近似。</p>
+<h5 id="46122-各向异性过滤-ripmap"><a class="markdownIt-Anchor" href="#46122-各向异性过滤-ripmap"></a> 4.6.1.2.2 各向异性过滤 Ripmap</h5>
+<p>Ripmap保留了横向和纵向的不同程度的缩小。这使得映射回原始纹素图时，映射的区域不局限为正方形。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B249.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>如下图。各向异性过滤可以处理矩形的映射区域，但是对斜着的矩形区域没有办法处理。显存的开销是原来的三倍。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B250.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h5 id="46123-其他方法"><a class="markdownIt-Anchor" href="#46123-其他方法"></a> 4.6.1.2.3 其他方法 （？）</h5>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B251.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="462-纹理映射的应用"><a class="markdownIt-Anchor" href="#462-纹理映射的应用"></a> 4.6.2 纹理映射的应用</h3>
+<h4 id="4621-环境映射"><a class="markdownIt-Anchor" href="#4621-环境映射"></a> 4.6.2.1 环境映射</h4>
+<p>将环境光作为纹理来存储在球上。但是存储在球上，再展开是会发生扭曲。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B252.jpg" srcset="/img/loading.gif" lazyload alt="犹他壶"></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B253.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B254.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="4622-凹凸贴图法线贴图"><a class="markdownIt-Anchor" href="#4622-凹凸贴图法线贴图"></a> 4.6.2.2 凹凸贴图/法线贴图</h4>
+<p>通过将纹素设为像素点的虚拟高度值，从而修改像素点的法线方向。</p>
+<p>具体来说，现在纹素值是虚拟高度dp。对于二维平面来说，这个虚拟高度指的是该点向右移动一个单位会上升的高度。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B255.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>在三维空间中这写为：</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B256.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>只是贴图，所以球面没有真的进行形状改变。</p>
+<h4 id="4623-位移贴图"><a class="markdownIt-Anchor" href="#4623-位移贴图"></a> 4.6.2.3 位移贴图</h4>
+<p>改变三角形的顶点位置。但是会大量增加三角形个数。使用了曲面细分技术，自适应的增加三角形个数。（DirectX）</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B257.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="4624-3d泊松噪声-立体模型"><a class="markdownIt-Anchor" href="#4624-3d泊松噪声-立体模型"></a> 4.6.2.4 3D泊松噪声 + 立体模型</h4>
+<p>定义三维空间的噪声函数，通过二值化之类的操作，来建立三维模型。（Diffusion？）</p>
+<h4 id="4625-存储已经计算好的着色信息"><a class="markdownIt-Anchor" href="#4625-存储已经计算好的着色信息"></a> 4.6.2.5 存储已经计算好的着色信息</h4>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B258.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="4626-体渲染"><a class="markdownIt-Anchor" href="#4626-体渲染"></a> 4.6.2.6 体渲染</h4>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B260.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="47-重心插值"><a class="markdownIt-Anchor" href="#47-重心插值"></a> 4.7 重心插值</h2>
+<p>无论是像素法线和像素纹理都需要根据三角形的顶点进行插值，常用的方法是重心插值。</p>
+<p>三角形所表示的平面内的任意一点，都可以由三角形的三个顶点的线性组合来表示。因此使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>α</mi><mo separator="true">,</mo><mi>β</mi><mo separator="true">,</mo><mi>γ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\alpha,\beta,\gamma)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mclose">)</span></span></span></span>在三角形坐标系中表示任意一个点。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>α</mi><mo separator="true">,</mo><mi>β</mi><mo separator="true">,</mo><mi>γ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\alpha,\beta,\gamma)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mclose">)</span></span></span></span>称为重心坐标</p>
+<p>如果点在三角形内，则<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>α</mi><mo separator="true">,</mo><mi>β</mi><mo separator="true">,</mo><mi>γ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\alpha,\beta,\gamma)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mclose">)</span></span></span></span>都是非负的。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B233.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>重心坐标的计算公式如下：</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B234.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B236.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>三角形自身的重心的定义是，存在一个点，使得划分后的三个三角形的面积相等，则</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B235.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>因此，重心插值就可以使用重心坐标来线性表示</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%9D%80%E8%89%B237.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>需要注意的是，重心坐标不具有投影不变性，也就是说三角形经过投影变换后，点的重心坐标会发生改变。因此，重心插值应该在三维空间中进行，而不是投影之后的平面。</p>
+<h1 id="5-几何"><a class="markdownIt-Anchor" href="#5-几何"></a> 5 几何</h1>
+<p>几何的表示可以分为隐式和显式。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%87%A0%E4%BD%951.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="51-隐式表示的概述"><a class="markdownIt-Anchor" href="#51-隐式表示的概述"></a> 5.1 隐式表示的概述</h2>
+<p>简单的说，就是说不告诉点的具体位置，而是用函数之类的方式来表示。优点是非常容易判断点是否在模型内。缺点是无法直观了解模型的形状。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%87%A0%E4%BD%952.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="52-显式表示的概述"><a class="markdownIt-Anchor" href="#52-显式表示的概述"></a> 5.2 显式表示的概述</h2>
+<p>直接通过三角形渲染或者是其他空间点的参数映射关系。</p>
+<p><img src="/2024/02/29/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%87%A0%E4%BD%953.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>5.3</p>
+<h1 id="应用知识"><a class="markdownIt-Anchor" href="#应用知识"></a> 应用知识</h1>
+<ul>
+<li>如何判别一个场景是否渲染的好
+<ul>
+<li>其中一个标准是看场景亮不亮，这反映了渲染时的全局光照质量。亮的时候，细节的粗糙就会显露出来</li>
+</ul>
+</li>
+<li></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+      
+        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/">#计算机图形学</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>现代计算机图形学基础</div>
+      <div>http://example.com/2024/02/29/现代计算机图形学基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Juan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月29日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/" title="基于深度学习的3D重建：综述">
+                        <span class="hidden-mobile">基于深度学习的3D重建：综述</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
