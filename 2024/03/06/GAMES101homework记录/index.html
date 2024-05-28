@@ -1,0 +1,984 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="记录在完成GAMES101的作业时学习到的一些东西">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GAMES101homework记录">
+<meta property="og:url" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="记录在完成GAMES101的作业时学习到的一些东西">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%87.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%872.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%873.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%874.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F3.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F4.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F5.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F6.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F7.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F8.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F9.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F10.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B3.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B4.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B5.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B6.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt3.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt4.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E7%B3%BB1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E7%B3%BB2.jpg">
+<meta property="article:published_time" content="2024-03-06T13:37:00.000Z">
+<meta property="article:modified_time" content="2024-03-13T00:55:53.490Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="VScode">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="GMAES101">
+<meta property="article:tag" content="图形学">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%87.jpg">
+  
+  
+  
+  <title>GAMES101homework记录 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="GAMES101homework记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-06 21:37" pubdate>
+          2024年3月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          94 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">GAMES101homework记录</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="games101homework记录"><a class="markdownIt-Anchor" href="#games101homework记录"></a> GAMES101homework记录</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/Ljy0109/Graphics_algorithms">Ljy0109/Graphics_algorithms (github.com)</a></p>
+<h2 id="语法"><a class="markdownIt-Anchor" href="#语法"></a> 语法</h2>
+<h3 id="inline"><a class="markdownIt-Anchor" href="#inline"></a> <code>inline</code></h3>
+<p><code>inline</code> 是 C++ 中的关键字，用于提示编译器对函数进行内联展开。<strong>内联展开是指在调用函数的地方直接将函数的代码插入，而不是通过函数调用的方式进行执行。这样可以减少函数调用的开销，并提高程序的执行效率。</strong></p>
+<p>使用 <code>inline</code> 关键字声明的函数会被编译器视为候选进行内联展开的函数，但并不保证一定会被内联展开。编译器会根据一些策略来决定是否将函数内联展开，例如函数的大小、调用频率等因素。</p>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a + b;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> result = <span class="hljs-built_in">add</span>(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在这个示例中，<code>add</code> 函数被声明为 <code>inline</code>，因此编译器可能会将 <code>add</code> 函数的代码直接插入到 <code>main</code> 函数中，而不是通过函数调用的方式执行。</p>
+<p>需要注意的是，<strong><code>inline</code> 关键字只是对编译器的建议，编译器并不一定会采纳</strong>。通常情况下，<strong>较小的、频繁调用的函数更容易</strong>被编译器选择进行内联展开。</p>
+<h3 id="throw"><a class="markdownIt-Anchor" href="#throw"></a> <code>throw</code></h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">runtime_error</span>(<span class="hljs-string">&quot;Invalid color values&quot;</span>);<br></code></pre></td></tr></table></figure>
+<p>在满足条件后抛出错误。</p>
+<p><code>std::runtime_error</code>表示程序运行时的错误</p>
+<h3 id="stdtransform"><a class="markdownIt-Anchor" href="#stdtransform"></a> <code>std::transform()</code></h3>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">std::array&lt;Vector4f, 3&gt; <span class="hljs-title">Triangle::toVector4</span><span class="hljs-params">()</span> <span class="hljs-type">const</span></span><br><span class="hljs-function"></span>&#123;<br>    std::array&lt;Vector4f, 3&gt; res;<br>    std::<span class="hljs-built_in">transform</span>(std::<span class="hljs-built_in">begin</span>(v), std::<span class="hljs-built_in">end</span>(v), res.<span class="hljs-built_in">begin</span>(), [](<span class="hljs-keyword">auto</span>&amp; vec) &#123;<span class="hljs-comment">// const Vector3f&amp; vec</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Vector4f</span>(vec.<span class="hljs-built_in">x</span>(), vec.<span class="hljs-built_in">y</span>(), vec.<span class="hljs-built_in">z</span>(), <span class="hljs-number">1.f</span>);<br>    &#125;);<br>    <span class="hljs-keyword">return</span> res;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>std::transform</code> 是 C++ 标准库中的一个算法，它用于对一个容器（或者两个容器）中的元素应用指定的操作，并将结果存储到另一个容器中。该算法定义在 <code>&lt;algorithm&gt;</code> 头文件中。</p>
+<p><code>std::transform</code> 函数的常用形式有以下几种：</p>
+<ol>
+<li>单容器变换：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> InputIterator, <span class="hljs-keyword">class</span> OutputIterator, <span class="hljs-keyword">class</span> UnaryOperation&gt;</span><br><span class="hljs-function">OutputIterator <span class="hljs-title">transform</span><span class="hljs-params">(InputIterator first1, InputIterator last1,</span></span><br><span class="hljs-params"><span class="hljs-function">                         OutputIterator result, UnaryOperation op)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>该函数接受一个输入迭代器范围 <code>[first1, last1)</code> 表示输入容器的范围，一个输出迭代器 <code>result</code> 表示输出容器的起始位置，以及一个一元操作函数 <code>op</code>，用于对输入容器的元素进行变换，并将结果存储到输出容器中。</p>
+<ol start="2">
+<li>双容器变换：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> InputIterator1, <span class="hljs-keyword">class</span> InputIterator2, <span class="hljs-keyword">class</span> OutputIterator, <span class="hljs-keyword">class</span> BinaryOperation&gt;</span><br><span class="hljs-function">OutputIterator <span class="hljs-title">transform</span><span class="hljs-params">(InputIterator1 first1, InputIterator1 last1,</span></span><br><span class="hljs-params"><span class="hljs-function">                         InputIterator2 first2, OutputIterator result, BinaryOperation op)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>该函数接受两个输入迭代器范围 <code>[first1, last1)</code> 和 <code>[first2, ...</code> 来源于第二个容器的元素进行操作，并将结果存储到输出容器中。</p>
+<p>在示例提供的代码中，使用的是第一种形式的 <code>std::transform</code> 函数，它对一个输入容器中的每个元素应用指定的操作，并将结果存储到输出容器中。</p>
+<h3 id="map"><a class="markdownIt-Anchor" href="#map"></a> <code>map</code></h3>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++">std::map&lt;<span class="hljs-type">int</span>, std::vector&lt;Eigen::Vector3f&gt;&gt; pos_buf;<br><br>pos_buf.<span class="hljs-built_in">emplace</span>(id, positions);<br></code></pre></td></tr></table></figure>
+<p><code>std::map</code> 是 C++ 标准库中的一个关联容器，它提供了键-值对的映射关系，并且能够根据键的排序规则自动对键进行排序。<code>std::map</code> 的定义位于 <code>&lt;map&gt;</code> 头文件中。</p>
+<p><code>std::map</code> 的特点包括：</p>
+<ol>
+<li>键值对：<code>std::map</code> 中的每个元素都是一个键值对，其中键和值可以是任意类型的数据，键和值之间存在映射关系。</li>
+<li>排序：<code>std::map</code> 会根据键的排序规则自动对键进行排序，默认情况下是按照键的自然顺序进行排序，但也可以通过提供自定义的比较函数来定义排序规则。</li>
+<li>唯一性：<code>std::map</code> 中的键是唯一的，每个键只能对应一个值，如果尝试插入一个已经存在的键，则插入操作会失败。</li>
+<li>搜索：<code>std::map</code> 提供了高效的搜索操作，可以根据键来快速查找对应的值。</li>
+</ol>
+<p>使用 <code>std::map</code> 的一般步骤包括：</p>
+<ol>
+<li>包含头文件：<code>#include &lt;map&gt;</code></li>
+<li>定义 <code>std::map</code> 对象：<code>std::map&lt;KeyType, ValueType&gt; myMap;</code></li>
+<li>插入元素：<code>myMap[key] = value;</code> 或者 <code>myMap.emplace(key, value);</code></li>
+<li>访问元素：<code>myMap[key]</code> 或者 <code>myMap.at(key)</code></li>
+<li>遍历元素：使用迭代器进行遍历，或者范围遍历（C++11 及以上版本）。</li>
+</ol>
+<p>例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;map&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    std::map&lt;std::string, <span class="hljs-type">int</span>&gt; myMap;<br>    <br>    <span class="hljs-comment">// 插入元素</span><br>    myMap[<span class="hljs-string">&quot;apple&quot;</span>] = <span class="hljs-number">10</span>;<br>    myMap.<span class="hljs-built_in">emplace</span>(<span class="hljs-string">&quot;banana&quot;</span>, <span class="hljs-number">20</span>);<br><br>    <span class="hljs-comment">// 访问元素</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;Value of apple: &quot;</span> &lt;&lt; myMap[<span class="hljs-string">&quot;apple&quot;</span>] &lt;&lt; std::endl;<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;Value of banana: &quot;</span> &lt;&lt; myMap.<span class="hljs-built_in">at</span>(<span class="hljs-string">&quot;banana&quot;</span>) &lt;&lt; std::endl;<br><br>    <span class="hljs-comment">// 遍历元素</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; pair : myMap) &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Key: &quot;</span> &lt;&lt; pair.first &lt;&lt; <span class="hljs-string">&quot;, Value: &quot;</span> &lt;&lt; pair.second &lt;&lt; std::endl;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这段代码创建了一个 <code>std::map</code> 对象 <code>myMap</code>，并向其中插入了两个键值对。然后使用下标运算符和 <code>.at()</code> 方法访问元素，并使用范围遍历方式遍历所有元素。</p>
+<p><code>.emplace()</code> 是 C++ STL 容器中的一个成员函数，用于在容器中直接构造一个新的元素。它的参数会被传递给容器中元素的构造函数，从而在容器中直接构造一个新的元素。<code>.emplace()</code> 函数通常用于避免不必要的拷贝或移动操作，因为它可以在容器中直接构造新的元素，而不需要先创建一个临时对象。</p>
+<h3 id="fabs"><a class="markdownIt-Anchor" href="#fabs"></a> <code>fabs()</code></h3>
+<p><code>fabs(dx)</code> 是 C++ 标准库 <code>&lt;cmath&gt;</code> 中的函数，用于计算一个浮点数 <code>dx</code> 的绝对值。</p>
+<p>在 C++ 中，<code>fabs()</code> 函数的功能是返回一个浮点数的绝对值。如果参数是整数类型，则会隐式转换为浮点数再计算绝对值。</p>
+<h3 id="static"><a class="markdownIt-Anchor" href="#static"></a> <code>static</code></h3>
+<h4 id="static-function"><a class="markdownIt-Anchor" href="#static-function"></a> <code>static function()</code></h4>
+<p>static修饰的静态函数被限定在本源码文件中，不能被本源码文件以外的代码文件调用。而普通的函数，默认是extern的，也就是说，可以被其它代码文件调用该函数。</p>
+<p>静态函数只是在声明他的文件当中可见，不能被其他文件所用。因此定义静态函数有以下好处：</p>
+<ul>
+<li>其他文件中可以定义相同名字的函数，不会发生冲突。</li>
+<li>静态函数不能被其他文件所用。</li>
+<li>静态函数会被自动分配在一个一直使用的存储区，直到退出应用程序实例，避免了调用函数时压栈出栈，速度快很多。</li>
+<li>static函数在内存中只有一份，普通函数在每个被调用中维持一份拷贝。</li>
+</ul>
+<h4 id="static-成员变量和成员函数"><a class="markdownIt-Anchor" href="#static-成员变量和成员函数"></a> <code>static</code> 成员变量和成员函数</h4>
+<ol>
+<li>private static 和 public static 都是静态变量,在类加载时就定义,不需要创建对象</li>
+<li>private static 是私有的,不能在外部访问,只能通过静态方法调用,这样可以防止对变量的修改</li>
+<li>static 成员函数只能访问static成员变量，非static成员函数可以访问static成员变量</li>
+</ol>
+<h4 id="static函数和私有函数的区别"><a class="markdownIt-Anchor" href="#static函数和私有函数的区别"></a> <code>static</code>函数和私有函数的区别</h4>
+<ul>
+<li><code>static</code>函数避免了调用函数的进栈出栈，速度比私有函数快。这在光栅化、渲染等实时任务里是一个有效加速的方法</li>
+<li>为什么不将私有函数变为静态函数？因为静态函数不能直接访问成员变量</li>
+<li>为什么不使用静态私有函数？因为静态私有函数只能访问静态成员变量</li>
+</ul>
+<h3 id="使用位运算同时表示两个种类"><a class="markdownIt-Anchor" href="#使用位运算同时表示两个种类"></a> 使用位运算同时表示两个种类</h3>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">enum class</span> <span class="hljs-title class_">Buffers</span><br>&#123;<br>    Color = <span class="hljs-number">1</span>, <span class="hljs-comment">// 01</span><br>    Depth = <span class="hljs-number">2</span>  <span class="hljs-comment">// 10</span><br>&#125;;<br><br><span class="hljs-keyword">inline</span> Buffers <span class="hljs-keyword">operator</span>|(Buffers a, Buffers b)<br>&#123;   <span class="hljs-comment">// 对color和depth进行位与和位或</span><br>    <span class="hljs-comment">// color | depth = 11 同时表示color和depth，也就是说</span><br>    <span class="hljs-comment">// (color | depth) &amp; color = color</span><br>    <span class="hljs-comment">// (color | depth) &amp; depth = depth</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Buffers</span>((<span class="hljs-type">int</span>)a | (<span class="hljs-type">int</span>)b);<br>&#125;<br><br><span class="hljs-keyword">inline</span> Buffers <span class="hljs-keyword">operator</span>&amp;(Buffers a, Buffers b)<br>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Buffers</span>((<span class="hljs-type">int</span>)a &amp; (<span class="hljs-type">int</span>)b);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>使用<code>operator</code>关键词重构位运算符，以下是使用示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">void</span> rst::rasterizer::<span class="hljs-built_in">clear</span>(rst::Buffers buff)<br>&#123;   <span class="hljs-comment">// 初始化缓冲器</span><br>    <span class="hljs-keyword">if</span> ((buff &amp; rst::Buffers::Color) == rst::Buffers::Color)<br>    &#123;<br>        std::<span class="hljs-built_in">fill</span>(frame_buf.<span class="hljs-built_in">begin</span>(), frame_buf.<span class="hljs-built_in">end</span>(), Eigen::Vector3f&#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;);<br>    &#125;<br>    <span class="hljs-keyword">if</span> ((buff &amp; rst::Buffers::Depth) == rst::Buffers::Depth)<br>    &#123;<br>        std::<span class="hljs-built_in">fill</span>(depth_buf.<span class="hljs-built_in">begin</span>(), depth_buf.<span class="hljs-built_in">end</span>(), std::numeric_limits&lt;<span class="hljs-type">float</span>&gt;::<span class="hljs-built_in">infinity</span>());<br>    &#125;<br>&#125;<br><span class="hljs-comment">// 同时初始化color和depth缓冲器</span><br><span class="hljs-comment">// 使用位运算同时表示两个种类，很精妙的用法</span><br>r.<span class="hljs-built_in">clear</span>(rst::Buffers::Color | rst::Buffers::Depth);<br></code></pre></td></tr></table></figure>
+<h3 id="v0w"><a class="markdownIt-Anchor" href="#v0w"></a> <code>v[0].w()</code></h3>
+<p>在C++中，<code>v[0].w()</code>通常表示对一个自定义类型或结构体中的第四个成员进行访问。</p>
+<p>也就是说从0到3的元素默认表达为：<code>v[0].x()</code> <code>v[0].y()</code> <code>v[0].z()</code> <code>v[0].w()</code></p>
+<h2 id="算法"><a class="markdownIt-Anchor" href="#算法"></a> 算法</h2>
+<h3 id="bresenham-直线光栅化算法"><a class="markdownIt-Anchor" href="#bresenham-直线光栅化算法"></a> Bresenham 直线光栅化算法</h3>
+<p><a target="_blank" rel="noopener" href="https://ljy0109.github.io/2024/03/06/Bresenham%E5%B8%83%E9%9B%B7%E6%A3%AE%E6%9B%BC%E7%AE%97%E6%B3%95/">Bresenham布雷森曼算法 - Blog of Mr.Juan (ljy0109.github.io)</a></p>
+<h3 id="透视矫正系数"><a class="markdownIt-Anchor" href="#透视矫正系数"></a> 透视矫正系数</h3>
+<p>如何获得屏幕中二维点对应的深度信息？</p>
+<p>通过二维点对应到三维空间所在的三角平面的三个顶点进行插值。</p>
+<p>如何进行插值？</p>
+<p>通过三角形的重心坐标：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mo>=</mo><mi>α</mi><mo>∗</mo><msub><mi>V</mi><mi>a</mi></msub><mo>+</mo><mi>β</mi><mo>∗</mo><msub><mi>V</mi><mi>b</mi></msub><mo>+</mo><mi>γ</mi><mo>∗</mo><msub><mi>V</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">V=\alpha*V_a+\beta*V_b+\gamma*V_c
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.46528em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.6597200000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>为什么不在二维平面进行插值？</p>
+<p>首先，肯定不能使用二维点进行重心插值。因为二维点没有深度。</p>
+<p>那么同一个点在二维平面的重心坐标和在三维空间中的重心坐标一样吗？</p>
+<p>答案是不一样。重心坐标是三角形内部划分的三个三角形的面积。平面的三角形是三维空间三角形的投影，难道从不同视角看过去，三个三角形的面积比例都是不变的吗？当然不是</p>
+<p>所以必须计算目标点在三维空间的重心坐标。</p>
+<p>怎么计算呢？</p>
+<p>思考一下从三维空间到平面坐标，顶点的变化：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%87.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%872.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>假设在屏幕空间中求得得重心坐标$ (a,b,c)<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">，</mi><mi mathvariant="normal">我</mi><mi mathvariant="normal">们</mi><mi mathvariant="normal">只</mi><mi mathvariant="normal">需</mi><mi mathvariant="normal">对</mi><mi mathvariant="normal">三</mi><mi mathvariant="normal">个</mi><mi mathvariant="normal">屏</mi><mi mathvariant="normal">幕</mi><mi mathvariant="normal">空</mi><mi mathvariant="normal">间</mi><mi mathvariant="normal">中</mi><mi>A</mi><mo separator="true">,</mo><mi>B</mi><mo separator="true">,</mo><mi>C</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">重</mi><mi mathvariant="normal">心</mi><mi mathvariant="normal">权</mi><mi mathvariant="normal">重</mi></mrow><annotation encoding="application/x-tex">，我们只需对三个屏幕空间中 A, B , C的重心权重</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">我</span><span class="mord cjk_fallback">们</span><span class="mord cjk_fallback">只</span><span class="mord cjk_fallback">需</span><span class="mord cjk_fallback">对</span><span class="mord cjk_fallback">三</span><span class="mord cjk_fallback">个</span><span class="mord cjk_fallback">屏</span><span class="mord cjk_fallback">幕</span><span class="mord cjk_fallback">空</span><span class="mord cjk_fallback">间</span><span class="mord cjk_fallback">中</span><span class="mord mathdefault">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">重</span><span class="mord cjk_fallback">心</span><span class="mord cjk_fallback">权</span><span class="mord cjk_fallback">重</span></span></span></span>(1/w_a,0,0),(0,1/w_b,0),(0,0,1/w_c)$插值即可（这里把它当作普通数据插值，之后再保证和为1），插值后的形式即是校正后的重心坐标：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%873.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>那么插值公式就是：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%874.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>此时插值的不一定是坐标值，也可以是颜色值，纹理值等等</p>
+<h3 id="法向量变换矩阵"><a class="markdownIt-Anchor" href="#法向量变换矩阵"></a> 法向量变换矩阵</h3>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/tkokof1/article/details/88531964">法向量变换矩阵的推导_法向量变换矩阵推导-CSDN博客</a></p>
+<p>使用矩阵对点进行空间变换是图形学中的常见操作,假设变换矩阵为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>,我们需要变换切向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>(由点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mn>2</mn></msub><mo>−</mo><msub><mi>P</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">P_2-P_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>定义) 以及与其垂直的法向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>。（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>均为列向量）</p>
+<p>假设点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">P_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>经过<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>变换后为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>P</mi><mn>2</mn><mo mathvariant="normal">′</mo></msubsup></mrow><annotation encoding="application/x-tex">P_2&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.24810799999999997em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4518920000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>，点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">P_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>经过<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>变换后为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>P</mi><mn>1</mn><mo mathvariant="normal">′</mo></msubsup></mrow><annotation encoding="application/x-tex">P_1&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.24810799999999997em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4518920000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>T</mi><mo mathvariant="normal">′</mo></msup></mrow><annotation encoding="application/x-tex">T&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.751892em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span>为变换后的切向量：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>对于原切向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>,我们希望找到一个矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>M</mi><mo mathvariant="normal">′</mo></msup></mrow><annotation encoding="application/x-tex">M&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.751892em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span>，使得：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>我们直接令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>M</mi><mo mathvariant="normal">′</mo></msup><mo>=</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">M&#x27;=M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.751892em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>试一下：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>可见对于切向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>，我们可以直接使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>对其进行变换。</p>
+<p>对于法向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>,我们有(注意,第一个公式中的点号表示<strong>点积</strong>):</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>假设变换后的法向量为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>N</mi><mo mathvariant="normal">′</mo></msup></mrow><annotation encoding="application/x-tex">N&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.751892em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span>，我们希望仍然保持其与<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>T</mi><mo mathvariant="normal">′</mo></msup></mrow><annotation encoding="application/x-tex">T&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.751892em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span>（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>的变换后向量）的垂直(注意,第一个公式中的点号表示<strong>点积</strong>):</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>假设用于变换法向量的矩阵为G，则应有:</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>由于我们知道:</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>所以我们只要令(<strong>注意,这只是一种可能的取值,并不是唯一取值,我们的目的也仅是需要获得一种可能的取值</strong>):</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>便可以满足上面的等式 :</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>所以变换法向量,我们需要使用普通变化矩阵逆的转置(或者说转置的逆,<strong>对于可逆矩阵,其转置矩阵的逆矩阵等于其逆矩阵的转置矩阵</strong>）</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E6%B3%95%E5%90%91%E9%87%8F10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="菲涅尔反射方程"><a class="markdownIt-Anchor" href="#菲涅尔反射方程"></a> 菲涅尔反射方程</h3>
+<p>当光线碰撞到一个表面的时候，<strong>菲涅尔方程会根据观察角度告诉我们被反射的光线所占的百分比</strong>。利用这个反射比率和能量守恒原则，我们可以直接得出光线被折射的部分以及光线剩余的能量。将其应用在<strong>BRDF</strong>当中，我们就可以更加精准的计算出渲染方程中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mi>o</mi></msub><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><msub><mi>w</mi><mi>o</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L_o(p,w_o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>的值。</p>
+<p>我们假设入射光与法线的夹角为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，折射光与法线的夹角为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">\theta_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 。由于折射还和介质的折射率有关，例如空气中的光射入水中，我们需要知道空气和水分别对应的折射率，我们再假设入射光所在介质的折射率为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">n_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> ，物体的折射率为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">n_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。由于<strong>光的偏振</strong>（极化）现象，我们可以得到 S偏振光 和 P偏振光 分别对应的菲涅尔方程，如下：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>根据折射定律：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>可以推导出：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>因此上面的菲涅尔方程可以写成没有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\theta_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的形式：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>如果我们不考虑偏振的情况，那么菲涅尔方程即是上面两者的平均值：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>利用菲涅尔方程，我们就可以根据不同的反射率画出 R 与<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的对应关系图，如下：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E8%8F%B2%E6%B6%85%E5%B0%94%E5%8F%8D%E5%B0%84%E6%96%B9%E7%A8%8B6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>代码示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">float</span> <span class="hljs-title">fresnel</span><span class="hljs-params">(<span class="hljs-type">const</span> Vector3f &amp;I, <span class="hljs-type">const</span> Vector3f &amp;N, <span class="hljs-type">const</span> <span class="hljs-type">float</span> &amp;ior)</span></span><br><span class="hljs-function"></span>&#123;   <span class="hljs-comment">// 计算菲涅尔方程中的反射系数</span><br>    <span class="hljs-type">float</span> cosi = <span class="hljs-built_in">clamp</span>(<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-built_in">dotProduct</span>(I, N));<br>    <span class="hljs-type">float</span> etai = <span class="hljs-number">1</span>, etat = ior;<br>    <span class="hljs-keyword">if</span> (cosi &gt; <span class="hljs-number">0</span>) &#123;  std::<span class="hljs-built_in">swap</span>(etai, etat); &#125; <span class="hljs-comment">// 从内部射出</span><br>    <span class="hljs-comment">// Compute sini using Snell&#x27;s law</span><br>    <span class="hljs-comment">// sini = sqrtf(std::max(0.f, 1 - cosi * cosi))</span><br>    <span class="hljs-type">float</span> sint = etai / etat * <span class="hljs-built_in">sqrtf</span>(std::<span class="hljs-built_in">max</span>(<span class="hljs-number">0.f</span>, <span class="hljs-number">1</span> - cosi * cosi));<br>    <span class="hljs-comment">// Total internal reflection</span><br>    <span class="hljs-keyword">if</span> (sint &gt;= <span class="hljs-number">1</span>) &#123; <span class="hljs-comment">// 全反射</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-type">float</span> cost = <span class="hljs-built_in">sqrtf</span>(std::<span class="hljs-built_in">max</span>(<span class="hljs-number">0.f</span>, <span class="hljs-number">1</span> - sint * sint));<br>        cosi = <span class="hljs-built_in">fabsf</span>(cosi);<br>        <span class="hljs-type">float</span> Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));<br>        <span class="hljs-type">float</span> Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));<br>        <span class="hljs-keyword">return</span> (Rs * Rs + Rp * Rp) / <span class="hljs-number">2</span>;<br>    &#125;<br>    <span class="hljs-comment">// As a consequence of the conservation of energy, transmittance is given by:</span><br>    <span class="hljs-comment">// kt = 1 - kr;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="折射方程的计算逻辑"><a class="markdownIt-Anchor" href="#折射方程的计算逻辑"></a> 折射方程的计算逻辑</h3>
+<h4 id="折射光线的强度因子"><a class="markdownIt-Anchor" href="#折射光线的强度因子"></a> 折射光线的强度因子</h4>
+<p>折射光线的强度因子（transmission coefficient）是指光线在介质界面发生折射时，入射介质和折射介质之间能量的传递比率。在一般情况下，该强度因子由折射角和入射角以及介质的折射率决定。</p>
+<p>数学公式为：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>=</mo><mn>1</mn><mo>−</mo><msup><mrow><mo fence="true">(</mo><mfrac><msub><mi>η</mi><mtext>in</mtext></msub><msub><mi>η</mi><mtext>out</mtext></msub></mfrac><mo fence="true">)</mo></mrow><mn>2</mn></msup><mrow><mo fence="true">(</mo><mn>1</mn><mo>−</mo><msup><mo><mi>cos</mi><mo>⁡</mo></mo><mn>2</mn></msup><mo stretchy="false">(</mo><msub><mi>θ</mi><mtext>in</mtext></msub><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">k = 1 - \left( \frac{\eta_{\text{in}}}{\eta_{\text{out}}} \right)^2 \left( 1 - \cos^2(\theta_{\text{in}}) \right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.604038em;vertical-align:-0.95003em;"></span><span class="minner"><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1075599999999999em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">η</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">out</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">η</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804400000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.6540080000000001em;"><span style="top:-3.9029000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mop"><span class="mop">cos</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span></p>
+<p>其中：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>是强度因子；</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>η</mi><mtext>in</mtext></msub></mrow><annotation encoding="application/x-tex">\eta_{\text{in}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">η</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是入射介质的折射率；</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>η</mi><mtext>out</mtext></msub></mrow><annotation encoding="application/x-tex">\eta_{\text{out}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">η</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">out</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是折射介质的折射率；</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><mtext>in</mtext></msub></mrow><annotation encoding="application/x-tex">\theta_{\text{in}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是入射角的余弦值。</li>
+</ul>
+<p>这个公式的理解是，当 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>大于等于 0 时，光线能够穿透介质界面进行折射；而当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>小于 0 时，发生全反射，光线无法穿透介质界面。</p>
+<h4 id="折射光线的方向向量"><a class="markdownIt-Anchor" href="#折射光线的方向向量"></a> 折射光线的方向向量</h4>
+<p>折射光线的向量公式可以表示为：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>refracted_ray</mtext><mo>=</mo><mi>η</mi><mo>×</mo><mtext>I</mtext><mo>+</mo><mo stretchy="false">(</mo><mi>η</mi><mo>×</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>θ</mi><mtext>in</mtext></msub><mo stretchy="false">)</mo><mo>−</mo><msqrt><mi>k</mi></msqrt><mo stretchy="false">)</mo><mo>×</mo><mtext>n</mtext></mrow><annotation encoding="application/x-tex">\text{refracted\_ray} = \eta \times \text{I} + (\eta \times \cos(\theta_{\text{in}}) - \sqrt{k}) \times \text{n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.00444em;vertical-align:-0.31em;"></span><span class="mord text"><span class="mord">refracted_ray</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord text"><span class="mord">I</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">cos</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31750199999999995em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">in</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.231095em;vertical-align:-0.25em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.981095em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span><span style="top:-2.941095em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg width="400em" height="1.08em" viewbox="0 0 400000 1080" preserveaspectratio="xMinYMin slice"><path d="M95,702c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,
+-10,-9.5,-14c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54c44.2,-33.3,65.8,
+-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10s173,378,173,378c0.7,0,
+35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429c69,-144,104.5,-217.7,106.5,
+-221c5.3,-9.3,12,-14,20,-14H400000v40H845.2724s-225.272,467,-225.272,467
+s-235,486,-235,486c-2.7,4.7,-9,7,-19,7c-6,0,-10,-1,-12,-3s-194,-422,-194,-422
+s-65,47,-65,47z M834 80H400000v40H845z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.058904999999999985em;"><span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord text"><span class="mord">n</span></span></span></span></span></span></p>
+<p>其中：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>refracted_ray</mtext></mrow><annotation encoding="application/x-tex">\text{refracted\_ray}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.00444em;vertical-align:-0.31em;"></span><span class="mord text"><span class="mord">refracted_ray</span></span></span></span></span> 是折射光线的方向向量；</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>η</mi></mrow><annotation encoding="application/x-tex">\eta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">η</span></span></span></span>是入射介质的折射率与折射介质的折射率之比；</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>I</mtext></mrow><annotation encoding="application/x-tex">\text{I}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord text"><span class="mord">I</span></span></span></span></span>是入射光线的单位方向向量；</li>
+<li>$ \cos(\theta_{\text{in}})$是入射角的余弦值；</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msqrt><mi>k</mi></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{k}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.10777999999999999em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.93222em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span><span style="top:-2.89222em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg width="400em" height="1.08em" viewbox="0 0 400000 1080" preserveaspectratio="xMinYMin slice"><path d="M95,702c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,
+-10,-9.5,-14c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54c44.2,-33.3,65.8,
+-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10s173,378,173,378c0.7,0,
+35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429c69,-144,104.5,-217.7,106.5,
+-221c5.3,-9.3,12,-14,20,-14H400000v40H845.2724s-225.272,467,-225.272,467
+s-235,486,-235,486c-2.7,4.7,-9,7,-19,7c-6,0,-10,-1,-12,-3s-194,-422,-194,-422
+s-65,47,-65,47z M834 80H400000v40H845z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.10777999999999999em;"><span></span></span></span></span></span></span></span></span>是折射光线的幅值，表示入射光线与法线夹角的正弦值；</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>n</mtext></mrow><annotation encoding="application/x-tex">\text{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord text"><span class="mord">n</span></span></span></span></span>是法线的单位方向向量。</li>
+</ul>
+<h4 id="代码示例"><a class="markdownIt-Anchor" href="#代码示例"></a> 代码示例</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">Vector3f <span class="hljs-title">refract</span><span class="hljs-params">(<span class="hljs-type">const</span> Vector3f &amp;I, <span class="hljs-type">const</span> Vector3f &amp;N, <span class="hljs-type">const</span> <span class="hljs-type">float</span> &amp;ior)</span></span><br><span class="hljs-function"></span>&#123;   <span class="hljs-comment">// 实现了折射（refraction）的计算逻辑</span><br>    <span class="hljs-comment">// 接受三个参数：I：入射光线的方向向量。N：表面法线向量。ior：介质的折射率（index of refraction）。</span><br>    <br>    <span class="hljs-comment">// 计算入射光线与表面法线的夹角的余弦值</span><br>    <span class="hljs-comment">// clamp 函数确保其在 [-1, 1] 的范围内，定义在gobal.hpp中</span><br>    <span class="hljs-type">float</span> cosi = <span class="hljs-built_in">clamp</span>(<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-built_in">dotProduct</span>(I, N));<br>    <span class="hljs-type">float</span> etai = <span class="hljs-number">1</span>, etat = ior; <span class="hljs-comment">// etai 是入射介质的折射率，通常为1，etat 是出射介质的折射率</span><br>    Vector3f n = N;<br><br>    <span class="hljs-comment">// 如果入射角 cosi 小于0，则将其取反</span><br>    <span class="hljs-comment">// 否则交换 etai 和 etat 的值，并将法线 n 取反。这是因为入射光线可能来自介质内部而不是外部。</span><br>    <span class="hljs-comment">// ~~ 为什么是这个逻辑？因为正常的入射光线是从光源到折射点，所以本来cosi 就是小于0 ~~</span><br>    <span class="hljs-keyword">if</span> (cosi &lt; <span class="hljs-number">0</span>) &#123; cosi = -cosi; &#125; <span class="hljs-keyword">else</span> &#123; std::<span class="hljs-built_in">swap</span>(etai, etat); n= -N; &#125;<br>    <span class="hljs-type">float</span> eta = etai / etat;<br>    <span class="hljs-type">float</span> k = <span class="hljs-number">1</span> - eta * eta * (<span class="hljs-number">1</span> - cosi * cosi);<br>    <span class="hljs-comment">// 如果 k 小于 0，表示全反射，此时返回零向量。</span><br>    <span class="hljs-comment">// 否则，根据折射定律计算折射光线的向量。</span><br>    <span class="hljs-keyword">return</span> k &lt; <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : eta * I + (eta * cosi - <span class="hljs-built_in">sqrtf</span>(k)) * n;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="mt算法射线与三角形的交点"><a class="markdownIt-Anchor" href="#mt算法射线与三角形的交点"></a> MT算法：射线与三角形的交点</h3>
+<p>不用掌握推导，只用记住结论</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>推理过程：</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/mt4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>代码示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">rayTriangleIntersect</span><span class="hljs-params">(<span class="hljs-type">const</span> Vector3f&amp; v0, <span class="hljs-type">const</span> Vector3f&amp; v1, <span class="hljs-type">const</span> Vector3f&amp; v2, <span class="hljs-type">const</span> Vector3f&amp; orig,</span></span><br><span class="hljs-params"><span class="hljs-function">                          <span class="hljs-type">const</span> Vector3f&amp; dir, <span class="hljs-type">float</span>&amp; tnear, <span class="hljs-type">float</span>&amp; u, <span class="hljs-type">float</span>&amp; v)</span></span><br><span class="hljs-function"></span>&#123;   <span class="hljs-comment">// 实现了射线和三角形的相交检测功能 MT算法</span><br>    <span class="hljs-comment">// v0、v1、v2：三角形的三个顶点。</span><br>    <span class="hljs-comment">// orig：射线的起始点。</span><br>    <span class="hljs-comment">// dir：射线的方向。</span><br>    <span class="hljs-comment">// tnear：相交点到射线起始点的距离。</span><br>    <span class="hljs-comment">// u、v：相交点在三角形上的重心坐标。</span><br>    Vector3f E0=v1-v0,E1=v2-v0,B=orig-v0;<br>    Vector3f B_Cross_E0=<span class="hljs-built_in">crossProduct</span>(B,E0),D_Cross_E1=<span class="hljs-built_in">crossProduct</span>(dir,E1);<br>    tnear= <span class="hljs-built_in">dotProduct</span>(B_Cross_E0,E1)/(<span class="hljs-built_in">dotProduct</span>(D_Cross_E1,E0));<br>    u=<span class="hljs-built_in">dotProduct</span>(D_Cross_E1,B)/(<span class="hljs-built_in">dotProduct</span>(D_Cross_E1,E0));<br>    v=<span class="hljs-built_in">dotProduct</span>(B_Cross_E0,dir)/(<span class="hljs-built_in">dotProduct</span>(D_Cross_E1,E0));<br>    <span class="hljs-keyword">return</span> tnear&gt;=-std::numeric_limits&lt;<span class="hljs-type">float</span>&gt;::<span class="hljs-built_in">epsilon</span>()&amp;&amp; u&gt;=-std::numeric_limits&lt;<span class="hljs-type">float</span>&gt;::<span class="hljs-built_in">epsilon</span>()<br>    &amp;&amp; v&gt;=-std::numeric_limits&lt;<span class="hljs-type">float</span>&gt;::<span class="hljs-built_in">epsilon</span>()&amp;&amp; <span class="hljs-number">1.0f</span>-u-v &gt;= -std::numeric_limits&lt;<span class="hljs-type">float</span>&gt;::<span class="hljs-built_in">epsilon</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="由局部坐标系到世界坐标系的转换"><a class="markdownIt-Anchor" href="#由局部坐标系到世界坐标系的转换"></a> 由局部坐标系到世界坐标系的转换</h3>
+<p>[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/499847859">补充知识]由局部坐标系到世界坐标系的转换 - 知乎 (zhihu.com)</a></p>
+<p>在生成采样方向时，一般生成的采样方向都是定义在<strong>点的局部坐标系（也叫切线空间）<strong>中的，很多时候都需要把采样方向</strong>由局部坐标系转换到世界坐标系</strong>下进行后续计算（如下图）。</p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E7%B3%BB1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>在光线追踪中，从相机光心打出射线与物体进行相交，然后需要在交点处随机采样一个反射光线。</p>
+<p>怎么随机采样呢？那就是画一个以交点为中心的单位上半球，然后在球的表面随机选取一个点，从球心指向表面点的向量就是随机采样的光线。</p>
+<p>代码示例：<code>in Material.hpp</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">Vector3f <span class="hljs-title">Material::sample</span><span class="hljs-params">(<span class="hljs-type">const</span> Vector3f &amp;wi, <span class="hljs-type">const</span> Vector3f &amp;N)</span></span>&#123;<br>    <span class="hljs-keyword">switch</span>(m_type)&#123;<br>        <span class="hljs-keyword">case</span> Microfacet:<br>        <span class="hljs-keyword">case</span> DIFFUSE:<br>        &#123;   <span class="hljs-comment">// 在单位球面上随机取一个点</span><br>            <span class="hljs-comment">// uniform sample on the hemisphere</span><br>            <span class="hljs-type">float</span> x_1 = <span class="hljs-built_in">get_random_float</span>(), x_2 = <span class="hljs-built_in">get_random_float</span>();<br>            <span class="hljs-type">float</span> z = std::<span class="hljs-built_in">fabs</span>(<span class="hljs-number">1.0f</span> - <span class="hljs-number">2.0f</span> * x_1);<br>            <span class="hljs-type">float</span> r = std::<span class="hljs-built_in">sqrt</span>(<span class="hljs-number">1.0f</span> - z * z), phi = <span class="hljs-number">2</span> * M_PI * x_2;<br>            <span class="hljs-function">Vector3f <span class="hljs-title">localRay</span><span class="hljs-params">(r*std::cos(phi), r*std::sin(phi), z)</span></span>;<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">toWorld</span>(localRay, N);         <br>            <span class="hljs-keyword">break</span>;<br>        &#125;      <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但是这个采样光线是在以球心作为原点的局部坐标系中表示。怎么把这个光线变换到世界坐标系？</p>
+<p>通过交点平面的法向量。法向量N是世界坐标系的表示，那么使用N来表示采样光线的话，采样光线就是世界坐标系下的了。</p>
+<p>怎么表示呢？思考这样一件事，法向量N是通过世界坐标系的基向量来表示的。现在如果以法向量N作为局部坐标系的基向量，那么使用N来表示采样光线是不是就相当于使用世界坐标系的基向量来表示。</p>
+<p>但是法向量N就一个向量，所以需要通过法向量N来生成另外两个基向量，使其可以表示局部坐标系下的点。</p>
+<p>引入<strong>切线空间 tangent space</strong></p>
+<p><img src="/2024/03/06/GAMES101homework%E8%AE%B0%E5%BD%95/%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E7%B3%BB2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>构造方法：</p>
+<p>计算在x-z平面或者y-z平面中与N正交的单位向量，获得副切线向量B，然后<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>×</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">N\times B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span>获得切线向量T</p>
+<p>NBT三个互相正交的向量构成局部坐标系。半球表面随机采样的点(x,y,z)对应NBT三个基向量，线性组合就变成世界坐标系了。变换后的采样光线仍然是单位向量。</p>
+<p>代码示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">Vector3f <span class="hljs-title">toWorld</span><span class="hljs-params">(<span class="hljs-type">const</span> Vector3f &amp;a, <span class="hljs-type">const</span> Vector3f &amp;N)</span></span>&#123;<br>	Vector3f B, C;<br>	<span class="hljs-keyword">if</span> (std::<span class="hljs-built_in">fabs</span>(N.x) &gt; std::<span class="hljs-built_in">fabs</span>(N.y))&#123;<br>		<span class="hljs-type">float</span> invLen = <span class="hljs-number">1.0f</span> / std::<span class="hljs-built_in">sqrt</span>(N.x * N.x + N.z * N.z);<br>		C = <span class="hljs-built_in">Vector3f</span>(N.z * invLen, <span class="hljs-number">0.0f</span>, -N.x *invLen);<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-type">float</span> invLen = <span class="hljs-number">1.0f</span> / std::<span class="hljs-built_in">sqrt</span>(N.y * N.y + N.z * N.z);<br>		C = <span class="hljs-built_in">Vector3f</span>(<span class="hljs-number">0.0f</span>, N.z * invLen, -N.y *invLen);<br>	&#125;<br>	B = <span class="hljs-built_in">crossProduct</span>(C, N);<br>	<span class="hljs-keyword">return</span> a.x * B + a.y * C + a.z * N;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>思考代码中的C为什么这么计算？为了保证C和N正交，且C是单位向量</p>
+<p>思考变换后的a和原本的a表示的是半球上相同的点吗？没想过，不过本来就是随机点，所以没关系</p>
+<h3 id="games101作业7的教程"><a class="markdownIt-Anchor" href="#games101作业7的教程"></a> GAMES101：作业7的教程</h3>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Q_pril/article/details/124206795?spm=1001.2101.3001.6650.7&amp;utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-7-124206795-blog-124565054.235%5Ev43%5Epc_blog_bottom_relevance_base3&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-7-124206795-blog-124565054.235%5Ev43%5Epc_blog_bottom_relevance_base3&amp;utm_relevant_index=13">Games101：作业7（含提高部分）_intersection scene::intersect(const ray &amp;ray) cons-CSDN博客</a></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+      
+        <a href="/tags/VScode/">#VScode</a>
+      
+        <a href="/tags/C/">#C++</a>
+      
+        <a href="/tags/GMAES101/">#GMAES101</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">#图形学</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>GAMES101homework记录</div>
+      <div>http://example.com/2024/03/06/GAMES101homework记录/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月6日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/06/Bresenham%E5%B8%83%E9%9B%B7%E6%A3%AE%E6%9B%BC%E7%AE%97%E6%B3%95/" title="Bresenham布雷森曼算法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Bresenham布雷森曼算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/06/VScode+CMake+Opencv%E9%85%8D%E7%BD%AE/" title="VScode+CMake+Opencv配置">
+                        <span class="hidden-mobile">VScode+CMake+Opencv配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

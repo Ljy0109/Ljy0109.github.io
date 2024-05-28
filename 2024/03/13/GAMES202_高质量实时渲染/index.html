@@ -1,0 +1,1417 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="高质量实时渲染 GAMES202_高质量实时渲染-闫令琪_哔哩哔哩_bilibili">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GAMES202_高质量实时渲染">
+<meta property="og:url" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="高质量实时渲染 GAMES202_高质量实时渲染-闫令琪_哔哩哔哩_bilibili">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/%E5%85%89%E6%A0%85%E5%8C%96%E7%AE%A1%E7%BA%BF.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/%E6%B8%B2%E6%9F%93%E6%96%B9%E7%A8%8B.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/%E6%B8%B2%E6%9F%93%E6%96%B9%E7%A8%8B2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm3.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm4.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm5.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm6.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm7.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm8.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm9.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm28.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm10.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm11.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm12.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm13.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm14.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm15.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm16.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm19.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm20.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm21.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm22.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm23.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm24.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm25.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm26.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm27.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm29.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm30.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem3.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem4.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem5.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem6.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem7.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem8.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm29.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem9.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem10.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem11.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem12.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem13.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem14.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem15.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem16.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem17.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem18.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem19.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem20.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi3.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi4.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi5.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi6.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi7.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi8.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi10.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi9.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi11.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi12.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi13.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi14.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi15.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi16.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi17.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi18.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi19.jpg">
+<meta property="og:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi20.jpg">
+<meta property="article:published_time" content="2024-03-13T10:18:00.000Z">
+<meta property="article:modified_time" content="2024-03-26T11:41:30.471Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="计算机图形学">
+<meta property="article:tag" content="GAMES">
+<meta property="article:tag" content="实时渲染">
+<meta property="article:tag" content="GAMES202">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/%E5%85%89%E6%A0%85%E5%8C%96%E7%AE%A1%E7%BA%BF.jpg">
+  
+  
+  
+  <title>GAMES202_高质量实时渲染 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="GAMES202_高质量实时渲染"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-13 18:18" pubdate>
+          2024年3月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          113 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">GAMES202_高质量实时渲染</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="games202_高质量实时渲染-real-time-high-quality-rendering"><a class="markdownIt-Anchor" href="#games202_高质量实时渲染-real-time-high-quality-rendering"></a> GAMES202_高质量实时渲染 Real-Time High Quality Rendering</h1>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1YK4y1T7yY/?spm_id_from=333.999.0.0&amp;vd_source=6790d22f4f1ac65edf671d785399c0fe">GAMES202-高质量实时渲染_哔哩哔哩_bilibili</a></p>
+<p>Real-Time：渲染速度达到30FPS，在VR/AR中需要到90FPS</p>
+<p>High Quality：保证真实性，即物理上是近似正确的</p>
+<p>Rendering：模拟一个虚拟的摄像机看到一个虚拟场景时，获得的信息。通过光线追踪，模拟光线弹射来实现。</p>
+<p>课程包括四个部分：</p>
+<ul>
+<li>阴影和环境</li>
+<li>全局光照</li>
+<li>基于物理的着色</li>
+<li>实时光线追踪</li>
+</ul>
+<p>Real-time rendering（RTR） = 快速且近似离线渲染+系统工程</p>
+<h1 id="0-基础知识回顾"><a class="markdownIt-Anchor" href="#0-基础知识回顾"></a> 0 基础知识回顾</h1>
+<h2 id="01-渲染管线"><a class="markdownIt-Anchor" href="#01-渲染管线"></a> 0.1 渲染管线</h2>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/%E5%85%89%E6%A0%85%E5%8C%96%E7%AE%A1%E7%BA%BF.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="02-opengl概述"><a class="markdownIt-Anchor" href="#02-opengl概述"></a> 0.2 OpenGL概述</h2>
+<p>教程搜索LearnOpenGL</p>
+<ul>
+<li>OpenGL是一系列API，是在CPU端中负责安排GPU怎么执行</li>
+<li>OpenGL是跨平台，语言无所谓</li>
+<li>OpenGL的版本很碎片，新版本不一定好</li>
+<li>OpenGL是C语言风格</li>
+<li>OpenGL目前似乎不更新了，Vulkan可以看作是OpenGL的后续</li>
+<li>理解OpenGL：画画
+<ul>
+<li>摆放物体：目标物体的位置、属性	<code>vertex buffer object(VBO)</code>将物体的三角形顶点、法向量进行存储</li>
+<li>摆放画架：相机、视点的位置、属性 <code>framebuffer</code>帧缓冲器</li>
+<li>设置画布：成像平面 相同的 <code>framebuffer</code>可以渲染不同纹理的图像，换个“画布”就行</li>
+<li>在画布上作画：成像 <code>shader</code></li>
+</ul>
+</li>
+<li>总结：状态机模型？
+<ul>
+<li>定义 物体、相机、MVP等属性</li>
+<li>定义  <code>framebuffer</code>帧缓冲器、输入输出的纹理</li>
+<li>定义 物体的顶点、片元着色器</li>
+<li>将这些东西放入GPU中，进行渲染</li>
+</ul>
+</li>
+</ul>
+<h2 id="03-shading-languages-sl"><a class="markdownIt-Anchor" href="#03-shading-languages-sl"></a> 0.3 Shading Languages （SL）</h2>
+<ul>
+<li>HLSL（high level SL）-&gt; DirectX（vertex+pixel）</li>
+<li>GLSL -&gt; OpenGl（vertex+fragment）</li>
+<li>Shading Languages （SL）需要通过编译，才能在GPU中执行</li>
+</ul>
+<h3 id="031-debugging-shaders"><a class="markdownIt-Anchor" href="#031-debugging-shaders"></a> 0.3.1 Debugging Shaders</h3>
+<p>多年前，SL是非常难调试的。为什么？因为SL是在GPU中运行的，而GPU的多线程不能像CPU那样打断点来单步调试。</p>
+<p>现在调试SL的方法有：</p>
+<ul>
+<li>Nsight Graphics：跨平台，但是仅限于NVIDIA GPU</li>
+<li>RenderDoc：跨平台，没有GPU限制</li>
+<li>上述两种是否可以用在WebGL中？（待验证）</li>
+<li>RGB调试法：GPU不能直接打印变量值，那么就将变量值归一化为RGB值，并作为图片打印处理</li>
+</ul>
+<h2 id="04-渲染方程-rendering-equation"><a class="markdownIt-Anchor" href="#04-渲染方程-rendering-equation"></a> 0.4 渲染方程 Rendering Equation</h2>
+<p>渲染方程的常规描述：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/%E6%B8%B2%E6%9F%93%E6%96%B9%E7%A8%8B.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>在实时渲染中，</p>
+<ul>
+<li>表示从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">w_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>方向去看点p的可见性（是否有遮挡）的变量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(p,w_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>被加入到公式中</li>
+<li>这里的BRDF通常是将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>cos</mi><mo>⁡</mo><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\cos\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>考虑在内，只与材质有关</li>
+<li>这两个公式完全等价</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/%E6%B8%B2%E6%9F%93%E6%96%B9%E7%A8%8B2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="1-阴影映射-shadow-mapping"><a class="markdownIt-Anchor" href="#1-阴影映射-shadow-mapping"></a> 1 阴影映射 shadow mapping</h1>
+<p>核心思想：两阶段算法（点光源为例）</p>
+<ul>
+<li>第一步：从光源打出光线，渲染与最近物体相交的深度，将深度作为纹理存储</li>
+<li>第二步：从相机打出光线，真正开始渲染</li>
+</ul>
+<p>特点：</p>
+<ul>
+<li>不需要场景的几何信息</li>
+<li>会造成自遮挡和错误识别、走样的问题</li>
+</ul>
+<p>著名的shadow mapping方法：</p>
+<ul>
+<li>Basic shadowing technique even for early offline renderings, e.g., Toy Story</li>
+</ul>
+<h2 id="11-核心思想"><a class="markdownIt-Anchor" href="#11-核心思想"></a> 1.1 核心思想</h2>
+<p>核心思想：两阶段算法（点光源为例）</p>
+<ul>
+<li>第一步：从光源打出光线，渲染与最近物体相交的深度，将深度作为纹理存储</li>
+<li>第二步：从相机打出光线，真正开始渲染</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="12-阴影映射存在的问题"><a class="markdownIt-Anchor" href="#12-阴影映射存在的问题"></a> 1.2 阴影映射存在的问题</h2>
+<h3 id="121-自遮挡"><a class="markdownIt-Anchor" href="#121-自遮挡"></a> 1.2.1 自遮挡</h3>
+<p>下图中劳拉身旁不规则的阴影就是自遮挡现象。白色区域是光滑的地面，这些阴影原本不应该存在的。</p>
+<p>怎么理解这些阴影？可以理解为原本光滑的平面变成了不规则隆起或则凹陷的沙丘，从而形成了阴影。</p>
+<p>为什么会变成“沙丘”呢？因为深度信息是通过以光源作为视角获得的深度信息（纹理信息）。这些信息存储在depth-buffer缓冲器中，也就是一个数组。这会导致深度信息离散化，就像右图那样，原本是光滑的黑色平面，但是通过depth-buffer重构的确是红色表面。绿色部分就是隆起或则凹陷的程度，从而造成了阴影。可见，自遮挡的程度与光源的角度和离散化程度有关。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>工业界普遍的解决方法就是：</p>
+<p>既然因为离散化导致了绿色部分的深度差，那么设置一个阈值（bias），使得在深度差阈值内的值均不计算阴影。</p>
+<p>但是这也导致本来该有阴影的地方变得没有阴影。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>进一步改进的方法是使用Second-depth shadow mapping，也就是除了生成最浅深度信息外，还生成第二浅深度。然后将两个深度的中间值midpoint作为shadow mapping的depth-buffer。</p>
+<p>这样做的好处是：</p>
+<ul>
+<li>如果物体是平面的话，造成阴影的深度是在平面以下，所以阴影也在平面之下</li>
+<li>如果物体是立体的话，虽然造成阴影的深度会改变，但是物体产生的阴影始终在物体之下，并且不会出现阴影与物体断开的情况</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="122-走样"><a class="markdownIt-Anchor" href="#122-走样"></a> 1.2.2 走样</h3>
+<p>depth-buffer是离散化的，因此在生成阴影时会出现锯齿</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="13-微积分预备知识-约等式"><a class="markdownIt-Anchor" href="#13-微积分预备知识-约等式"></a> 1.3 微积分预备知识 约等式</h2>
+<p>本节会涉及到经典微积分不等式</p>
+<p><strong>注意，在实时渲染RTR中，RTR不关心不等式，而是关心 近似相等</strong></p>
+<p><strong>两个函数先乘再积分和先积分再乘：</strong></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>这个公式什么时候适用？满足一个条件就行：</p>
+<ul>
+<li>当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>的支撑集（support）也就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mo>∫</mo><mi mathvariant="normal">Ω</mi></msub></mrow><annotation encoding="application/x-tex">\int_\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1608200000000002em;vertical-align:-0.35582em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0005599999999999772em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.12251099999999993em;"><span style="top:-2.34418em;margin-left:-0.19445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">Ω</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35582em;"><span></span></span></span></span></span></span></span></span></span>足够小的时候，也就是函数值不为零的积分区域</li>
+<li>当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>足够光滑的时候</li>
+</ul>
+<p>马上应用一下：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>考虑这个近似公式的满足条件：</p>
+<ul>
+<li>当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>的支撑集（support）也就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mo>∫</mo><mi mathvariant="normal">Ω</mi></msub></mrow><annotation encoding="application/x-tex">\int_\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1608200000000002em;vertical-align:-0.35582em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0005599999999999772em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.12251099999999993em;"><span style="top:-2.34418em;margin-left:-0.19445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">Ω</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35582em;"><span></span></span></span></span></span></span></span></span></span>足够小的时候
+<ul>
+<li>什么时候<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mo>∫</mo><mi mathvariant="normal">Ω</mi></msub></mrow><annotation encoding="application/x-tex">\int_\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1608200000000002em;vertical-align:-0.35582em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0005599999999999772em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.12251099999999993em;"><span style="top:-2.34418em;margin-left:-0.19445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">Ω</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35582em;"><span></span></span></span></span></span></span></span></span></span>，也就是函数值不为零的积分区域足够小？足够小，小到只有一个单位方位角，也就是只有一束光。</li>
+<li>一束光是意味着什么？意味着点光源。</li>
+<li>也就是说，当光源是点光源（或者是硬阴影）的时候，公式适用</li>
+</ul>
+</li>
+<li>且当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>足够光滑的时候
+<ul>
+<li>当光源是面光源的时候，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">L_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>可以看作是光滑的，因为各个方位的照度区别不大</li>
+<li>当着色点的材质是diffuse的时候，它的BRDF就是光滑的，因为向各个方向发射的照度是均匀的</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm28.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="14-软阴影-pcss"><a class="markdownIt-Anchor" href="#14-软阴影-pcss"></a> 1.4 软阴影 PCSS</h2>
+<p>上述的shadow mapping方法获得的是硬阴影。但是软阴影才是shadow mapping追求的目标。</p>
+<p>软阴影是怎么形成的？软阴影和硬阴影的区别在于没有明显的边界。这是因为在边界处返回去看光源，会发现光源是部分可见的。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="141-百分比渐近滤波-percentage-closer-filteringpcf"><a class="markdownIt-Anchor" href="#141-百分比渐近滤波-percentage-closer-filteringpcf"></a> 1.4.1 百分比渐近滤波 Percentage Closer Filtering（PCF）</h3>
+<p>PCF简单来说就是做了个均值滤波。但是是在哪里进行的滤波？</p>
+<p>不是在depth-buffer中，也不是在shadow mapping中，而是在visibility中进行。</p>
+<p>visibility是什么？相机看过去的目标点是否会被遮挡，这会生成一个01矩阵，大小和相机的成像图像一致。这个就是visibility矩阵，对这个矩阵进行均值滤波，从而模糊阴影。</p>
+<h3 id="142-percentage-closer-soft-shadows-pcss"><a class="markdownIt-Anchor" href="#142-percentage-closer-soft-shadows-pcss"></a> 1.4.2 Percentage Closer Soft Shadows （PCSS）</h3>
+<p><strong>一句话总结PCSS：自适应的调整PCF的滤波窗口大小</strong></p>
+<p>PCF是如何控制阴影的软硬程度？通过调整滤波器的窗口大小。越大，越模糊，也就越软。</p>
+<p>但是这个窗口大小是人为设定的。这显然不够适应多种情况，有没有什么办法来自适应调整窗口大小。也就是说阴影的软硬程度和场景中的什么有关系？</p>
+<p>PCSS给出的答案是光源距离阴影对应的物体的远近</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>上图中灰色部分就是软阴影的区域，与光源形成了一个相似三角形。Blocker就是遮挡物。</p>
+<p>如何理解？当光源是点光源的时候，黄色区域和灰色区域都是0。当光源越靠近Blocker的时候，灰色区域就越小。</p>
+<p>因此，根据软阴影区域的大小来自适应的调整PCF的窗口大小，这就是PCSS的思想。</p>
+<p>最后一个问题：</p>
+<ul>
+<li>Blocker是什么？不就是遮挡物吗？没错，上面的演示图中将Blocker视作平面。</li>
+<li>但是在实际案例中，Blocker可以是各种各样的曲面。怎么办？求平均深度，把它近似为一个平面。因为阴影不用特别精确。</li>
+<li>在多大的范围内求平均深度？简单方法就是用一个5X5的窗口来计算。另外一个启发式的方法：
+<ul>
+<li>将目标点和面光源生成为一个视锥，Blocker在视锥内的截面大小视作窗口大小。</li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm12.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+</ul>
+<p><strong>However，这样的计算方法的计算开销非常的大！！！</strong></p>
+<p><strong>但是PCSS是现在最常用的方法，因此后续提出了许多加速方法。</strong></p>
+<h3 id="143-方差软阴影映射-variance-soft-shadow-mapping-vssm"><a class="markdownIt-Anchor" href="#143-方差软阴影映射-variance-soft-shadow-mapping-vssm"></a> 1.4.3  方差软阴影映射 Variance Soft Shadow Mapping （VSSM）</h3>
+<p>前面提到，PCSS的计算开销非常大。接下来分析一下是哪里的计算量大：</p>
+<ul>
+<li>第一步：寻找Blocker，计算Blocker的平均深度</li>
+<li>第二步：根据Blocker的平均深度自适应调整PCF的窗口大小</li>
+<li>第三步：计算PCF</li>
+</ul>
+<p>计算量大在哪里？大在需要使用滤波器进行平均的步骤，也就是第一步和第三步。计算平均深度要用到均值滤波，计算PCF要用到均值滤波。简单来说就是在求均值时，计算量非常大。</p>
+<p>计算量为什么大？因为对于每个像素（或者说每个元素），计算次数都是窗口面积大小。也就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>f</mi><mi>i</mi><mi>l</mi><mi>t</mi><mi>e</mi><msub><mi>r</mi><mrow><mi>s</mi><mi>i</mi><mi>z</mi><mi>e</mi></mrow></msub><mo>×</mo><mi>f</mi><mi>i</mi><mi>l</mi><mi>t</mi><mi>e</mi><msub><mi>r</mi><mrow><mi>s</mi><mi>i</mi><mi>z</mi><mi>e</mi></mrow></msub><mo>×</mo><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(filter_{size}\times filter_{size}\times N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mord mathdefault mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mord mathdefault mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>。</p>
+<p>VSSM就是针对性的解决这个问题。-&gt;求均值时，计算量大的问题</p>
+<p>回顾一下PCF中的Visiblity矩阵是怎么计算的？是通过比较目标点的深度是否比光源的depth-buffer要浅。</p>
+<p>Visiblity矩阵的均值滤波是什么？就是在目标点周围选定一个小的搜索区域一起进行比较，看看深度更浅的点所占的百分比是多少。进一步说，在PCSS中Blocker近似为平面，所以搜索区域对应的光源的depth-buffer是一个平均值t。因此，问题变为了目标点周围的一个搜索区域内，有多少点的深度要比t浅，也就是比t浅的点所占百分比是多少。</p>
+<p>这样计算势必会遍历一遍搜索区域内所有的点，从而增加计算量。</p>
+<p><strong>VSSM不想对于每个目标点都要这样遍历一遍搜索区域</strong>。</p>
+<p>VSSM将搜索区域内的点的深度分布视为正态分布</p>
+<ul>
+<li>缺点：这种近似非常大胆，但是阴影映射也并不需要特别精确，所以只用通过正态分布函数大概知道百分比就够了</li>
+<li>优点：搜索区域的深度视为正态分布，要计算正态分布中大于t的百分比，可以直接用累计分布函数表示，只需要知道正态分布的均值和方差</li>
+</ul>
+<p>只需要均值和方差的好处是只需要遍历一遍所有的深度即可，而不是对每个搜索区域都要均值一下。</p>
+<p>如何在一次遍历中知道任意矩形内的均值？使用积分图 Summed Area Tables</p>
+<p>已知均值之后怎么求方差？公式：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mi>a</mi><mi>r</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>−</mo><msup><mi>E</mi><mn>2</mn></msup><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Var(X)=E(X^2)-E^2(X)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mclose">)</span></span></span></span>，因此只需要遍历深度时，顺便将深度的平方存储下来，构建另一个积分图即可。</p>
+<p><strong>综上</strong>：VSSM利用正态分布近似和积分图，顺利将 “比t浅的点所占百分比是多少” 这个问题从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>f</mi><mi>i</mi><mi>l</mi><mi>t</mi><mi>e</mi><msub><mi>r</mi><mrow><mi>s</mi><mi>i</mi><mi>z</mi><mi>e</mi></mrow></msub><mo>×</mo><mi>f</mi><mi>i</mi><mi>l</mi><mi>t</mi><mi>e</mi><msub><mi>r</mi><mrow><mi>s</mi><mi>i</mi><mi>z</mi><mi>e</mi></mrow></msub><mo>×</mo><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(filter_{size}\times filter_{size}\times N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mord mathdefault mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mord mathdefault mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>的复杂度变为了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>，速度加快了数十倍。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm13.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>however，正态分布的累计分布函数没有解析解，只有数值解，也就是一个表格记录所有解的数值。在C++中叫error_function。</p>
+<p>为了避免查表。VSSM引入了切比雪夫不等式：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm14.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>在实时渲染RTR中，不考虑不等式，而是考虑约等式。</p>
+<p>切比雪夫不等式是说，知道一个分布的均值和方差（可以不是正态分布），那么这个分布中大于t的面积一定不大于上述公式。但是有一个条件，t必须在均值的右边。</p>
+<p>虽然但是，人们仍然使用切比雪夫不等式来计算。</p>
+<p>上述过程解决了第三步PCF的计算复杂度。但是怎么快速计算Blocker的平均深度仍然是个问题，因为Blocker是不规则的，没有办法直接用积分图来计算。像下图所示，蓝色的深度更浅，是遮挡物，它的边界不规则，所以不能用积分图。</p>
+<p>考虑这样一件事：Blocker的平均深度 X Blocker的元素个数 + Non-blocker的平均深度 X Non-blocker的元素个数 = 整个区域的平均深度 X 整个区域的元素个数。这是一个显然的事情</p>
+<p>将这件事写成下面这个公式。百分比就自然出来了。百分比出来，那么就可以用上面介绍的切比雪夫不等式进行计算了。</p>
+<p>这里VSSM又做了一个假设，将Non-blocker的平均深度设为t。t是划分Blocker的阈值，也就可以理解为Blocker之下物体的平局深度。这个假设如何理解？因为被投影的物体大多是平面，或者说在一个小区域内可以近似为平面，所以假设还算合理。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm15.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>综上：VSSM降低了PCSS中计算Blocker平均深度和PCF均值滤波的计算复杂度。通过正态分布、积分图和切比雪夫不等式。</p>
+<p>VSSM在这个过程中提出了非常大胆的假设，并且有很多近似。</p>
+<p>however，实时渲染结果的对与错，是由观看者来决定的，而非数值。</p>
+<p>“看起来是对的，那就是对的”</p>
+<p>再however，现在来看，人们对于VSSM和PCSS的使用度相当。SAT的构建速度相对较慢。</p>
+<h3 id="144-moment-shadow-mapping"><a class="markdownIt-Anchor" href="#144-moment-shadow-mapping"></a> 1.4.4 Moment Shadow Mapping</h3>
+<p>VSSM将搜索区域的深度分布假设为正态分布。</p>
+<p>那么当深度分布与正态分布相差很大会怎么样呢？</p>
+<p>会导致Visibility的均值滤波值出现与事实相差较大的结果。反应到阴影中就是过亮或者过暗。事实上，阴影如果过暗，对于人眼来说还可以接受。但是致命的是阴影会过亮。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm16.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm19.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>这个问题本质就是深度分布不满足正态分布的假设。</p>
+<p>Moment Shadow Mapping的目的就是想办法使用更高阶的矩（moment）来表示深度分布。</p>
+<p>矩是什么东西？简单的理解：以深度为例，记录深度的是一阶矩<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">x</span></span></span></span>，记录深度的平方是二阶矩<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>,记录深度的三次方是三阶矩<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>x</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">x^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>，等等。以这个角度来看，VSSM是使用的一阶矩和二阶矩来表示深度分布。</p>
+<p>Moment Shadow Mapping是使用了更高阶的矩来表示。这有点像球谐函数、泰勒展开、多项式展开、过拟合的思想。</p>
+<p>表示什么？数学结论表明，用前m阶的矩，可以表示一个具有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">m/2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">m</span><span class="mord">/</span><span class="mord">2</span></span></span></span>阶的阶跃函数。</p>
+<p>阶跃函数有什么用？思考VSSM做出正态分布假设的目的是什么。VSSM是想通过正态分布假设，用正态分布的累积分布函数（CDF）来表示Visibility的百分比。累积分布函数（CDF）是一个从0到1单增的函数。从0到1单增，那是不是可以用阶跃函数来表示。也就是说用前m阶的矩来表示累积分布函数（CDF）。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm20.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>however，计算过程会非常复杂。</p>
+<h2 id="15-距离场软阴影-distance-field-soft-shadows"><a class="markdownIt-Anchor" href="#15-距离场软阴影-distance-field-soft-shadows"></a> 1.5 距离场软阴影 Distance field soft shadows</h2>
+<h3 id="151-distance-functions"><a class="markdownIt-Anchor" href="#151-distance-functions"></a> 1.5.1 Distance Functions</h3>
+<p>想象一个黑色区域在一个白色区域向右平移，获得A和B两个图像。现在想要获得平移过程中处于A和B中间位置的图像。</p>
+<p>简单的想法是直接做像素插值。但是这样做的结果是lerp(A,B)的图，也就是中间位置是灰色的，这显然不是想要的结果。</p>
+<p>那么怎么做呢？定义两个Signed Distance Field（SDF，有向距离场）。令SDF中的元素表示该元素到边界处的距离，且左边的取为符号。对这两个SDF进行插值，再根据插值后的SDF反过来获得实际像素值。这样就获得了A和B的中间态。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm21.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>SDF与一个理论联系密切，Optimal Transport 最优传输。</p>
+<p>SDF的相关应用：</p>
+<ul>
+<li>
+<p>融合，Blending。<img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm22.jpg" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+<li>
+<p>光线行进算法 Ray Marching <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/158713630">RayMarching入门 - 知乎 (zhihu.com)</a></p>
+<ul>
+<li>如何理解Ray Marching ？</li>
+<li>举个例子，打出一束光线，在光线的起始位置计算其SDF的值，也就是与物体相交的最小距离。以这个SDF的值的半径画一个圆，这个圆和物体只有一个交点。这时可以将这个SDF的值理解为安全距离，也就是光线从起始位置出发，随便往哪个方向走，只要走的长度在安全距离内，光线就不会与任何物体发生相交。</li>
+<li>因此我们获得了一个光线行进的方法，让光线每次沿着光线的方向行进一个安全距离，直到安全距离足够小或者行进的距离足够远。</li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm23.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+<li>
+<p>软阴影</p>
+<ul>
+<li>将安全距离变为安全角度。像下图这样，光线的安全角度越小，说明光线被遮挡的越厉害，所以阴影越硬。</li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm24.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm25.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li>however，计算安全角度会使用反三角函数，这是在实时渲染中需要避免的情况。</li>
+<li>反三角函数的值应该是在[0,1]之间，并且这个安全角度不是非求不可。本质上是根据SDF和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mi>p</mi><mo>−</mo><mi>o</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|p-o|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">o</span><span class="mord">∣</span></span></span></span>的比值来衡量阴影的软硬。</li>
+<li>既然如此，使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>min</mi><mo>⁡</mo><mo stretchy="false">{</mo><mo>⋅</mo><mo separator="true">,</mo><mn>1.0</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\min\{\cdot,1.0\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">{</span><span class="mord">⋅</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">0</span><span class="mclose">}</span></span></span></span>来限定比值范围，然后使用k来调节比值的权重。从而实现和反三角函数差不多的效果。k越大，即使比值很小，也会被算成1，也就是安全角度为0，即阴影越硬。</li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm26.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+</ul>
+<p>SDF长什么样？（很深的方向，还待继续了解）不好贴纹理</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm27.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="2-实时环境映射-real-time-environment-mapping"><a class="markdownIt-Anchor" href="#2-实时环境映射-real-time-environment-mapping"></a> 2 实时环境映射 Real-time Environment Mapping</h1>
+<p>环境映射，就是假设环境光照是在任意方向都是无限远的。</p>
+<p>现在给定一个环境光照，将一个物体放在场景中，不考虑遮挡（without shadows）。怎么对这个物体进行着色shading？</p>
+<p>这种操作叫做Image-Based Lighting（IBL）</p>
+<p>IBL操作是基于渲染方程。不考虑遮挡，也就是visibility全是1。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm29.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>求解这个值，通用的解法是使用蒙特卡洛积分。也就是对光源和像素进行多次采样求平均。</p>
+<p>但是在IBL中，光源是来自四面八方的，这对于光源采样来说，需要的采样量是非常大的。（however，现在GPU似乎可以逐渐解决这个任务）。排除GPU的性能逐渐提升来说，只要是采样，就很难应用到实时渲染中。另一方面，使用蒙特卡洛积分需要采样，而采样会引入噪声。</p>
+<p>因此在IBL中要避免采样。</p>
+<p>回顾第1.3节中介绍的约等式。注意这里的支撑集是对于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>来说的</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm30.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>放到渲染方程中，会发现：</p>
+<ul>
+<li>材料如果是glossy（镜面），BRDF的支撑集足够小</li>
+<li>材料如果是diffuse（漫反射），BRDF足够光滑</li>
+</ul>
+<p>所以渲染方程就可以写成约等式：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>观察黄色框圈出来的部分。这是不是形似</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mo>∑</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>∗</mo><mi>x</mi></mrow><mrow><mo>∑</mo><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\sum f(x)*x}{\sum x}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.36301em;vertical-align:-0.93601em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">x</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93601em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>这可以理解为归一化，也可以是均值滤波，模糊化。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>进一步的说，这个公式是在shade point的球面上以方位角作为滤波器的窗口进行均值滤波。</p>
+<p>对于gloss的BRDF来说，它的支撑集只有一个小lobe（波瓣），左图蓝色区域，也就是一个小的方位角。这个公式计算的就是入射光在这个lobe上的均值滤波。</p>
+<p>怎么求解这部分呢？对于蒙特卡洛积分来说，就是多次采样入射光，然后求平均。</p>
+<p>怎么避免这样采样呢？预滤波（pre-filtered），既然都是均值滤波，先后有什么区别。先对整个半球的入射光进行不同程度（不同大小方位角）的滤波，这就像MIPMAP，不过不在预设方位角中，就三线性插值。这样就将多次采样求平均变成了，只采样lobe中心的光线，公式的值就变为以lobe的方位角大小进行的均值滤波，而这个值预先已经计算好了。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>观察公式的第二部分：（淦，没懂。。</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/434964126">微表面模型(Microfacet Model) - 知乎 (zhihu.com)</a></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>Split sum。。应用在虚幻引擎中</p>
+<h2 id="21-来自环境光的阴影"><a class="markdownIt-Anchor" href="#21-来自环境光的阴影"></a> 2.1 来自环境光的阴影</h2>
+<p>计算来自环境光的阴影是一件非常困难的事情，这可以从两个角度来看：</p>
+<ul>
+<li>作为一个多光源问题：将环境光作为许多个光源，然后做shadow map。相当于每个光源都要做一遍shadow map。这会线性的增加计算量</li>
+<li>作为一个采样问题：通过渲染方程来计算。然后使用Split sum的操作。但是因为是计算阴影，所以要考虑Visibility这个函数。Visibility不具有像BRDF在gloss或者diffuse的那两种特性（support小或者光滑），所以没有办法使用Split sum中的近似不等式。</li>
+</ul>
+<p>那么怎么解决这个问题呢？</p>
+<ul>
+<li>只计算贡献最多的光源。在户外的话，贡献最多的光源是太阳。这样计算量就降下来了。这在工业界是使用很广的方法。</li>
+<li>Imperfect shadow maps</li>
+<li>Light cuts -&gt; offline rendering</li>
+<li>RTRT -&gt; real-time ray tracing（可能是最后的解决方法</li>
+<li>Precomputed radiance transfer</li>
+</ul>
+<h2 id="22-预备知识"><a class="markdownIt-Anchor" href="#22-预备知识"></a> 2.2 预备知识</h2>
+<h3 id="221-频率和卷积"><a class="markdownIt-Anchor" href="#221-频率和卷积"></a> 2.2.1 频率和卷积</h3>
+<ul>
+<li>两个函数相乘再对变量积分 等价于 卷积操作</li>
+<li>什么是低频函数？光滑的函数，变化量小的函数就是低频函数</li>
+<li>两个函数卷积得到函数的频率由两个函数中频率更低的函数的频率决定</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="222-基函数"><a class="markdownIt-Anchor" href="#222-基函数"></a> 2.2.2 基函数</h3>
+<p>一个函数可以由一系列基函数的线性组合来表示</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="23-实时环境光照-real-time-environment-lighting-global-illumination"><a class="markdownIt-Anchor" href="#23-实时环境光照-real-time-environment-lighting-global-illumination"></a> 2.3 实时环境光照 Real-time environment lighting &amp; global illumination</h2>
+<h3 id="231-球谐函数-spherical-harmonicssh"><a class="markdownIt-Anchor" href="#231-球谐函数-spherical-harmonicssh"></a> 2.3.1 球谐函数 Spherical Harmonics（SH）</h3>
+<p>怎么理解球谐函数？就像多项式展开、傅里叶展开。球谐函数在其中扮演的就是基函数的角色，用这些基函数来表示任意一个的球面函数。球谐函数的阶表示基函数的频率，也是类似多项式的次方数</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>球谐函数的特性：</p>
+<ul>
+<li>
+<p>每个球谐函数基函数 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">B_i(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>可以由一个 Legendre 多项式表示</p>
+</li>
+<li>
+<p>投影：原函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>与任意一个基函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">B_i(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>相乘再积分，这个过程叫做投影，也就是向基函数方向投影。获得的值就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">B_i(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>进行线性组合表示原函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>的系数</p>
+<ul>
+<li>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>c</mi><mi>i</mi></msub><mo>=</mo><msub><mo>∫</mo><mi mathvariant="normal">Ω</mi></msub><mi>f</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mi>d</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">c_i=\int_{\Omega}f(\omega)B_i(\omega)d\omega
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.27195em;vertical-align:-0.9119499999999999em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011249999999999316em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:-0.433619em;"><span style="top:-1.7880500000000001em;margin-left:-0.44445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Ω</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119499999999999em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord mathdefault">d</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span></span></span></span></p>
+</li>
+<li>
+<p>怎么理解这个投影？类比三维向量向坐标轴进行投影，投影的结果也是一个数，这个数用于线性表示这个三维向量的系数。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>球谐函数基函数互相之间正交，也就是投影之后值为0</p>
+</li>
+<li>
+<p>球谐函数易于计算旋转后的结果</p>
+<ul>
+<li>一个球谐函数旋转，等效于其球谐基函数各自发生旋转。</li>
+<li>一个球谐基函数旋转后的函数，可以由其同阶的基函数的线性组合来表示</li>
+<li>因此，如果一个球谐函数发生旋转，可以用旋转后的球鞋基函数表示，旋转后的球谐基函数可以由其同阶球谐基函数的线性组合表示。线性组合怎么求？基函数本身是不会变的，所以线性组合也是不会变的，所以将每种角度的线性组合计算出来，然后存储成一张表就行了。</li>
+</ul>
+</li>
+</ul>
+<h3 id="232-预滤波环境光-prefiltered-env-lightinh"><a class="markdownIt-Anchor" href="#232-预滤波环境光-prefiltered-env-lightinh"></a> 2.3.2  预滤波环境光 Prefiltered env. lightinh</h3>
+<p>再次回顾预滤波的作用： 预滤波 + 单次查询（采样）= 没有滤波 + 多次查询（采样）</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>重新考虑一下环境光映射时的渲染方程：不考虑shadow，也就是visibility</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/sm29.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>这个方程中，入射光<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">L_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和BRDF其实都是球面函数，这没什么好说的。</p>
+<p>球面函数就可以用球谐函数来表示了。</p>
+<p>用几阶的球谐函数来表示呢？</p>
+<p>大师Ravi进行了实验（只是对Diffuse BRDF）。Diffuse BRDF应该是一个比较光滑的函数，光滑以为着低频，低频意味着使用低阶的球谐函数就可以表示了。</p>
+<p>Ravi的实验结果也验证了这一点。他不断提高SH的阶数来表示一个相同的Diffuse BRDF。发现SH的系数在第三阶的时候就已经趋近于0了，后续阶数同样如此。</p>
+<p>因此，Ravi指出用前三阶SH即可表示Diffuse BRDF。</p>
+<p>再看这个计算形式，是不是两个函数相乘再积分？在第2.2.1节中说明了，两个函数相乘再积分，得到的函数的频率取决于频率较低的函数的频率。而Diffuse BRDF的频率是前三阶SH可以表示，那么环境光的频率即使再高，也没有什么过多的影响，因为得到的结果的频率最高也就三阶。</p>
+<p>Ravi同样做了实验。他分别用前一阶、前两阶、前三阶的球谐函数来表示环境光。然后计算渲染公式。用渲染结果与实际图像进行误差计算。结果表明，使用前三阶的球谐函数来表示环境光，获得的误差为1%。</p>
+<p>最后Ravi整理了只用前三阶SH来渲染的公式。写成了如下形式：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>绿色部分代码的功能就是渲染Diffuse材质的环境光映射。</p>
+<p>这也是历史上，只用两行代码，获得博士学位的狠人，Ravi。</p>
+<p>并且开创了PRT的时代。</p>
+<h3 id="233-光辐射预计算-precomputed-radiance-transferprt"><a class="markdownIt-Anchor" href="#233-光辐射预计算-precomputed-radiance-transferprt"></a> 2.3.3 光辐射预计算 Precomputed Radiance Transfer（PRT）</h3>
+<p>在实时渲染中，人们更愿意将渲染函数写成相乘再积分的形式。</p>
+<ul>
+<li>lighting：球面函数</li>
+<li>visibility：以视点为球心的球面函数。右下角图中框出来的球为例</li>
+<li>BRDF：本身是4维函数但是投影到输出方向时，也是二维球面函数</li>
+</ul>
+<p>对于以下方程的一种粗暴计算方法：直接相乘然后相加。但是这样做的计算量很大。举个例子，以lighting为例，假设正方体的每个面的分辨率是64X64，则对于一个shading point 需要计算6X64X64次乘法和加法。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>于是有了载入史册的一篇论文 PRT：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>PRT对渲染方程进行了另一种理解：将lighting 投影到light transport 上</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem12.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>将lighting函数使用基函数近似
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>i</mi><mo stretchy="false">)</mo><mo>≈</mo><mo>∑</mo><msub><mi>l</mi><mi>i</mi></msub><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>i</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(i)\approx\sum l_i B_i(i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">L</span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.00001em;vertical-align:-0.25001em;"></span><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.01968em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+</li>
+<li>light transport实际上是不随环境光的变化而变化的，它是物体自身性质、颜色、反射率的体现
+<ul>
+<li>因此，light transport 完全可以预计算出来</li>
+</ul>
+</li>
+</ul>
+<p>然后对渲染方程进行计算：分两种情况讨论</p>
+<h4 id="2331-diffuse-case"><a class="markdownIt-Anchor" href="#2331-diffuse-case"></a> 2.3.3.1 Diffuse Case</h4>
+<p>Diffuse种类：diffuse 的BRDF是常数</p>
+<ul>
+<li>
+<p>differentiable rendering 可微分渲染，深度学习项目？</p>
+</li>
+<li>
+<p>实变函数：满足Fubini定理, 才可以交换顺序。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>∫</mo><mo>∑</mo><msub><mi>l</mi><mi>i</mi></msub><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>i</mi><mo stretchy="false">)</mo><mo>=</mo><mo>∑</mo><msub><mi>l</mi><mi>i</mi></msub><mo>∫</mo><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>i</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\int \sum l_i B_i(i)=\sum l_i \int B_i(i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.11112em;vertical-align:-0.30612em;"></span><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0005599999999999772em;">∫</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.01968em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.11112em;vertical-align:-0.30612em;"></span><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.01968em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0005599999999999772em;">∫</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mclose">)</span></span></span></span>。在普通图像学中不考虑这个条件</p>
+</li>
+<li>
+<p>precompute就是获得了每个角度对于的值，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">T_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p>代价：场景中的物体不能动。光源不能旋转-&gt;球谐函数的旋转性质（见2.3.1 球谐函数的性质）。</p>
+</li>
+<li>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem13.jpg" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+<li>
+<p>如何理解Ti？Ti就是不同的球谐基函数在Visibility的投影</p>
+<ul>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem14.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+<li>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem15.jpg" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+</ul>
+<h4 id="2332-glossy-case"><a class="markdownIt-Anchor" href="#2332-glossy-case"></a> 2.3.3.2 Glossy Case</h4>
+<p>glossy 与 diffuse 的区别在于BRDF不再是常数</p>
+<p>也就是说Ti不再是一个数值而是一个以观测角度为变量的函数，计算出数值的话，就是一个二维的矩阵。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem16.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="2333-follow-up-works"><a class="markdownIt-Anchor" href="#2333-follow-up-works"></a> 2.3.3.3 Follow up works</h4>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem17.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem18.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="2334-小波"><a class="markdownIt-Anchor" href="#2334-小波"></a> 2.3.3.4 小波</h4>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem19.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/rem20.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="3-实时全局光照-global-illumination-gi"><a class="markdownIt-Anchor" href="#3-实时全局光照-global-illumination-gi"></a> 3 实时全局光照 Global Illumination （GI）</h1>
+<h2 id="31-反射阴影映射-reflective-shadow-maps"><a class="markdownIt-Anchor" href="#31-反射阴影映射-reflective-shadow-maps"></a> 3.1 反射阴影映射 Reflective Shadow Maps</h2>
+<p>在实时渲染中，人们想要解决的全局光照是指比直接光照多一次的间接光照。也就是光线只弹射一次或者两次。如下图所示，光线最多弹射两次。</p>
+<p>在这个场景中，Q是受到直接光照的物体，并且转为光源来照亮P。所以将Q称为次级光源。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>要获得P点的着色Shading，需要知道两件事：</p>
+<ul>
+<li>哪些物体的哪些表面是次级光源？
+<ul>
+<li>也就是说哪些区域是被光源直接照射的？-&gt;通过Shadow mapping可以获得这个信息</li>
+<li>但是使用Shadow map来表示次级光源的话，就会有shadow map分辨率大小个片光源，这个计算量是比较夸张的</li>
+</ul>
+</li>
+<li>所有次级光源区域对于P点着色的贡献是多少？-&gt;相当于以P点作为相机观测次级光源区域。但是次级光源本身也是物体，次级光源上的一个点的BRDF值在不同方向是不一样的，这是与理想点光源不一样的。而对于次级光源上的每个点都要考虑不同方向的BRDF值，这个计算量显然是非常大的。
+<ul>
+<li>于是假设次级光源上每个点都是Diffuse的，也就是BRDF是常数</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="32-光传播体积-light-propagation-volumes-lpv"><a class="markdownIt-Anchor" href="#32-光传播体积-light-propagation-volumes-lpv"></a> 3.2 光传播体积 Light Propagation Volumes (LPV)</h2>
+<h2 id="33-体素全局照明-voxel-global-illuminationvxgl"><a class="markdownIt-Anchor" href="#33-体素全局照明-voxel-global-illuminationvxgl"></a> 3.3 体素全局照明 Voxel Global Illumination（VXGL)</h2>
+<h2 id="34-屏幕空间的环境光遮蔽-screen-space-ambient-occlusion-ssao"><a class="markdownIt-Anchor" href="#34-屏幕空间的环境光遮蔽-screen-space-ambient-occlusion-ssao"></a> 3.4 屏幕空间的环境光遮蔽 Screen Space Ambient Occlusion (SSAO)</h2>
+<p>什么是SSAO？</p>
+<ul>
+<li>对全局光照的近似</li>
+<li>在屏幕空间进行操作</li>
+</ul>
+<p>SSAO的作用：</p>
+<ul>
+<li>增加物体的立体感。也就是物体边界的阴影感
+<ul>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi4.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+</ul>
+<p>SSAO的核心思想：</p>
+<ul>
+<li>
+<p>我们不知道入射间接光照</p>
+</li>
+<li>
+<p>假设入射间接光照是一个常数，对于所有着色点以及所有方向</p>
+<ul>
+<li>这类似于布林冯氏反射模型的环境光反射的定义</li>
+</ul>
+</li>
+<li>
+<p>虽然间接光照是常数，但是所有点不是所有方向都能接收到光照 -&gt; visibility</p>
+<ul>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi5.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi6.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+<li>
+<p>SSAO计算环境光遮蔽AO时，假设物体是Diffuse的</p>
+</li>
+</ul>
+<p>计算思路：</p>
+<p>仍然从渲染方程进行推导</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>通过实时渲染近似方程，将visibility拆出去：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>为什么可以这样拆分？</p>
+<p>因为之前的SSAO假设中，入射间接光线<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>L</mi><mi>i</mi><mrow><mi>i</mi><mi>n</mi><mi>d</mi><mi>i</mi><mi>r</mi></mrow></msubsup></mrow><annotation encoding="application/x-tex">L_i^{indir}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.107772em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">d</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>是常数，BRDF也是常数。所以黄色框部分是一个常数。而蓝色框是visibility的加权平均。</p>
+<p>以这个SSAO为例子进一步理解实时渲染近似方程：</p>
+<ul>
+<li>
+<p>拆分除去的部分可以理解为在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>的覆盖范围内对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>求平均</p>
+<ul>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi10.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+<li>
+<p>以往根据近似方程进行拆分时，是只对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">d</mi><msub><mi>ω</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{d}\omega_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathrm">d</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>进行积分，为什么在SSAO中是对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>cos</mi><mo>⁡</mo><msub><mi>θ</mi><mi>i</mi></msub><mi mathvariant="normal">d</mi><msub><mi>ω</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\cos \theta_i \mathrm{d}\omega_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathrm">d</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>进行积分？</p>
+<ul>
+<li>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+<li>
+<p>解释为什么可以这样拆：引入立体角的投影</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">d</mi><msub><mi>ω</mi><mi>i</mi></msub><mo>=</mo><mi mathvariant="normal">d</mi><msub><mi>A</mi><mi>i</mi></msub><mi mathvariant="normal">/</mi><msup><mi>r</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathrm{d}\omega_i=\mathrm{d}A_i/r^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathrm">d</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathrm">d</span></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，在单位球中r=1，那么<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>cos</mi><mo>⁡</mo><msub><mi>θ</mi><mi>i</mi></msub><mi mathvariant="normal">d</mi><msub><mi>ω</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\cos \theta_i \mathrm{d}\omega_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathrm">d</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>表示的是球的单位表面积投影到赤道截面的单位圆的单位面积。那么对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>cos</mi><mo>⁡</mo><msub><mi>θ</mi><mi>i</mi></msub><mi>d</mi><msub><mi>ω</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\cos \theta_i d\omega_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault">d</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>进行半球积分，也就是对单位圆积分，也就是单位圆的面积，即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>π</mi></mrow><annotation encoding="application/x-tex">\pi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span></span></span></li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi11.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>综上所述，SSAO的实时渲染近似方程可以写为：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi12.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>现在计算这个方程只需要知道visibility就可以了。在世界空间里，可以直接做ray tracing来获得visibility，但是在屏幕空间怎么知道visibility呢？</p>
+<p>环境光遮蔽AO近似假设：辐射距离受限 -&gt; 将局部遮蔽限制在一个半径为R的半球内。</p>
+<p>如果不限制半径，那么所有光线在传播无限远的距离后可能都会遮挡，这显然是有问题的。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi13.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>SSAO基于AO假设计算visibility的方法：</p>
+<ul>
+<li>以着色点为球心做半径为R的单位球，在球内随机采样点，计算着色点与采样点的可见性</li>
+<li>怎么计算可见性？根据z-buffer来判断，也就是采样点是大于最浅深度还是小于最浅深度的。也就是说，采样点在成像表面内部还是外部。</li>
+<li>为什么是整球而不是半球？因为当时SSAO提出时，还没有存储着色点法线信息的手段。现在可以基于法线进行半球采样</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi14.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="35-屏幕空间方向遮挡-screen-space-directional-occlusionssdo"><a class="markdownIt-Anchor" href="#35-屏幕空间方向遮挡-screen-space-directional-occlusionssdo"></a> 3.5 屏幕空间方向遮挡 Screen Space Directional Occlusion（SSDO）</h2>
+<p>什么是SSDO？</p>
+<ul>
+<li>SSAO的改进版本</li>
+<li>不同于SSAO的环境光是常数这个假设，SSDO考虑了更精准的间接光照</li>
+</ul>
+<p>SSDO的核心思想：</p>
+<ul>
+<li>间接光照的来源-&gt;间接光源是知道的</li>
+</ul>
+<p>SSAO与SSDO的区别：假设的不同</p>
+<ul>
+<li>AO：从着色点向外打出光线，如果光线没有被遮挡，说明该方向有间接光照打入着色点，否则没有。</li>
+<li>DO：从着色点向外打出光线，如果光线没有被遮挡，说明该方向上没有次级光源，所以没有光线、间接光源来自被遮挡方向。</li>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi15.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+<p>如何理解SSDO和SSAO为什么完全相反：AO表示的是来自远处的间接光照，DO表示的是来自近处的间接光照</p>
+<p>计算方法与SSAO类似。</p>
+<p>SSDO存在的问题：</p>
+<ul>
+<li>
+<p>表示的间接光照是小范围的</p>
+</li>
+<li>
+<p>是通过相机的屏幕空间计算visibility的，也就是说根据深度来计算visibility是不准的，比如下图</p>
+<ul>
+<li><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi16.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+<li>
+<p>屏幕空间的问题：将三维场景变成了从相机角度看过去的一个壳。那么壳背后的东西都不知道，也就是说背面的物体对着色给不出贡献</p>
+</li>
+</ul>
+<h2 id="36-屏幕空间反射-screen-space-reflectionssr"><a class="markdownIt-Anchor" href="#36-屏幕空间反射-screen-space-reflectionssr"></a> 3.6 屏幕空间反射 Screen Space Reflection（SSR）</h2>
+<p>什么是SSR？</p>
+<ul>
+<li>在屏幕空间中做光线追踪ray tracing</li>
+<li>但是不要求三维的网格表面信息，而是将三维场景变成了从相机角度看过去的一个壳</li>
+</ul>
+<p>SSR的两个基本任务：</p>
+<ul>
+<li>计算任意光线与屏幕空间的“壳”的相交状态</li>
+<li>计算交点对于着色点的贡献</li>
+</ul>
+<p>SSR的基本思想：</p>
+<ul>
+<li>反射光通常是屏幕空间中已经存在的物体做出的贡献（假设）</li>
+</ul>
+<p>怎么计算光线与“壳”的相交情况呢？</p>
+<ul>
+<li>对于每根光线，追踪光线的反射</li>
+<li>设置一个步长，在每个步长处检测光线该点的深度值</li>
+<li>如果深度值与“壳”的深度值相近，说明相交</li>
+<li>显然相交的精度和计算量取决于步长的选择 -&gt; 一个显然的想法就是让步长自适应调整</li>
+</ul>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi17.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>怎么自适应调整步长？</p>
+<p>这是不是和包围盒、BVH的情况相似？将灰色矩形看作包围盒，那么光线没有与包围盒相交，自然不会与“壳”相交了</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi18.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>怎么计算“包围盒”？使用深度图做MipMap（Min Pooling）。</p>
+<p>为什么是最小值池化？深度的最小值，就是这片区域中深度最浅的位置，也就是“包围盒”的边界。光线没有到边界，自然不会与“壳”相交。</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi19.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>实际计算时的策略是：</p>
+<ul>
+<li>类似二分查找</li>
+<li>在最顶层，也就是pooling尺度最大的深度图进行交点查找</li>
+<li>然后在交点处的像素的下一层进行查找</li>
+<li>知道查找到初始深度图的位置</li>
+</ul>
+<p>以上只是完成了第一步，也就是光线与壳的相交状态</p>
+<p>第二步计算着色与path tracing一致：</p>
+<p><img src="/2024/03/13/GAMES202_%E9%AB%98%E8%B4%A8%E9%87%8F%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/gi20.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="应用知识"><a class="markdownIt-Anchor" href="#应用知识"></a> 应用知识</h1>
+<ul>
+<li>实时渲染（RTR）不相信复杂度，只看绝对的渲染时间</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+      
+        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/">#计算机图形学</a>
+      
+        <a href="/tags/GAMES/">#GAMES</a>
+      
+        <a href="/tags/%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93/">#实时渲染</a>
+      
+        <a href="/tags/GAMES202/">#GAMES202</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>GAMES202_高质量实时渲染</div>
+      <div>http://example.com/2024/03/13/GAMES202_高质量实时渲染/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/13/%E5%85%B3%E4%BA%8Ehexo%E4%B8%8A%E4%BC%A0%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8A%A5%E9%94%99%E5%8F%8A%E8%A7%A3%E5%86%B3/" title="关于hexo上传遇到的一些报错及解决">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于hexo上传遇到的一些报错及解决</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/06/Bresenham%E5%B8%83%E9%9B%B7%E6%A3%AE%E6%9B%BC%E7%AE%97%E6%B3%95/" title="Bresenham布雷森曼算法">
+                        <span class="hidden-mobile">Bresenham布雷森曼算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

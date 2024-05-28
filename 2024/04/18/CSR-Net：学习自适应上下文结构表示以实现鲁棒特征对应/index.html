@@ -1,0 +1,929 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="如题,CSR-Net,2022 TIP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSR-Net：学习自适应上下文结构表示以实现鲁棒特征对应">
+<meta property="og:url" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="如题,CSR-Net,2022 TIP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/title.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig1.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq1.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq3.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq5.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig2.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq6.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq7.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq8.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig3.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig4.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq10.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq11.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq12.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq13.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq14.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig5.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table1.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig6.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table2.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table3.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig7.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig8.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table4.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig9.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq15.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table5.jpg">
+<meta property="og:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig10.jpg">
+<meta property="article:published_time" content="2024-04-18T04:07:00.000Z">
+<meta property="article:modified_time" content="2024-04-22T04:54:28.154Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="特征匹配">
+<meta property="article:tag" content="论文翻译">
+<meta property="article:tag" content="TIP">
+<meta property="article:tag" content="错误匹配去除">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/title.jpg">
+  
+  
+  
+  <title>CSR-Net：学习自适应上下文结构表示以实现鲁棒特征对应 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="CSR-Net：学习自适应上下文结构表示以实现鲁棒特征对应"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-18 12:07" pubdate>
+          2024年4月18日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          18k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          150 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">CSR-Net：学习自适应上下文结构表示以实现鲁棒特征对应</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/title.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="csr-net-learning-adaptive-context-structure-representation-for-robust-feature-correspondence"><a class="markdownIt-Anchor" href="#csr-net-learning-adaptive-context-structure-representation-for-robust-feature-correspondence"></a> CSR-Net: Learning Adaptive Context Structure Representation for Robust Feature Correspondence</h1>
+<h1 id="csr-net学习自适应上下文结构表示以实现鲁棒特征对应"><a class="markdownIt-Anchor" href="#csr-net学习自适应上下文结构表示以实现鲁棒特征对应"></a> CSR-Net：学习自适应上下文结构表示以实现鲁棒特征对应</h1>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要：</h1>
+<p>特征匹配是指从两个或多个图像中识别并对应相同或相似的视觉模式，是任何需要在图像之间建立良好对应关系的图像处理任务中的关键技术。 给定两个场景中的潜在对应（匹配），一种新颖的整体深度学习框架，称为上下文结构表示网络（CSR-Net），旨在推断任意对应作为内点的概率。 传统方法通常通过手动设计的标准来构建对应关系之间的本地关系。 与现有的尝试不同，我们工作的主要思想是明确学习每个对应关系的邻域结构，使我们能够以端到端的方式将匹配问题表述为动态局部结构共识评估。 为此，我们提出了一种排列不变结构表示（STR）学习模块，它可以轻松地将不同类型的网络合并到一个统一的架构中，以直接处理稀疏匹配。 通过协同使用STR，我们引入了上下文感知注意（CAA）机制，通过旋转不变的上下文感知编码和简单的特征门控来自适应地重新校准结构特征，从而产生细粒度模式识别的能力。 此外，为了进一步削弱建立可靠对应关系的成本，CSR-Net被制定为整体共识学习，其中整体水平的目标是补偿刚性变换。 为了证明我们的 CSR-Net 可以有效地提高基线，我们对图像匹配和其他视觉任务进行了深入的实验。 实验结果证实，CSR-Net 的匹配性能比九个最先进的竞争对手有了显着提高。</p>
+<p>关键词：异常值拒绝、特征匹配、结构表示、上下文感知注意力、深度学习。</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1 引言</h1>
+<p>寻找两幅图像之间的高质量对应关系是计算机视觉（CV）领域最基本的研究之一，它在图像配准和融合[1]-[4]、运动结构（SfM）[5]中发挥着关键作用 ，以及视觉同步定位与建图（SLAM）[6]、[7]等。这些基于特征的任务通常假设已经成功建立了良好的对应关系。 流行的匹配流程通常涉及三个处理阶段：i）局部特征检测和描述，ii）生成假定的对应关系，以及 iii）异常值拒绝。 通常，假定的对应关系是通过简单地将每个关键点与另一幅图像中最相似的对应点（即最近邻搜索）进行匹配来形成的。 然而，由于图像描述符的模糊性，例如尺度不变特征变换（SIFT）[8]、SuperPoint [9]、辐射变化不敏感特征变换（ 裂痕）[10]。 因此，异常值检测和内部值选择作为图像匹配管道的后端，是提高对应可靠性的关键后处理技术。</p>
+<p>特征对应选择是 CV 界长期存在的问题，在过去的几十年里，人们在不同的背景下对其进行了研究，并产生了多种方法。  RANdom SAmple Consensus (RANSAC) [11] 及其变体 [12]、[13]，通过查找符合预定义几何模型的最大子集来保留内点，是最典型的异常值剪枝算法，广泛应用于图像匹配 。 然而，由于严重的异常值污染和多种看似合理的变换模型，采样方法可能很难找到令人满意的几何模型。 近年来，许多作品[14]-[16]提出了手工制定的局部规则来模拟对应共识，并通过深度学习推断潜在的内点。 由于避免了强制性约束，这些宽松方法的通用性得到了显着提高。 尽管人们在应用深度学习技术来解决异常值拒绝方面付出了巨大的努力，但定制一个通用且强大的深度学习管道以供实际使用仍然具有挑战性。 首先，由于生成的假定对应关系是离散且稀疏的，因此很难以学习方式对邻居共识进行建模。 其次，两个观察到的场景可能具有复杂的匹配模式，这带来了结构模糊问题，即一些离群点也具有较高的局部结构兼容性（一致性）。 第三，异常值通常在假定的集合上分布不均匀，这意味着直接使用基于最近邻居的本地信息是不可靠的。 为了克服以前方法的局限性，在这项工作中，提出了一种新颖的端到端网络架构，称为上下文结构表示网络（CSR-Net），用于高效且有效的异常值过滤。 从技术上讲，CSR-Net 也利用了局部共识的概念，但我们更进一步，即努力在统一的深度网络架构中实现上下文结构表示建模和共识学习。</p>
+<p><strong>贡献</strong>：具体来说，为了避免手工操作，我们设计了一种自适应结构表示（STR）学习，用于显式建模两个局部特征点集的空间拓扑关系。  STR 受计算机图形学经典可视化的启发，是一个排列不变块，为每个稀疏匹配生成空间中的规范顺序，而不是使用预定义的启发式描述符。 这种可微组件使流行的深度网络（例如视觉变换器（ViT）[17]或卷积神经网络（CNN））能够推广到分散的数据学习，从而利用稀疏匹配的空间局部相关性来捕获交互特征。 同时，针对不确定的模糊结构问题，我们开发了上下文感知注意（CAA），它通过上下文感知编码和简单的门控机制主动重新校准STR以减少空间拓扑关系的模糊性。 此外，与现有的仅关注本地信息的共识方法不同，我们还集成了匹配的经典思想，以提供从整体到部分的架构。 为了实现这一目标，PointNet 作为几何估计器插入到我们网络的前端，以利用全局上下文，然后我们制定匹配距离作为分组层，将匹配模式从全局“转换”为局部。 简而言之，我们的主要贡献可概括如下：</p>
+<ul>
+<li>我们设计了一个排列不变的结构表示（STR）块，以可学习的方式产生稀疏匹配的规范空间顺序。 这种可微分块可以插入到现有的卷积架构中，从而使网络能够利用两个特征点集的空间局部相关性。</li>
+<li>我们提出了上下文感知注意（CAA），重点是通过旋转不变的上下文感知编码来提高网络的表示能力，它可以自适应地消除复杂匹配场景的局部信息的歧义。</li>
+<li>我们定制了一个整体架构CSR-Net，以全局几何估计器和基于匹配距离的分组操作开始，它可以通过消耗任意候选匹配集来执行对应修剪。 我们的方法在单传感器和多模态图像上都取得了最先进的结果。</li>
+</ul>
+<p>本文的其余部分组织如下：  第二节回顾相关工作及其局限性。 并在第三节我们详细讨论了异常值拒绝的学习框架。 特征匹配（以及其他视觉任务）的实验结果在第四节中报告。  然后是第五节的一些结论性意见。</p>
+<h1 id="2-相关工作"><a class="markdownIt-Anchor" href="#2-相关工作"></a> 2 相关工作</h1>
+<p>在这里，我们简要回顾一下异常值过滤技术及其局限性。 正式地，如相关调查[18]、[19]中所定义，描述符强力匹配，然后是异常值拒绝，也称为间接点匹配。 现有的寻求良好对应关系的研究可大致分为三个主要范式，即生成验证框架、类PointNet架构和邻域共识。</p>
+<h2 id="21-生成验证框架"><a class="markdownIt-Anchor" href="#21-生成验证框架"></a> 2.1 生成验证框架</h2>
+<p>几何验证技术是一种重要的范式，以著名的RANSAC[11]算法为代表。 基本上，从不同图像中提取的两组关键点被假设通过特定的全局几何变换（例如极几何）耦合。  RANSAC 重复采样最小子集来估计给定的参数模型作为假设，并通过一致内点的数量验证置信度。 因此，RANSAC 及其变体，例如 GroupSAC [20]、PROSAC [21] 和 LO-RANSAC [22] 也被称为基于重采样的方法。 最近，提出了一种更有效的估计器，即边缘化样本共识（MAGSAC）[12]。 关键思想是应用 σ 共识，通过在一系列噪声尺度上进行边缘化来消除对异常值阈值的要求。 巴拉特等人。  [13]还介绍了MAGSAC++，包括新的模型质量（评分）函数和新颖的边缘化程序。 在 MAGSAC 的改进版本中，估计问题被公式化为迭代重新加权最小二乘过程。 另一方面，对于可训练的基本矩阵估计，Brachmann 等人。  [23]以端到端的方式提出了基于强化学习的可微对应物（DSAC）来模仿RANSAC的行为，但预测模型不如使用RANSAC。 随后，布拉赫曼等人。  [24]提出了神经引导RANSAC（NG-RANSAC），这是一种具有假设抽样学习指导的RANSAC公式，它可以利用任何不可微的任务损失和最小求解器进行训练。</p>
+<h2 id="22-限制"><a class="markdownIt-Anchor" href="#22-限制"></a> 2.2 限制</h2>
+<p>尽管 RANSAC 系列广泛用于鲁棒模型估计，但仍表现出某些基本缺点。 例如，最小子集采样机制仅适用于参数转换约束，这意味着生成验证框架无法解决复杂的匹配模式，例如非刚性匹配模式。 随着内点率的降低，匹配性能急剧恶化，这在文献[18]、[25]中得到了证明，因为采样的子集不可避免地容易包含异常值。</p>
+<h2 id="23-类pointnet架构"><a class="markdownIt-Anchor" href="#23-类pointnet架构"></a> 2.3 类PointNet架构</h2>
+<p>近年来，深度学习在各种复杂的计算机视觉任务（例如图匹配[26]、[27]）上取得了惊人的成功，这促使研究人员通过学习技术对异常值拒绝问题进行建模。 不幸的是，由于特征点的无序结构和分散性，直接采用传统的 CNN 进行基于对应的学习是不可行的。 随着PointNet[28]及其改进版本PointNet++[29]（即点特征学习主干）的提出，寻找良好对应关系的学习也被重新审视。 作为第一次尝试，Yi 等人。  [30]利用具有上下文归一化（CN）的PointNet来解决对应修剪问题，它在特定于任务的几何约束下根据稀疏坐标和图像内在特征来训练多层感知器（MLP）。 另一项并行工作，深度基本矩阵估计（DFE）[31]也利用了类似PointNet的架构和CN，但采用了不同的优化策略和迭代框架。 赵等人。 期望基于邻居挖掘网络（NM-Net）提取可靠的本地信息，而不是空间最近的信息。 依赖于仿射属性的特定兼容性邻居挖掘在 NM-Net 中起着至关重要的作用。 为了改进上下文学习机制，Zhang 等人。  [32]设计了一个订单感知网络（OANet），通过 DiffPool 层对输入对应进行聚类，并使用反池技术执行全尺寸预测。</p>
+<h2 id="24-限制"><a class="markdownIt-Anchor" href="#24-限制"></a> 2.4 限制</h2>
+<p>类似 PointNet 的框架仍然受到输入对应中包含的主要异常值的影响，尽管它们已经表现出有希望的性能，但由于缺乏有效的异常值感知机制（例如，局部平滑约束）。 另一方面，为了捕获对应的有效上下文，它们的流行做法是将节点聚类为更粗糙的表示，这将导致结构或形状信息的遗弃。 此外，大多数方法可能会牺牲许多内点来估计运动参数，无法处理一般的匹配任务[18]。</p>
+<h2 id="25-邻域一致"><a class="markdownIt-Anchor" href="#25-邻域一致"></a> 2.5 邻域一致</h2>
+<p>在特征匹配问题中，可以利用物理规则：两个图像之间的对应关系必须遵守一定的平滑约束，因此大多数特征点在变换后将保持其相邻点对的分布。 关于该主题的几个代表性研究包括基于网格的运动统计（GMS）[33]、[34]、支持线投票（SLV）[35]、局部性保留匹配（LPM）[36]以及通过密度的特征匹配 基于噪声应用的空间聚类（RFM-SCAN）[37]。 具体来说，GMS封装了一个具有旋转和尺度不变特性的统计框架，其中平滑约束被描述为一定数量的局部对应的统计似然。  SLV通过自适应分箱直方图技术设计了分箱支持线变换描述符，应用于投票阶段以拒绝异常值。  LPM 提出了比 GMS 更严格的共识假设，以维持潜在内点的局部邻域拓扑。  RFM-SCAN 提出了一种富有启发性的思想，即将异常值拒绝转化为空间聚类问题，利用 DBSCAN 算法[38]将对应集自适应地聚类为多个运动相干簇。 总的来说，上述方法的共同特点是基于手动设计的共识标准过滤不匹配，例如基于角度的局部拓扑的相似性度量。</p>
+<p>近年来出现了一种趋势，即从纯手工优化转向混合框架。 马等人。  [14]提出了一种通用的手工表示，利用邻域元素和拓扑的共识。 这样的描述符可以输入到监督模型中，用于学习用于消除不匹配的二类分类器，称为 LMR。 这种混合策略在处理刚性和非刚性特征匹配方面显示出相当大的优越性。 陈等人。  [15]引入了带有自注意力模块的 MLP 框架来学习宽松邻域一致性（LRNC）。 与LMR类似，LRNC也定制了手工制作的结构描述符，但它削弱了对大视点变化的敏感性。 为了最大限度地减少手工操作，Chen 等人。  [16]开发了一种视觉表示，称为局部结构可视化（LSV），试图直接映射点集结构。 该视觉描述符被传递到注意力网络（LSV-ANet）以编码相似性度量函数，从而允许深度网络自动提取与任务相关的判别特征来代替传统的统计度量（例如，匹配之间的距离和角度）。 所提出的 CSR-Net 也建立在邻里共识的基础上，但旨在填补学习结构表示的空白。 大量的图像匹配实验表明，我们的方法在运行时间和匹配性能方面优于 LSV-ANet。</p>
+<h2 id="26-限制"><a class="markdownIt-Anchor" href="#26-限制"></a> 2.6 限制</h2>
+<p>事实证明，分析局部邻域模式和放宽全局约束对于提高通用性和效率非常有用[18]。 然而，如上所述，大多数算法仍然依赖于不可微的手工技术来发展邻域共识，这将阻碍整体匹配性能。 这是因为它们需要专业知识来设计，并且可能会忽略隐藏在原始数据中的有用模式，即无法捕获正确的特征表示。 更重要的是，现有的邻域共识方法（又称宽松方法）对不确定的模糊结构很敏感，这限制了复杂匹配场景的通用性。</p>
+<h1 id="3-csr-网络架构"><a class="markdownIt-Anchor" href="#3-csr-网络架构"></a> 3 CSR-网络架构</h1>
+<p>本节讨论提出的用于拒绝特征匹配任务中异常值的 CSR-Net。 该框架的概述，其中包含三个新颖的子模块：整体到部分传播层（第 III-B 节）、自适应结构表示学习（第 III-C 节）和上下文感知注意力（第 III-D 节）  ），如图 1 所示。在深入研究 CSR-Net 架构的细节之前，首先介绍问题表述。、</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图 1. 提出的 CSR-Net 框架。在架构的前端，使用 PointNet 更新移动点的初始几何结构。在点集大致对齐后，对应关系 S 被划分为 N 个子集，每个子集在一定的匹配距离内。然后，我们引入了一个表示学习模块 STR，用于显式嵌入空间交互信息。通过 STR 的协同使用，我们设计了一个感知上下文的注意力机制，以改善表示空间中正样本（内点）与负样本（外点）之间的特征差异，并生成一个上下文结构表示（CSR）。为方便起见，每个方块代表一个 4D 向量，特征响应的强度通过颜色的阴影来可视化。</p>
+</blockquote>
+<h2 id="31-问题表述"><a class="markdownIt-Anchor" href="#31-问题表述"></a> 3.1 问题表述</h2>
+<p>考虑运动图像 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mi>s</mi></msup></mrow><annotation encoding="application/x-tex">I^s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span></span></span> 和固定图像 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">I^r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span></span></span></span> ，我们的目标是搜索两个（或更多）图像中重叠区域的良好对应关系。 有几种精心设计的特征描述符（例如，SIFT [8]、RIFT [10] 和 SuperPoint [9]）可以有效地建立假定的对应关系 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mo>=</mo><mo stretchy="false">{</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">)</mo><msubsup><mo stretchy="false">}</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></msubsup></mrow><annotation encoding="application/x-tex">S=\{(x_i,y_i)\}_{i=1}^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.0999949999999998em;vertical-align:-0.258664em;"></span><span class="mopen">{</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span> （<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 表示 通过最近邻策略从乘积空间 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>×</mo><mi>Y</mi><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>∈</mo><mi>X</mi><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo>∈</mo><mi>Y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">X\times Y(x_i\in X,y_i\in Y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mclose">)</span></span></span></span>中提取特征点的坐标）。 请注意，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span> 是我们管道的唯一输入。 通常，邻域共识方法不考虑全局信息。 然而，在手动验证假定匹配的正确性的过程中，我们受到以下观察的启发：人类视觉系统（HVS）将利用整个场景的整体分层信息，即在评估每个对应的局部相似性之前 ，HVS可以轻松地执行两个图像或关键点集的预配准，以降低建立可靠对应关系的成本。 因此，我们将 CSR-Net 制定为整体共识学习架构，从而模仿这种视觉选择性的能力。</p>
+<p>为了实现全局和局部细节捕获，我们首先通过类似 PointNet 的几何估计器 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mrow><mi>g</mi><mi>e</mi></mrow></msub></mrow><annotation encoding="application/x-tex">F_{ge}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 从初始输入推断全局相对变换。接下来，对应分组 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mrow><mi>c</mi><mi>g</mi></mrow></msub></mrow><annotation encoding="application/x-tex">F_{cg}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>，定义每个假定匹配的邻居，选择 N 个局部匹配 来自更新位置四元组的区域。 上述两个操作构成了我们的传播层：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">T</mi></mrow><annotation encoding="application/x-tex">\mathcal{T}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.25417em;">T</span></span></span></span></span>表示变换模型，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mo>⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\cdot)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord">⋅</span><span class="mclose">)</span></span></span></span>是匹配距离函数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">P</mi></mrow><annotation encoding="application/x-tex">\mathcal{P}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span></span></span></span>表示基于匹配距离的N组邻居（实现中设置邻居大小<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span>的上限）。 分组的输出被输入到所提出的 STR 模块中，用于学习空间结构，即将空间位置映射到密集表示。 随后，我们的 CAA 自适应地增强正样本（内点）和负样本（异常值）之间的表示差异，并生成重新校准的特征 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">C</mi><mi mathvariant="script">S</mi><mi mathvariant="script">R</mi></mrow><annotation encoding="application/x-tex">\mathcal{CSR}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.05834em;">C</span><span class="mord mathcal" style="margin-right:0.075em;">S</span><span class="mord mathcal">R</span></span></span></span></span>。 最后，我们利用带有 softmax 函数的 MLP 来预测内点概率，可以写为：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">Z</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>N</mi><mo>×</mo><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\mathcal{Z}\in\R^{N\times 2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.07944em;">Z</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">×</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span> 是分类的预测值。 与近期的混合框架相比，所提出的 STR 和 CAA 组件明确允许网络内部进行结构感知嵌入，以便精确推断出解决异常值拒绝任务的最佳匹配表示。此外，这种可微分的架构允许损失梯度回流到输入坐标，这使得在端到端的方式中实现特征点的局部共识学习成为可能。</p>
+<h2 id="32-从整体到部分的传播"><a class="markdownIt-Anchor" href="#32-从整体到部分的传播"></a> 3.2 从整体到部分的传播</h2>
+<p>由于成像视角的变化经常涉及仿射或投影变换，两组特征点集之间的整体分布可能会发生显著变化。为了防止这种变形干扰后续的表示和共识学习，在 CSR-Net 的前端，我们设计了一个整体到部分的传播层，目的是计算一个软约束以补偿全局几何变换。这一传播过程可以进一步分解为两个操作：学习两组关键点之间的相对变换，然后通过提出的分组规则将推导出的软约束传播到每个匹配的局部区域。 值得注意的是，我们的分组规则是专门为定义每个对应关系的空间邻居而设计的。</p>
+<p>1）全局变换评估：从一个大小为 N×4 的输入假定对应关系（每个特征点有一个二维坐标），我们的目标是生成将两组特征点之间进行对应的单应性矩阵。为了实现空间操作，我们采用了现成的 PointNet [28] 作为我们的骨干网络，因为它简单易用，并且在语义分割 [39]、点云配准 [40] 到目标检测 [41] 等任务上已经展现出令人满意的结果。具体地，假定对应关系 S 通过一个共享的 MLP [4, 64, 128, 1024]，并且一个对称的池化函数聚合所有成对匹配的特征，以产生全局特征向量。然后，另一个 MLP [1024, 512, 256, 9] 包括一个回归层用于输出 3×3 投影参数 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">θ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span></span></span></span>。</p>
+<p>2）对应关系分组：点的邻域由度量距离定义，但与点云数据不同，稀疏匹配并没有明确的距离度量定义。分别搜索两个关键点集的空间局部信息并不是一个理想的做法，我们希望获得具有更强局部一致性的匹配邻居。为了实现这一目标，我们的策略是在双边域中定义一个分段常数函数作为匹配距离。 例如，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p_i=(x_i,y_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>j</mi></msub><mo>=</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>j</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p_j=(x_j,y_j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>之间的距离可以表示为：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mo>⋅</mo><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\cdot|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span></span></span></span> 表示集合的基数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mo stretchy="false">(</mo><mo separator="true">⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">d(·)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">)</span></span></span></span> 是欧氏距离函数。 直觉是这样的：由于点周围小区域的物理约束，相邻像素和特征一起移动，并且匹配距离同时考虑<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_i,x_j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>j</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(y_i,y_j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>的空间关系，从而 一定程度上保证了局部区域匹配向量的一致性，如图2所示。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图 2. 特定匹配距离 C = 5 下推定匹配<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_i,y_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>的邻居示意图。 橘色箭头表示查询匹配<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_i,y_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，蓝色箭头表示匹配距离小于 C 的邻居匹配，并且 红色箭头是$ f(·, p_i)&gt; C$。</p>
+</blockquote>
+<p>根据方程5中的距离定义,我们可以利用 Ball 查询来查找查询匹配的特定半径 C 内的本地匹配，并且假定匹配的邻居 $p_i = (x_i , y_i ) $可以写为：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>与 K 最近邻搜索相比，Ball 查询的局部邻域保证了固定的区域尺度，从而使局部区域特征在空间上更具泛化性。</p>
+<h2 id="33-自适应结构表示学习"><a class="markdownIt-Anchor" href="#33-自适应结构表示学习"></a> 3.3 自适应结构表示学习</h2>
+<p>稀疏匹配的数据表示是不规则且无序的。 为了在两个点集之间学习上下文信息，存在两种策略：</p>
+<p>1）将点数据转换为描述结构信息的精心设计的统计数据或格网数据，然后再将其提供给网络架构（例如，LMR [14]和LSV-ANet[16]）；</p>
+<p>2）构建一个分层的 PointNet，并逐步提取越来越大的局部特征（例如，PointNet++ [29] 和 OANet [32]）。 然而，将不规则数据映射到规则数据的不可微手工技术效率低下，并且可能会忽略隐藏在数据中的有益模式。  PointNet 架构可以以端到端的方式学习全局和局部点特征，但与传统 CNN 相比，它在捕获数据的空间局部相关性方面存在缺陷。 迄今为止，PointNet 的成功应用仍然难以实现 [40]。</p>
+<p>另一方面，利用网格数据中的空间顺序信息是CNN成功的核心，最近的Vision Transformer家族[17] 也嵌入了补丁的位置信息，两者都提供了场景的重要空间线索。为了将这种归纳偏差推广到不规则和无序数据，我们提出了一种用于稀疏匹配的自适应表示学习模块(STR)。STR 的目的是以可学习的方式明确地建模点之间的空间交互信息。为了实现这一目标，STR必须学习一种排列不变的嵌入规则，该规则将散乱的点集映射到网格中密集表示的潜在正则化。如何确保网络能够对理想的空间交互信息进行编码？让我们来看看传统的可视化方法，它本质上决定了特定网格像素和点坐标之间的映射关系。受此启发，我们引入了一个空间感知网格<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">G</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>H</mi><mo>×</mo><mi>W</mi><mo>×</mo><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{G}\in\R^{H\times W\times 2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72521em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathbf">G</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.08125em;">H</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">W</span><span class="mbin mtight">×</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>作为交互特征，其中H和W表示网格的高度和宽度。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">G</mi></mrow><annotation encoding="application/x-tex">\mathbf{G}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68611em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbf">G</span></span></span></span></span>的像素坐标可以定义为：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>h</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mi mathvariant="normal">，</mi><mi>H</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">h\in[1，H]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.73354em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">h</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mord cjk_fallback">，</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mclose">]</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>w</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mi mathvariant="normal">，</mi><mi>W</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">w\in[1，W]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mord cjk_fallback">，</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mclose">]</span></span></span></span>。为了确保空间感知网格能够叠加在点集上，我们将每个匹配的邻居的空间坐标归一化到（0，1）。然后，使用一维卷积层和RELU激活函数作为密集特征编码器<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="bold">F</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{F}_e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83611em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">F</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">e</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，用于嵌入空间感知网格和匹配邻域的位置坐标。最后，我们引入了一种空间互相关操作来注入所有特征点与特定空间位置之间的交互特征，该操作可以表示为：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>×</mo></mrow><annotation encoding="application/x-tex">\times</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">×</span></span></span></span>为点积，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>Max</mtext><mo stretchy="false">(</mo><mo separator="true">⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{Max}(·)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Max</span></span><span class="mopen">(</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">)</span></span></span></span>为最大合并算子，它不仅去除了冗余的交互响应，而且实现了排列不变性。如图3所示，该过程类似于可视化方法，但是计算和存储相对或绝对位置信息的渲染机制是以可学习的方式推断的。值得注意的是，STR学习可以由多个相同的编码器堆栈组成，从而通过沿通道拼接不同的张量来提高网络的结构表示能力。</p>
+<p>总结：输入匹配点集，通过PointNet计算变换矩阵T，根据T变换其中一组点，通过距离阈值C进行分组。此时网络中每组点只剩下C个点。N是归一化。Encoder是三个全连接层，将通道维度（点的坐标维度）变为64。以通道维度为目标进行划分，也就是说有网格张量有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo>×</mo><mi>W</mi></mrow><annotation encoding="application/x-tex">H\times W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span></span></span></span>个<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>×</mo><mn>64</mn></mrow><annotation encoding="application/x-tex">1\times 64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">4</span></span></span></span>的向量，点集张量有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span>个<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>×</mo><mn>64</mn></mrow><annotation encoding="application/x-tex">1\times 64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">4</span></span></span></span>的向量。将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>×</mo><mn>64</mn></mrow><annotation encoding="application/x-tex">1\times 64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">4</span></span></span></span>进行点集操作，类似位置编码，然后在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span>也就是点集维度进行最大池化（类似PointNet的置换一致性）。</p>
+<p>（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo>×</mo><mi>W</mi><mo>×</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">H\times W\times 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>怎么通过全连接层的？应该是将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo>×</mo><mi>W</mi></mrow><annotation encoding="application/x-tex">H\times W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span></span></span></span>临时concate了一下）</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图3. STR学习示意图。在STR的特定位置<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>h</mi><mi mathvariant="normal">，</mi><mi>w</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(h，w)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">h</span><span class="mord cjk_fallback">，</span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mclose">)</span></span></span></span>，响应值由网格<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">G</mi></mrow><annotation encoding="application/x-tex">\mathbf{G}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68611em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbf">G</span></span></span></span></span>的单个坐标嵌入与关键点的所有坐标嵌入之间的最大标量积确定。请注意，编码器的数量是可选的。为清楚起见，我们仅展示了单个编码器的推理过程。</p>
+</blockquote>
+<h2 id="34-情境感知注意力"><a class="markdownIt-Anchor" href="#34-情境感知注意力"></a> 3.4 情境感知注意力</h2>
+<p>经过表示学习，我们可以获得一个 3D 结构张量，这类似于传统方法中手工制作的结构描述符。 匹配 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是一个内点，特征空间中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mrow><mi mathvariant="bold">S</mi><mi mathvariant="bold">T</mi><mi mathvariant="bold">R</mi></mrow><msub><mi>x</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathbf{STR}_{x_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93621em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">S</span><span class="mord mathbf">T</span><span class="mord mathbf">R</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139199999999997em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mrow><mi mathvariant="bold">S</mi><mi mathvariant="bold">T</mi><mi mathvariant="bold">R</mi></mrow><msub><mi>y</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathbf{STR}_{y_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.972218em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">S</span><span class="mord mathbf">T</span><span class="mord mathbf">R</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 之间的距离将尽可能小。 相反，异常值的表示存在很大差异。 由于 STR 的常规数据格式，可以利用简单的迷你 CNN 来寻求共识度量函数来识别异常值。 然而，遮挡、纹理模糊等图像退化问题将不可避免地导致拓扑结构的模糊性，即离群点也具有非常相似的局部邻域元素分布，见图4左。 因此，仅仅利用结构表示的共识是有问题的。</p>
+<p>事实上，从模糊结构中检索内点的关键是确定空间错位发生的位置。 给定一个假定的匹配$ (x_i , y_i )$，查询点的空间错位将影响整个拓扑特征（即所有邻居与查询点之间的距离）。 相反，单个邻域点的异常值不会显着影响整个拓扑特征，如图4右所示。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图 4. 上下文感知注意力的示意图。 左：部分不匹配导致拓扑结构的模糊性，这使得基于结构表示来评估内部点和异常点变得困难。 右：从更细粒度的角度来看，我们观察到以<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为中心点分别构建星型拓扑，并使用欧氏距离作为节点特征可以有效识别结构模糊性。</p>
+</blockquote>
+<p>基于这一观察，我们在这里提出了一种简单而实用的注意力机制（CAA），该机制旨在专注于识别空间错位模式，从而消除结构语义歧义。 形式上，CAA 是一种基于旋转不变上下文感知编码的门控机制，用于特征重新校准，可以写为：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>o</mi><mi>n</mi><mi>v</mi><mo stretchy="false">(</mo><msub><mrow><mi mathvariant="bold">S</mi><mi mathvariant="bold">T</mi><mi mathvariant="bold">R</mi></mrow><mi>i</mi></msub><mo stretchy="false">)</mo><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mi mathvariant="script">J</mi></msup></mrow><annotation encoding="application/x-tex">conv(\mathbf{STR}_i)\in\R^{\mathcal{J}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord mathbf">S</span><span class="mord mathbf">T</span><span class="mord mathbf">R</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999998em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.18472em;">J</span></span></span></span></span></span></span></span></span></span></span></span></span>表示平坦化卷积特征，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mn>1</mn></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi mathvariant="script">J</mi><mo>×</mo><mi>C</mi></mrow></msup></mrow><annotation encoding="application/x-tex">W_1\in\R^{\mathcal{J}\times C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999998em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.18472em;">J</span></span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mn>2</mn></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mn>128</mn><mo>×</mo><mn>2</mn><mi mathvariant="script">J</mi></mrow></msup></mrow><annotation encoding="application/x-tex">W_2\in\R^{128\times 2\mathcal{J}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999998em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">2</span><span class="mord mtight">8</span><span class="mbin mtight">×</span><span class="mord mtight">2</span><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.18472em;">J</span></span></span></span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mn>3</mn></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi mathvariant="script">J</mi><mo>×</mo><mn>128</mn></mrow></msup></mrow><annotation encoding="application/x-tex">W_3\in\R^{\mathcal{J}\times 128}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999998em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.18472em;">J</span></span><span class="mbin mtight">×</span><span class="mord mtight">1</span><span class="mord mtight">2</span><span class="mord mtight">8</span></span></span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mrow><mi mathvariant="bold">C</mi><mi mathvariant="bold">A</mi></mrow><mi>i</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mi>C</mi></msup></mrow><annotation encoding="application/x-tex">\mathbf{CA}_i\in\R^C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83611em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">C</span><span class="mord mathbf">A</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span> 表示上下文感知编码：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>对上下文感知编码进行线性投影的目的是获得与STR的展平卷积特征相同的尺寸，从而减少权衡参数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>的维度。  STR和CAA形成了一个互补的解决方案，换句话说，前者提供了拓扑结构特征，而CAA可以被认为是查询匹配的密集相对位置信息嵌入。 当存在结构模糊时，门控机制会增加上下文感知编码的权重，从而将注意力集中在查询点是否在空间上错位。 这种自校准功能 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">C</mi><mi mathvariant="script">S</mi><mi mathvariant="script">R</mi></mrow><annotation encoding="application/x-tex">\mathcal{CSR}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.05834em;">C</span><span class="mord mathcal" style="margin-right:0.075em;">S</span><span class="mord mathcal">R</span></span></span></span></span> 使我们能够利用简单的全连接网络来计算每个假定匹配的置信概率。</p>
+<h2 id="35-基于学习的对应关系选择方法"><a class="markdownIt-Anchor" href="#35-基于学习的对应关系选择方法"></a> 3.5 基于学习的对应关系选择方法</h2>
+<p>基于学习的对应关系选择方法通常结合交叉熵损失函数来剔除异常值。我们的总体训练目标同样包含交叉熵损失项，以计算地面真实标签和输出之间的偏差：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq12.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span></span></span></span>表示CSR-Net参数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span>表示从两个图像场景中提取的推定集合。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mrow><mi>c</mi><mi>l</mi><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathcal{L}_{cls}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是在每个假设对应上聚集的交叉熵损失，而<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mrow><mi>r</mi><mi>e</mi><mi>g</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathcal{L}_{reg}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>表示变换的源点集和目标点集上的切角损失。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span></span></span></span>是超参数加权<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mrow><mi>c</mi><mi>l</mi><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathcal{L}_{cls}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mrow><mi>r</mi><mi>e</mi><mi>g</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathcal{L}_{reg}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>。具体地说，二进制交叉损耗可以写成：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq13.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>t</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">t_i=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76508em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>表示对应<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_i,y_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>是异常值，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>t</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t_i=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76508em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>表示内点，并且<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是第i个假定对应的SoftMax层的输出。 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">L</mi></mrow><annotation encoding="application/x-tex">\mathcal{L}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal">L</span></span></span></span></span>的第二项作为配准的约束，其值代表配准效果的好坏：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq14.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>MIN</mtext><mo stretchy="false">(</mo><mo separator="true">⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{MIN}(·)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">MIN</span></span><span class="mopen">(</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">)</span></span></span></span>返回集合的最小值，变换参数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span></span></span></span>由整体到部分传播层生成，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>S</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">S_x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>S</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">S_y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>表示构成对应关系<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span>的两组特征点。理论上，添加一个类似于归一化互相关（NCC）的相似性正则项，以鼓励内点的结构相关性并惩罚外点的相关性是必要的。然而，我们发现 CSR-Net 能够在不需要优化对比损失的情况下学习到良好的视觉表征，并在第4.5 节中展示了这一点确实发生的定性证据。</p>
+<h1 id="4-实验结果"><a class="markdownIt-Anchor" href="#4-实验结果"></a> 4 实验结果</h1>
+<p>在这里，首先介绍了实现细节、图像匹配数据集和评价标准。其次，我们在单传感器和多通道图像匹配上对CSR-Net(以及九种最新技术)进行了基准测试，并对CSR-Net的健壮性和通用性进行了评估。此外，我们还深入分析了框架的各个模块，并将其应用于解决图像配准和融合任务，这些任务的性能由图像匹配质量决定。</p>
+<p>实现细节：使用9种最先进的失配消除方法进行比较，包括参数方法：RANSAC[11]、PROSAC[21]、MAGSAC++[13]；非参数方法：ICF[42]、LPM[36]、RFM-SCAN[37]；学习方法：LMR[14]、OANET[32]、LSV-ANET[16]。RANSAC、PROSAC和MAGSAC++是基于OpenCV 4.5.3库实现的，其中最大迭代次数为5万次，几何模型为单应变换，像素阈值为5。其他竞争对手的实现基于公开的代码和自己的优化参数设置。SIFT[8]和RIFT[10]被用来确定假定的对应关系。我们的CSR-Net是用Pytorch实现的，网格大小为6×6，网络参数如图1所示。请注意，对于不同的查询匹配，特定邻居匹配的数量是不同的。为了便于数据处理，在STR学习的输入矩阵中，我们使用查询匹配将其填充到统一的大小，并将C的上限设置为30。在训练阶段，损失函数L(权值α=0.2时)的优化采用Adam算法[43]，学习率为1e-3。此外，使用25对单传感器图像和25对多模式图像训练CSR-Net，这些图像包括仿射、投影和非刚性变形。可以使用更多的图像对，但我们使用固定的训练数据来演示本文方法的一般性。所有的实验都是在一台笔记本电脑上进行的，该笔记本电脑配备了3.80 GHz的AMD Ryzen 7 5800H CPU和NVIDIA GeForce RTX 3060，通过MatLab和Python进行。</p>
+<p>数据集：为了实现直接和公平的比较，我们在以下六个具有代表性的数据集上进行了实验：</p>
+<p>(A)多模式图像匹配数据集[19]。MIM是一个新发布的用于图像匹配的数据库，涵盖了遥感(RS)、医学等CV领域的所有具有代表性的多模图像。1)遥感研究数据集包括光学跨时、昼夜、LiDAR深度光学、红外光学、MAP光学、SAR光学以及无人机跨季节图像对；2)医学研究数据集包括MR T1、T2和PD加权图像、不同成像技术的视网膜图像、MRI-PET和SPECT-CT的交叉匹配；3)与CV相关的研究数据集包括可见光-IR、可见光跨季、可见光-近红外、图像-油漆和昼夜图像对。地面真实变形由该数据库提供。</p>
+<p>(B)遥感数据集[16]、[44]。该数据集提供156对遥感图像，包括不同类型的高空遥感图像(即彩色红外、合成孔径雷达和全色照片)和小型无人机图像。遥感数据集提供了每个图像对及其地面事实标签的假定匹配。</p>
+<p>©小型无人机图像配准数据集(SUIR)[18]。SUIR用于图像配准研究，包含60对无人机图像(800×600)，从不同的视角拍摄。该数据集同样提供假定的对应关系和基本事实标签，其中每个图像对包括274-2385个匹配。</p>
+<p>(D)VGG数据集[45]。VGG包含40个图像对，它们的图像因视点、模糊、光线、缩放和旋转以及JPEG压缩而发生变化。这些图像对始终遵循投影变换，变形参数由数据集提供。</p>
+<p>(E)牛津建筑数据集(OxBs)[46]。这个数据集由5062张从Flickr上通过搜索特定牛津地标收集的图像组成。大多数地标图像是从不同的成像条件拍摄的，可以用于宽基线匹配研究。</p>
+<p>(F)混合类型图像数据集(MTI)：MTI数据集涉及不同的变换(例如，仿射、核线几何、分段线性和非刚性)，由动态场景、可变形对象和其他CV图像对组成。通过多用户手动交叉检查来获得地面真实标签[16]。</p>
+<p>评价标准：遵循[14]、[16]、[36]三个评价指标：查准率、查全率和F分，在整个实验过程中使用。给定真阳性(TP)、假阳性(FP)、真阴性(TN)和假阴性(FN)的数量，上述三个评价度量可以被定义为：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi><mo>=</mo><mi>T</mi><mi>P</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">R=TP/(TP+FN)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo>=</mo><mi>T</mi><mi>P</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>P</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P=TP/(TP+FP)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>=</mo><mn>2</mn><mo>⋅</mo><mi>P</mi><mo>⋅</mo><mi>R</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mi>P</mi><mo>+</mo><mi>R</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">F=2\cdot P\cdot R/(P+R)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mclose">)</span></span></span></span>，其中recall®是在初始推定匹配中包含的整个嵌入物(TP+FN)中预测的真嵌入物(TP)的百分比，精度§是TP在那些保留的嵌入物(TP+FP)中的百分比，F-Score(F)表示匹配性能，其定义为查全率和查准率的调和平均值。</p>
+<h2 id="41-定性说明"><a class="markdownIt-Anchor" href="#41-定性说明"></a> 4.1 定性说明</h2>
+<p>为了直观地反映CSR-Net的匹配性能，首先使用了6个具有代表性的匹配场景进行测试，如图5所示。彩色红外航拍照片只涉及线性(如刚性或仿射)变换，这在遥感图像拼接中通常会出现。无人机拍摄的低空图像对往往存在投影失真，在环境自动监测领域特别需要寻找这些图像的良好对应关系。第三种是宽基线户外建筑图像对，这通常出现在SLAM和Structure from Motion中。其余三对都是非刚体运动，这在变形体识别和动态景象匹配中是经常发生的。从图5可以看出，当图像变换不满足特定的几何模型时，参数方法不能很好地工作，我们看到我们的CSR网总是可以产生令人满意的结果。表1中还报告了CSR-Net(以及9个备选方案)在这些图像对上的准确率、召回率、F-Score和运行时间。从定量结果看，CSR-Net比LSV-Anet提高了7.10%的F-Score指数和1722.80%的推理速度。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图 5. 六个代表性匹配场景上十种异常值剔除方法的特征匹配结果（蓝色 = 真阳性，绿色 = 假阴性，红色 = 假阳性）。 为了可见性，每个图像对中最多显示 1,000 个随机选择的匹配项，并且我们不显示真正的负例。</p>
+</blockquote>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表1 十种方法在六种代表性匹配场景上的定量比较。表中数值代表平均值</p>
+</blockquote>
+<h2 id="42-单传感器图像的定量结果"><a class="markdownIt-Anchor" href="#42-单传感器图像的定量结果"></a> 4.2 单传感器图像的定量结果</h2>
+<p>在本节中，我们对三种类型的单传感器图像进行实验，以全面定量评估我们的 CSR-Net 在处理常见匹配场景（即高空卫星图像、低空无人机图像和户外场景）的性能。所有测试图像来自数据集 RS-satellite、RS-UAV 和 OxBs。十种算法的初始内点百分比、召回率、精确度和 F-score 统计数据在图 6 中报告，并且我们还在表 II 中提供了运行时间统计数据。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图 6. 从左到右：内点率、召回率、精度和 F 分数的累积分布。 从上到下，对高空卫星图像（RS-satellite）、低空无人机图像（RS-UAV）和室外建筑场景（OxBs）进行定量比较。 粗体表示最好的结果。</p>
+</blockquote>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表2 十种方法在三种类型的单传感器图像上的平均运行时间（以毫秒为单位）。表中的值分别表示平均值和标准差</p>
+</blockquote>
+<p>结果表明，邻域一致性方法LPM和RFM-SCAN与传统的参数方法(即RANSAC-Family)相比，在精度上没有明显的优势。然而，由于降低了几何约束以增强内点检索能力，特别是对于深度不连续、运动不一致的场景，它们总能产生有希望的召回指数。相比之下，RANSAC族只保留了符合某些几何约束的部分对应关系，因此具有较高的精度。ICF的结果并不令人满意，这是因为它使用的是慢而平滑的先验，如果运动场涉及较大的视角变化，则可能会失败。OANet通过回归基本矩阵提高了两视图几何匹配的稳健性，并在OxBs中得到了满意的结果。LMR和LSV-ANet是两种共识学习算法，旨在学习一般网络以确定任意假设匹配的正确性。由于LMR和LSV-ANet侧重于每个通信的局部性，因此在处理不同的图像时表现出了优势。而我们的CSR-Net在一个统一的网络下自动建模匹配结构，允许我们使用原始的点集数据而不是手工制作的特征，从而可以进一步提高匹配性能。</p>
+<h2 id="43-多模态图像的定量结果"><a class="markdownIt-Anchor" href="#43-多模态图像的定量结果"></a> 4.3 多模态图像的定量结果</h2>
+<p>在常见的退化问题（如几何变换）之外，多模态图像还面临着显著的非线性外观差异，从而导致更复杂的匹配模式。例如，跨季节的遥感图像通常涉及地面起伏变化引起的局部失真。因此，本实验对不同类型的多模态图像进行了全面的定量比较。具体而言，我们评估了我们的 CSR-Net 在多模态遥感图像（包括白天-夜晚、深度-光学、红外-光学、地图-光学、光学-光学、SAR-光学）和多模态医学图像（包括 PD-T1、PD-T2、视网膜和T1-T2），以及其他 CV 多模态图像（包括 RGB-NIR 和 VIS-IR）上的性能。十种方法的平均 F-score 和运行时间总结在表 III 中。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表3 不同类型多模态图像的定量比较。表中的值代表三个测试数据集的平均F-Score和平均内点比率分别为32.86%、30.52%、30.07%。为了清楚起见，最佳指标 数值以粗体显示，第二好的指标以红色显示</p>
+</blockquote>
+<p>正如表所示，MAGSAC++ 在大多数类型的多模态遥感图像中都能达到令人满意的 F-score。这是因为我们使用了足够数量的迭代次数（50,000）来获得一个无外点的子集进行变换估计。值得注意的是，多模态数据固有的非刚性特性阻碍了 MAGSAC++ 获得准确的参数模型。RFM-SCAN 在由 RIFT 描述符的模糊特性引起的一对多问题中遭受严重的性能退化。换句话说，RFM-SCAN 将一对多匹配聚类成一个运动一致的内点簇。总体而言，与传统方法相比，LMR 和 LSV-ANet 在多模态医学图像和其他 CV 多模态图像上显示出更好的性能。受益于 STR 和 CAA，我们的 CSR-Net 显示出更强的泛化能力，并且极大地改善了不同类型的多模态图像的匹配效果。</p>
+<h2 id="44-不同程度退化下的鲁棒性"><a class="markdownIt-Anchor" href="#44-不同程度退化下的鲁棒性"></a> 4.4 不同程度退化下的鲁棒性</h2>
+<p>为了进一步揭示 CSR-Net 的鲁棒性和通用性，考虑了以下具有不同退化程度的匹配模式：a) 五个级别的光照变化，通常由不同的成像条件引起（跨时间）；b) 五个级别的缩放，通常出现在图像拼接中；c) 五个级别的投影，通常由视点变化引起；d) 五个级别的分段线性（伴有遮挡），常出现在如视频检索等动态场景中；e) 五个级别的非刚性，常见于可变形物体识别和医学图像处理。上述不同程度的退化在图 8 中展示，其中前三列来自 VGG 数据集，最后两列来自 MTI 数据集。召回率-精确度统计和 F-score 在图 7 中总结。可以看出，CSR-Net 在五个级别的变形（包括不同的匹配模式）上超越了所有其他选择。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图7.不同程度图像劣化的定量比较。 左：召回率-精确率统计数据和线性预测曲线。 右：总体表现以平均 F 分数报告。 为了清楚起见，我们指出了每个级别的最佳和第二佳结果。</p>
+</blockquote>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图8. 从上到下，与第一行相比，退化程度逐渐增加。 五个水平的平均内点率分别为70.93%、60.52%、49.03%、42.89%和26.53%。</p>
+</blockquote>
+<h2 id="45-消融研究和讨论"><a class="markdownIt-Anchor" href="#45-消融研究和讨论"></a> 4.5 消融研究和讨论</h2>
+<p>在本节中，我们将通过重新运行上述三个定量实验，对 STR 和 CAA 进行剖析研究。具体来说，为了评估各组件可以带来的性能提升，我们提供了不同的匹配表示和共识学习骨干，包括 CSR + MLP、STR + CNN、STR + MLP 以及 STR + ViT [17]，其中每组都包含了与不同数量的 STR 编码器相关的结果。此外，我们还测试了两个代表性的点云网络，即 PointNet++ [29] 和 PointCNN [47]，它们直接使用整体到部分传播层的分组匹配。实验结果总结在表 IV 中。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表4 我们的CSR-NET在三个定量实验上的消融研究。Tr.表示变换，Num.代表结构编码器的数量。表中的值代表平均F-Score。请注意，在训练更多结构编码器时，我们不会调整损失比例和训练计划。</p>
+</blockquote>
+<p>从结果中我们可以观察到，增加编码器的数量可以实现一致的性能增益，而与最终的分类网络无关。 当编码器数量从1个变为2个时，性能可以提高4.65%到8.1%，并且随着编码器数量的增加，性能可以进一步提升。 但它也会导致运行时间线性增加。 如果使用更高性能的GPU（例如NVIDIA RTX3090）或分布式学习平台，CSR-Net可以提供实时、超鲁棒的图像匹配，因此有利于视频应用。 对于 CAA，它也比 STR 基线提高了近 1∼4%。 有趣的是，我们发现当使用CAA时，全局匹配操作的性能增益将会降低。 这是因为上下文感知编码具有旋转不变性。 与CNN相比，ViT通常在较小的训练集下具有较弱的归纳偏差，这可以通过使用更多的训练样本来解决。  PointNet++是PointNet的扩展，旨在提高捕获点集局部上下文的能力，但它对于建模匹配结构和利用稀疏匹配中的空间局部相关性可能不是最佳的。  PointCNN 通过 X-conv 算子模仿经典 CNN，因此它可以在某种程度上更好地捕获局部结构。 尽管如此，直接使用这些模型仍然不能很好地解决匹配问题。</p>
+<p>编码器已经学会根据特征点的空间分布来模仿传统的局部结构嵌入（例如，LSV [16]）。  STR 对空间共定位特征反应强烈，这些特征与图像中关键点的位置相匹配。 此外，高度一致的特征响应图证明STR学习可以过滤掉一些冗余特征（即异常值），这将提高后续结构一致性评估的有效性。 这也是传统的匹配表示[14]-[16]无法实现的。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图 9. STR 编码器的一些结构表示可视化。 补丁的强度表示假定匹配和上下文网格之间的空间互相关特征图，其值取决于特征点的空间分布。 红色矩形表示异常值的结构表示。</p>
+</blockquote>
+<h2 id="46-应用图像配准和融合"><a class="markdownIt-Anchor" href="#46-应用图像配准和融合"></a> 4.6 应用：图像配准和融合</h2>
+<p>图像特征匹配已广泛应用于许多视觉任务中，而图像配准是最关键的应用之一，其重点是最大化两幅图像之间重叠内容的对齐。 因此，为了证明我们的 CSR-Net 在匹配任务中的性能，首先，首先使用 CSR-Net 获取可靠的对应关系。 然后，选择可以解决非刚性翘曲的薄板样条（TPS）和单应性作为变换模型来生成平滑拟合。 最后，将运动图像中的每个像素映射到相应的坐标，并通过双线性插值算法获得变换图像的强度。 不同类型图像对（包括（多模态）遥感图像和多模态医学图像）的直观配准结果如图10上所示。 扭曲和棋盘结果表明，CSR-Net 可以很好地对齐所有图像对的重叠区域。 按照[16]、[44]，均方根误差（RMSE）、最大误差（MAE）和中值误差（MEE）用于衡量图像配准的精度，可以定义为：</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/eq15.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">T</mi><mo stretchy="false">(</mo><mo separator="true">⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{T}(·)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.25417em;">T</span></span><span class="mopen">(</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">)</span></span></span></span>表示从运动图像到固定图像的变换函数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><mo stretchy="false">(</mo><msub><mi>M</mi><mi>r</mi></msub><mo separator="true">,</mo><msub><mi>F</mi><mi>r</mi></msub><mo stretchy="false">)</mo><msubsup><mo stretchy="false">}</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>R</mi></msubsup></mrow><annotation encoding="application/x-tex">\{(M_r,F_r)\}_{r=1}^R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913309999999998em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span> 是位于运动图像和固定图像中的R个对应的地标（即像素坐标）。 定量比较结果总结在表5中。值得注意的是，表5中的结果是两个变换模型的最小误差。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/table5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表5 图像配准的定量比较。采用RMSE、MAE和MEE的平均值和标准差进行评估。为了清楚地显示不同方法的性能，最佳指标值以粗体显示</p>
+</blockquote>
+<p>在上述匹配流程中，估计变换函数是直接影响性能的关键步骤。 不仅是配准任务，实际上大多数基于特征的任务都需要估计两个场景之间的变换函数。 例如，全景拼接利用配准和融合技术将同一场景中的两幅图像的重叠部分对齐，最后将它们融合形成广角、高分辨率的全景图像。 此外，闭环检测是 SLAM 系统的基本组成部分，需要精确识别环境中之前访问过的区域。 也就是说，离群值剔除方法的查全率和精确率都决定了变换模型的准确性，从而影响其应用性能。 更具体地说，如果剪枝集包含大量异常值（即低精度），这可能会使平滑拟合函数产生偏差并导致后续应用程序失败。 内点数量不足，即召回率低，使得生成的平滑拟合函数无法正确表示潜在变换，并导致较大的局部拟合误差，尤其是对于非刚性拟合。 现有的方法大多是在精度和召回率之间进行权衡。 相反，同时考虑召回率和精确率，CSR-Net 具有令人鼓舞的性能。 因此，在所提出的结构表示学习策略下，它可以很好地适用于大多数情况。 最后，我们通过我们的 CSR-Net 和 U2Fusion 网络 [1] 给出了多模态图像融合的几个定性结果，如图 10 所示。 这些视觉结果表明，所提出的 CSR-Net 可以准确对齐两幅图像，尤其是边缘区域，这有助于更好地实现像素级融合。 融合结果具有丰富的纹理细节和明显的边缘，并且视觉上没有引入伪影。</p>
+<p><img src="/2024/04/18/CSR-Net%EF%BC%9A%E5%AD%A6%E4%B9%A0%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%93%E6%9E%84%E8%A1%A8%E7%A4%BA%E4%BB%A5%E5%AE%9E%E7%8E%B0%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%AF%B9%E5%BA%94/fig10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图 10. 上图：我们的 CSR-Net 在多视图遥感、多模态遥感和医学图像上的代表性图像配准结果。 下图：通过我们的方法对齐的遥感图像对的几个图像融合结果。</p>
+</blockquote>
+<h1 id="5-总结"><a class="markdownIt-Anchor" href="#5-总结"></a> 5 总结</h1>
+<p>这项工作提出了一种基于潜在局部共识学习的鲁棒特征匹配方法——上下文结构表示网络（CSR-Net）。 现有实践依赖于手动步骤，很难表示复杂的共识模式。 相反，CSR-Net 尝试将结构表示学习和良好的对应搜索封装到一个统一的模型中。 另一方面，由于无序匹配被转换为以密集网格表示的潜在规范空间顺序，这使得我们能够以端到端的方式灵活地构建混合架构（例如，带有 CNN 的 PointNet）。 此外，传播层提供了一种利用全局信息的方法，而CAA机制使CSR-Net能够识别模糊的共识模式，从而提高复杂匹配场景下的鲁棒性。 该框架可能有助于提供解决不匹配消除任务的新思路。 从实验结果来看，我们的方法在单模态和多模态图像方面都获得了优于最先进技术的强大性能。  CSR-Net 还可以为特定问题的几何估计器提供良好的初始化。</p>
+<p>我们的工作重点是假定匹配的净化，这意味着 CSR-Net 忽略源图像的内容。 然而，原始图像纹理实际上可以为对应关系非常稀疏的局部区域提供正信息。 此外，我们的方法在时间复杂度方面并不是最优的，这可能会限制 CSR-Net 在一些要求较高的实时任务中的应用。 对于未来的研究来说，如何设计一个特征提取子网络来利用原始图像内容来进一步提高对共识模式的识别，是一个值得练习的问题。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/">#特征匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
+      
+        <a href="/tags/TIP/">#TIP</a>
+      
+        <a href="/tags/%E9%94%99%E8%AF%AF%E5%8C%B9%E9%85%8D%E5%8E%BB%E9%99%A4/">#错误匹配去除</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CSR-Net：学习自适应上下文结构表示以实现鲁棒特征对应</div>
+      <div>http://example.com/2024/04/18/CSR-Net：学习自适应上下文结构表示以实现鲁棒特征对应/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年4月18日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/04/18/PointNet%E4%BB%A5%E5%8F%8APointNet++%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="PointNet以及PointNet++学习笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PointNet以及PointNet++学习笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/04/16/%E7%90%86%E8%A7%A3%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2/" title="理解傅里叶变换">
+                        <span class="hidden-mobile">理解傅里叶变换</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

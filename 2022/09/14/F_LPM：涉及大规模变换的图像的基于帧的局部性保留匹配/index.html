@@ -1,0 +1,971 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="（2022）LPM的变体，关注大尺度的缩放，提出了一种KNN的变体，使其可以在大缩放中寻找到合适的邻域点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配">
+<meta property="og:url" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="（2022）LPM的变体，关注大尺度的缩放，提出了一种KNN的变体，使其可以在大缩放中寻找到合适的邻域点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/title.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic1.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic2.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/table1.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form1.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form2.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form3.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic3.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form4.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form5.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form6.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form7.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form8.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic4.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form9.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form10.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form11.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form12.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic5.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form13.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form14.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form15.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form16.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic6.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/vectors.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form17.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/R.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form18.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form19.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form20.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form21.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form22.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form23.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/alg1.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic7.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic8.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form25.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic9.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic10.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic11.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/table2.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic12.png">
+<meta property="og:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic13.png">
+<meta property="article:published_time" content="2022-09-14T14:03:00.000Z">
+<meta property="article:modified_time" content="2024-02-27T07:36:47.820Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="邻域拓扑一致">
+<meta property="article:tag" content="F-LPM">
+<meta property="article:tag" content="特征匹配">
+<meta property="article:tag" content="论文翻译">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/title.png">
+  
+  
+  
+  <title>F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-14 22:03" pubdate>
+          2022年9月14日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          112 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/title.png" srcset="/img/loading.gif" lazyload alt="title"></p>
+<h1 id="f_lpm涉及大规模变换的图像的基于帧的局部性保留匹配"><a class="markdownIt-Anchor" href="#f_lpm涉及大规模变换的图像的基于帧的局部性保留匹配"></a> F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</h1>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要：</h1>
+<p>特征匹配是指在两组局部特征之间建立可靠的对应关系，这是遥感应用中必不可少的方法，例如图像配准和镶嵌。在本文中，提出了一种简单而有效的方法，称为基于帧的局部保存匹配（F-LPM），用于鲁棒的遥感图像匹配。我们主要关注那些涉及大规模几何变换（例如，极端缩放）的图像对。我们方法的关键思想是挖掘框架知识，例如尺度不变特征变换（SIFT）等常见特征所隐含的特征方向和尺度。框架知识是免费获得的，我们发现它在特征匹配中具有重要意义，特别是对于我们的重点——大规模几何变换。与其他最先进的方法相比，所提出的方法可以轻松处理几何挑战和高异常值比例，并显着提高性能。</p>
+<p>关键词：特征匹配、框架知识、错配去除、异常值剔除、遥感图像、尺度不变特征变换（SIFT）。</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1. 引言</h1>
+<p>特征匹配是摄影测量和遥感中的一个基本且具有挑战性的问题。其目标是在不同时间 [1]、从不同视角 [2] 或以不同分辨率 [3] 和模式 [4] 捕获的两幅图像之间建立可靠的特征对应关系。它对遥感任务的数量具有重要意义，例如图像配准[5]、图像融合[6]、图像拼接[7]和基于图像的定位[8]。它还广泛用于计算机视觉 [9]、[10] 和医学图像分析 [11]。特征匹配已经研究了几十年，最近，深度学习也被用于这项任务[12]、[13]，表现出有希望的性能。尽管在过去的几十年中取得了长足的进步，但由于缩放、旋转、视点变化、辐射失真和噪声的影响，特征匹配仍然是一项具有挑战性且不适定的任务[4]。因此，开发更强大的图像匹配算法 [1]、[4]、[5] 至关重要。</p>
+<p>特征匹配被认为具有组合性质[1]，[5]。例如，将第一个点集中的 N 个点匹配到另一个点集中的 N 个点将导致总共 N！安排，复杂度太高。为了解决这个问题，一种流行的策略是使用基于描述符的相似性约束[14]建立一组假定的对应关系。这种方法在第二个特征集中为第一个点集中的每个特征搜索具有最相似描述符的特征[14]。目前，已经提出了许多用于遥感图像的鲁棒局部描述符，以建立令人满意的假定匹配集[8]，[15]-[17]。然而，由于它们的模糊性（尤其是在涉及相似图案的图像中），不可避免地会出现很大比例的错误匹配[10]、[18]、[19]。因此，此时的匹配任务归结为在假定的匹配中选择正确的匹配，即内点，并拒绝错误的匹配，即异常点。</p>
+<p>几何约束 [5] 是根据正确匹配是全局或局部几何一致的事实而开发的。例如，来自多个视图的正确特征匹配通常遵循某种全局变换，如透视变换。利用几何约束的方法有很多种，可以分为两类——参数方法和非参数方法[20]。这两个类别的分类取决于它们对两个特征点集之间的几何变换的建模。参数化方法假设特征点经过一定的参数化变换，例如刚性、仿射或透视。在这一类中，鲁棒估计器，如 RANSAC [21]、MLESAC [22]、PROSAC [23] 等，应该是最经典和最受欢迎的估计器，它们已经被研究了很长时间。 RANSAC [21] 是一种假设和验证方法，它不断地对一些对应关系进行采样以生成一个暂定的参数模型，并通过计算相干对应数量来评估模型的质量。 RANSAC 对迭代次数和阈值敏感。提出了一些流行的 RANSAC 变体来解决这些问题，例如 MLESAC [22]、PROSAC [23] 和 MAGSAC [24]。另一种参数方法是统计回归方法[25]-[29]。李等人[28] 提出了一种用于遥感图像特征匹配的 lq 回归估计器，并获得了稳健且有希望的结果。吴等人[27] 还提出了一种基于加权总最小二乘的稳健回归估计器。</p>
+<p>参数化方法严重依赖于其预定义的参数化模型，并且在转换为非刚性时无效。因此，非参数方法大多被提出来解决这些问题[1]。例如，非参数插值方法 [18]、[30] 通过假设运动平滑度来插值非参数函数以检测异常值。这些方法通常具有三次复杂度，导致计算成本高。因此，它们很难在实时应用中使用。一些图匹配在遥感图像配准中的非参数方法中也起着重要作用[31]。这种代表性的方法包括图位移[32]、光谱匹配[33]和模式搜索[34]。</p>
+<p>最近，基于邻域共识的方法对异常值拒绝产生了越来越大的影响。邻域一致性衡量两个匹配特征的两个邻域之间的一定一致性，以评估正确性。最早的邻域共识思想是在 1990 年代提出的[35]，当时也被称为半局部约束。它被用作在使用诸如尺度不变特征变换 (SIFT) [10]、[19] 等描述符建立假定匹配后执行的预过滤步骤。</p>
+<p>在过去几年中，已经提出了许多最先进的方法，例如 GMS [19]、局部保存匹配 (LPM) [10]、引导局部保存匹配 (GLPM) [1] 和最近的密集匹配工作很少[36]，[37]。通常，这些方法在邻域结构和拓扑（内点的）在变换前后相似的共识假设下选择匹配。马等人。 [5] 开发了一种称为局部线性变换的局部几何约束来衡量邻居局部结构的一致性。 GMS 通过将运动平滑假设建模为统计测量来选择置信对应。因此，共识是通过对应的两个点的邻域之间的相交邻居的数量来衡量的[19]。在最近的密集匹配工作[37]中也可以看到类似的想法，其中李等人。尝试解决显着的类内变化和在建立密集对应关系时缺乏密集注释的问题。 [38] 中提出了一种并行设计的异常值检测方法，该方法通过分层自适应仿射验证来拒绝异常值。在[39]中提出了一种兼容特定的方法，它搜索兼容的邻居来衡量共识，并显示出良好的鲁棒性但效率低。此外，[40] 中引入的局部性保留已被证明在衡量邻域共识方面非常有效 [1]、[10]、[41]。与 GMS 中的共识相比，局部性保留不仅衡量了相交邻居的数量，而且还评估了拓扑结构。 LPM 假设由于物理约束，应保留转换后的相邻对应关系的分布和拓扑。</p>
+<p>尽管已经取得了很大进展，但异常值拒绝仍然是鲁棒图像匹配中的一个挑战[4]。由于两个原因，这个问题在遥感图像匹配中特别具有挑战性。首先，由于噪声、云层覆盖或辐射畸变，遥感图像的离群率可能非常高。其次，遥感图像可能涉及大规模的几何变换，从而增加了处理难度。</p>
+<p>为了解决上述挑战，我们提出了一种基于框架的邻域共识方法。我们方法的关键思想是挖掘框架知识，例如特征方向和共同特征附加的尺度。框架知识通常是免费获得的，我们发现它在特征匹配中具有重要意义，特别是对于涉及大规模几何变换和重异常值的遥感图像。</p>
+<p>我们首先总结了流行的尺度和方向不变特征的共同特征——方向和尺度知识——然后基于这些知识开发了一种几何鲁棒异常值剔除方法。我们的方法受到局部性保存思想的启发[10]，我们使用框架知识重新设计了 LPM 方法的所有关键问题。我们将我们的方法命名为基于帧的 LPM (F-LPM)。</p>
+<ul>
+<li>
+<p>我们发现框架知识非常重要。知识免费提供，我们将框架知识融入流行的局部性保存模型中。</p>
+</li>
+<li>
+<p>我们提出了一种新颖的基于框架的邻域构建方法，该方法对极端缩放（高达五倍）和异常值率（高达 97%）具有鲁棒性。此外，它不需要多尺度实现。</p>
+</li>
+<li>
+<p>我们通过利用框架知识开发新的共识措施，对极端几何变换和异常值具有显着的鲁棒性。</p>
+</li>
+</ul>
+<p>在剩下的部分中，我们首先在第二部分介绍这项工作的动机和初步。然后，我们在第三节中详细描述了所提出的方法。最后，我们在第四节中测试该提议，并在第五节中得出结论。请注意，我们使用内点来表示来自正确匹配的匹配特征，使用异常值来表示来自错误匹配的匹配特征。本文使用的主要符号如表一所示。代码将在 <a target="_blank" rel="noopener" href="https://github.com/shenliang16/F-LPM">https://github.com/shenliang16/F-LPM</a> 上提供。</p>
+<h1 id="2-动机和预备"><a class="markdownIt-Anchor" href="#2-动机和预备"></a> 2. 动机和预备</h1>
+<h2 id="21-放大图像中的邻里共识"><a class="markdownIt-Anchor" href="#21-放大图像中的邻里共识"></a> 2.1 放大图像中的邻里共识</h2>
+<p>邻域共识要求内点的邻居具有几何一致性，可以显着区分它们与异常值。例如，LPM 中的局部性保留假设保留了邻域拓扑和几何结构的一致性，并使用固定的 k-最近邻 (KNN) 邻域来评估这种一致性。然而，我们观察到，当发生未知的大规模几何变换时，基于固定 KNN 邻域的一致性可能会被严重破坏。如图1所示，我们使用KNN在左右图像中寻找十个最近的关键点作为邻居（黄色圆圈内的红色/蓝色点）。为了正确测量邻域一致性，我们希望支持匹配的两个特征（即蓝线的两个端点）分别位于左右图像中选定的邻域区域内。换句话说，我们应该尝试在正确的图像中找到青色圆圈作为最佳邻域，这非常困难（因为我们实际上不知道青色圆圈的大小，因此也不知道应该使用多少个邻域搜索KNN）。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic1.png" srcset="/img/loading.gif" lazyload alt="pic1"></p>
+<blockquote>
+<p>图1. 难以衡量邻域共识的缩放图像对。这些点都是假定匹配的特征点，其中蓝点是正确匹配的内点，红点是错误匹配的异常点（为了不遮挡视线，我们省略了错误匹配的连接线）。黄线是要验证的正确特征匹配，而蓝色匹配是支持匹配。两个黄色圆圈代表KNN选择的十个最近邻的区域，不考虑缩放。右图中的青色虚线框表示左图中黄色圆圈区域对应的最佳邻域区域。</p>
+</blockquote>
+<h2 id="22-框架中的知识"><a class="markdownIt-Anchor" href="#22-框架中的知识"></a> 2.2 框架中的知识</h2>
+<p>框架或特征框架是指几何对象，例如点、（定向）圆或（定向）椭圆，表示图像特征的位置和形状[42]。该框架不仅指定了局部图像区域，还指定了图像变换[42]。以图 2 左图所示的 SIFT 特征为例，除了描述符和特征点坐标外，它还包含方向和尺度的知识。方向（或主方向）由梯度方向的统计直方图的最大分量决定（根据特征的 16 × 16 局部块计算）。尺度对应于在多尺度检测过程中检测到特征的层。更具体的定义和计算可以参考[14]或VLfeat[42]。这种方向和尺度知识意味着图像的局部几何变换。例如，当图像旋转时，特征的方向会相应改变；当图像被下采样时，特征的尺度也会减小。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic2.png" srcset="/img/loading.gif" lazyload alt="pic2"></p>
+<blockquote>
+<p>图2. SIFT 框架和局部相对变换。 （左）SIFT 框架示意图，包括位置（圆心）、比例（半径）和方向（半径段的角度）。 （右）两个正确匹配的 SIFT 特征，其中我们可以通过计算两个方向之间的差异来获得相对旋转，通过计算两个尺度的比率来获得缩放因子。</p>
+</blockquote>
+<h2 id="23-相关工作"><a class="markdownIt-Anchor" href="#23-相关工作"></a> 2.3 相关工作</h2>
+<p>有多种基于局部保存思想的相关方法，例如 LPM [10]、GLPM [1]、邻域流形表示共识 (NMRC) [43] 和 mTopKRP [44]。 LPM [10] 使用 KNN 为每个点集独立且单独地构建邻域，并通过假设由于物理约束而应保留转换后的相邻对应关系的分布和拓扑结构来建立共识度量。 GLPM [1] 利用描述符知识来增强基于 SIFT 比率值的鲁棒性。然而，众所周知，描述符知识通常是模棱两可和不可靠的，当很少有低 SIFT 比对应时，它可能缺乏鲁棒性 [5]、[14]、[18]。 mTopKRP [44] 利用加权 Spearman 足迹距离度量来描述两个 KNN 邻域之间的相似性。 NMRC [43] 通过保留低维流形上的局部邻域结构来拒绝错误匹配。马等人 [45] 发现中心点和相邻点形成的角度在变换后是一致的，并为建模引入了仿射不变量。肖等人 [46]将特征匹配问题转换为基于运动一致性的仿射超平面拟合问题。</p>
+<p>在本文中，F-LPM 利用了框架知识，与上述方法的不同之处如下。</p>
+<ul>
+<li>邻域构建：我们通过利用框架知识提出了一种新的规模鲁棒的邻域构建方法。</li>
+<li>共识度量：我们还引入了框架知识来度量拓扑共识。</li>
+<li>多尺度过程：F-LPM 不需要多尺度过程，并且对于极端缩放更加准确和稳健。</li>
+</ul>
+<h1 id="3-建议的方法"><a class="markdownIt-Anchor" href="#3-建议的方法"></a> 3. 建议的方法</h1>
+<p>我们引入框架知识来测量涉及大规模几何变换的图像对的局部性保留。如上所述，两个对应图像区域的局部缩放和旋转可以用帧知识来表示（它只对正确匹配有效）。利用框架知识，我们可以在存在大规模几何变换和高比例异常值的情况下准确测量两幅图像之间的邻域一致性。在本节中，我们首先提出了一种新的基于框架的邻域构建方法，然后提出了多种新的基于框架的共识度量，最后统一这些共识度量来检测和拒绝异常值。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/table1.png" srcset="/img/loading.gif" lazyload alt="table1"></p>
+<h2 id="31-问题表述"><a class="markdownIt-Anchor" href="#31-问题表述"></a> 3.1 问题表述</h2>
+<p>给定从两个给定遥感图像中提取的两组局部特征，首先使用描述符（例如，SIFT）建立一组 N 个假定的特征匹配</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form.png" srcset="/img/loading.gif" lazyload alt="form"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>f</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">f_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.953104em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>f</mi><mi>i</mi><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">f_i^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>表示两组匹配的特征（一一对应），<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是表示空间位置的二维向量，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>s</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">s_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>s</mi><mi>i</mi><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">s_i^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>表示对应特征的尺度，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>o</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">o_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>o</mi><mi>i</mi><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">o_i^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>表示方向。</p>
+<p>该算法的目的是从 S 中删除异常值（即不正确的匹配）并保留尽可能多的内部值（即正确匹配）以建立准确的对应关系。换句话说，将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">I</mi></mrow><annotation encoding="application/x-tex">\mathcal{I}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.07382em;">I</span></span></span></span></span>表示为未知的内点集，我们的目标是获得最优解</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form1.png" srcset="/img/loading.gif" lazyload alt="form1"></p>
+<p>其中代价函数 C 定义为</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form2.png" srcset="/img/loading.gif" lazyload alt="form2"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mi mathvariant="script">I</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\mathcal{I}|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathcal" style="margin-right:0.07382em;">I</span></span><span class="mord">∣</span></span></span></span>表示 I 的基数； C1 和 C2 是接下来要描述的两个局部性度量，其中 C1 度量一致邻居的交集，C2 度量拓扑一致性；最后一项 λ|I|阻止异常值；参数 λ&gt; 0 平衡各项。</p>
+<h2 id="32-规模稳健的邻里建设与共识"><a class="markdownIt-Anchor" href="#32-规模稳健的邻里建设与共识"></a> 3.2 规模稳健的邻里建设与共识</h2>
+<p>在基于邻域的共识方法中，邻域的构建是至关重要的 [1]，因为共识措施主要基于所选的邻居。先前的研究（例如 LPM 和 GLPM）分别在两个特征集中选择 KNN，这在处理大规模缩放时并不稳健。因此，当存在未知的大规模缩放时，共识度量会严重降低。</p>
+<p>在这项工作中，我们引入了框架知识来解决这个问题。我们将建立一个对扩展具有鲁棒性的邻域。具体来说，对于每个正在测试的匹配，我们执行以下三个步骤来为匹配构建一个规模稳健的邻域。</p>
+<ul>
+<li>首先，我们根据两个匹配特征的尺度知识计算局部缩放因子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>（如果这个匹配正确，则缩放因子反映了围绕<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的两个局部图像区域之间的相对缩放）
+<ul>
+<li><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form3.png" srcset="/img/loading.gif" lazyload alt="form3"></li>
+</ul>
+</li>
+<li>然后，如图 3 所示，我们在低尺度侧确定一个邻域（例如 k 个最近点），并根据这个缩放因子计算圆形邻域半径。例如，我们首先确定左图中的邻域，因为图 3 中的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>s</mi><mi>i</mi><mi>x</mi></msubsup><mo>&lt;</mo><msubsup><mi>s</mi><mi>i</mi><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">s_i^x&lt;s_i^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>，然后计算半径<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>r</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">r_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>，即到最远邻域的距离。</li>
+<li>最后，结合小邻域大小<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>r</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">r_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>和尺度因子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，我们可以通过确定一个以<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为中心、半径为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><msubsup><mi>r</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">z_ir_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>的圆形区域来计算大尺度侧的对应邻域，然后确定邻域<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">y_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><mi mathvariant="normal">∣</mi><mi mathvariant="normal">∣</mi><msub><mi>y</mi><mi>j</mi></msub><mo>−</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi mathvariant="normal">∣</mi><mn>2</mn></msub><mo>≤</mo><msub><mi>z</mi><mi>i</mi></msub><msubsup><mi>r</mi><mi>i</mi><mi>x</mi></msubsup><mi mathvariant="normal">∣</mi><mi>j</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>N</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{||y_j-y_i||_2\leq z_ir_i^x|j=1,2,...,N\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord">∣</span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord">∣</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.008664em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">}</span></span></span></span>。</li>
+</ul>
+<p>通过以上三个步骤，我们可以得到两个更准确对应的邻域，对缩放具有鲁棒性。从另一个意义上说，这种策略提高了对大规模边上相邻异常值的鲁棒性（图 3 中的右图），如图 3 所示。请注意，步骤 1 不一定从左侧开始（图 3只是其中一种情况）因为不同的特征有不同的特征尺度，但关键是我们可以根据特征尺度的值自适应地确定邻域。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic3.png" srcset="/img/loading.gif" lazyload alt="pic3"></p>
+<blockquote>
+<p>图3. 使用框架知识构建稳健邻域的步骤。请注意，第一步不是固定在左侧，而是根据特征尺度的大小自适应地确定。</p>
+</blockquote>
+<p>对于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>s</mi><mi>i</mi><mi>x</mi></msubsup><mo>&lt;</mo><msubsup><mi>s</mi><mi>i</mi><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">s_i^x&lt;s_i^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>的匹配，我们首先使用 KNN 找到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的 KNN 作为其邻域</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form4.png" srcset="/img/loading.gif" lazyload alt="form4"></p>
+<p>令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>r</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">r_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>为包含<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">N</mi><msub><mi>x</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathcal{N}_{x_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.14736em;">N</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139199999999997em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>的最小圆的半径，换言之，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>r</mi><mi>i</mi><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">r_i^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span>是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>与其在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">N</mi><msub><mi>x</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathcal{N}_{x_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.14736em;">N</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139199999999997em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>中最远的邻居之间的距离</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form5.png" srcset="/img/loading.gif" lazyload alt="form5"></p>
+<p>则<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的邻域由下式确定</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form6.png" srcset="/img/loading.gif" lazyload alt="form6"></p>
+<p>对于那些<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>s</mi><mi>i</mi><mi>x</mi></msubsup><mo>&gt;</mo><msubsup><mi>s</mi><mi>i</mi><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">s_i^x&gt;s_i^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.923056em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>的匹配，我们首先计算KNN找到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的 KNN 作为其邻域</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form7.png" srcset="/img/loading.gif" lazyload alt="form7"></p>
+<p>令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>r</mi><mi>i</mi><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">r_i^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>作为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>与其在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">N</mi><msub><mi>y</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathcal{N}_{y_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.14736em;">N</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>中最远的邻居之间的距离,则 xi 的邻域由下式确定</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form8.png" srcset="/img/loading.gif" lazyload alt="form8"></p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic4.png" srcset="/img/loading.gif" lazyload alt="pic4"></p>
+<blockquote>
+<p>图4. 关于缩放比率的平均邻域内点比率的直方图（在威尼斯数据集上测试）。邻域内点比率越高，性能越好。</p>
+</blockquote>
+<p>图 4 将上述邻域构造与 LPM 的方法进行了比较，表明该提议更能保留内点。在确定相应的邻域区域后，我们可以测量每个匹配与其邻居之间的一致性，以区分内点和异常点。很容易观察到两个特征（正确匹配）周围的两个邻域区域应该查看相同的 3-D 位置 [19]。因此，相邻特征点的邻居（来自正确匹配）应该在变换前后保留[10]，[19]。如图 3 所示，如果测试匹配正确，则内部邻居是一致的，即两个邻域中存在（的索引）邻居的交集。相反，异常值通常没有一致的邻居，因为它们往往是混乱的。因此，我们可以通过计算以下距离来衡量一致邻居的局部保存：</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form9.png" srcset="/img/loading.gif" lazyload alt="form9"></p>
+<p>其中</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form10.png" srcset="/img/loading.gif" lazyload alt="form10"></p>
+<p>公式（9）实际上通过计算其相邻匹配来衡量第 i 个匹配的相邻一致性，其中两个特征分别在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">N</mi><msub><mi>x</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathcal{N}_{x_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.14736em;">N</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139199999999997em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">N</mi><msub><mi>y</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathcal{N}_{y_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.14736em;">N</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>中。基于公式（9）中单个匹配的局部性度量，我们为整个内点集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">I</mi></mrow><annotation encoding="application/x-tex">\mathcal{I}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.07382em;">I</span></span></span></span></span>定义一个新的成本函数 C1，如下所示，给定邻域大小 K：</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form11.png" srcset="/img/loading.gif" lazyload alt="form11"></p>
+<h2 id="33-变换一致性共识"><a class="markdownIt-Anchor" href="#33-变换一致性共识"></a> 3.3 变换一致性共识</h2>
+<p>如前所述，我们可以计算每个匹配的相对缩放和旋转，即我们可以获得一组假定的局部缩放比例和旋转角度值</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form12.png" srcset="/img/loading.gif" lazyload alt="form12"></p>
+<p>这些知识也可以用于测量遥感图像上的邻域一致性，因为遥感图像中相邻点的局部变换平滑而轻微地变化。也就是说，即使图像经过大规模变换，相邻内点匹配之间的缩放和旋转值也应该相似。因此，我们可以根据其 SIFT 框架知识计算相邻假定匹配的旋转和缩放，以衡量测试匹配的正确性。如果测试匹配和邻居的值相似，则测试匹配更有可能是正确匹配。图 5 显示了一个示例，其中相邻的内点具有相似的缩放和旋转。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic5.png" srcset="/img/loading.gif" lazyload alt="pic5"></p>
+<blockquote>
+<p>图5. 展示转换一致性共识的示例。图中有两个匹配项，其中特征由帧表示。我们看到两个相邻的帧（在左图中）都被类似地放大并从左到右旋转。因此，这两个匹配在局部变换方面是一致的。</p>
+</blockquote>
+<p>为了利用这种共识，我们使用缩放和旋转相似性扩展（9）中的邻域构造</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form13.png" srcset="/img/loading.gif" lazyload alt="form13"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>η</mi><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">\eta=1.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">5</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi><mo>=</mo><mfrac><mi>π</mi><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\theta=\frac{\pi}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>是两个粗略的阈值，分别约束缩放和旋转的差异范围。基于（13），测试匹配的相对缩放和旋转需要接近其邻居的对应物。与（10）类似，距离定义为</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form14.png" srcset="/img/loading.gif" lazyload alt="form14"></p>
+<p>然后将（11）中基于点的邻域共识度量更新为基于框架的共识度量</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form15.png" srcset="/img/loading.gif" lazyload alt="form15"></p>
+<p>因此，成本函数变为</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form16.png" srcset="/img/loading.gif" lazyload alt="form16"></p>
+<h2 id="34-基于框架的邻域拓扑共识"><a class="markdownIt-Anchor" href="#34-基于框架的邻域拓扑共识"></a> 3.4 基于框架的邻域拓扑共识</h2>
+<p>除了邻域一致性之外，inliers 邻域的拓扑通常满足某些约束。例如，LPM 算法将两个特征点的位移向量 [见图 6(a) 中的 vi 和 v j] 约束为相似的长度和方向。但是，当内部匹配稀疏或涉及大规模几何变换时，这种方法可能会变得无效。在图 6(a) 中，我们看到 vi 和 v j 由于大比例缩放而没有看到相同的方向。更显着的缩放会导致两个向量之间的差异更大。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic6.png" srcset="/img/loading.gif" lazyload alt="pic6"></p>
+<p>为了解决这个问题，我们提出了一种使用框架知识的更强大的拓扑共识度量。我们发现相邻特征点的局部结构（来自正确匹配）在相似变换下得到更稳健的保留，特别是对于遥感图像。如图 6(b) 所示，我们分别在两个图像中构建向量</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/vectors.png" srcset="/img/loading.gif" lazyload alt></p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1952720000000001em;vertical-align:-0.412972em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.412972em;"><span></span></span></span></span></span></span></span></span></span>有很大差异，但我们知道<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">x_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>周围的图像区域之间的局部变换应该接近由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">a_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>定义的相似变换。换句话说，如果我们进行变换，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1952720000000001em;vertical-align:-0.412972em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.412972em;"><span></span></span></span></span></span></span></span></span></span>应该是相似的到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span>，即使用框架知识<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">a_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span>进行旋转和缩放。因此，我们可以通过计算来稳健地衡量拓扑共识</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form17.png" srcset="/img/loading.gif" lazyload alt="form17"></p>
+<p>其中</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/R.png" srcset="/img/loading.gif" lazyload alt="R"></p>
+<p>是旋转矩阵。</p>
+<p>为了说明这一点，如图 6(b) 所示，我们执行了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><msub><mi>R</mi><mi>i</mi></msub><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">z_iR_iv_{ij}^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.078102em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span>的相似变换。容易发现<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><msub><mi>R</mi><mi>i</mi></msub><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>x</mi></msubsup></mrow><annotation encoding="application/x-tex">z_iR_iv_{ij}^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.078102em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>v</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>y</mi></msubsup></mrow><annotation encoding="application/x-tex">v_{ij}^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1952720000000001em;vertical-align:-0.412972em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4231360000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.412972em;"><span></span></span></span></span></span></span></span></span></span>的长度和方向比<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">v_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">v_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>更独立于缩放和旋转。变换不需要非常精确到真正的变换，因为我们用阈值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.1132em;">τ</span></span></span></span>将距离量化为两个级别</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form18.png" srcset="/img/loading.gif" lazyload alt="form18"></p>
+<p>然后，整个假定匹配集的拓扑共识是</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form19.png" srcset="/img/loading.gif" lazyload alt="form19"></p>
+<h2 id="35-求解"><a class="markdownIt-Anchor" href="#35-求解"></a> 3.5 求解</h2>
+<p>基于上面提出的邻里共识措施，我们可以将（1）中的问题表述为</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form20.png" srcset="/img/loading.gif" lazyload alt="form20"></p>
+<p>其中</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form21.png" srcset="/img/loading.gif" lazyload alt="form21"></p>
+<p>是第 i 个匹配的邻域共识的度量。为了解决这个问题，使用二进制向量 p 作为决策变量，其中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = 0 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = 1 分别表示第 i 个匹配为假和正确。这样我们就可以将内点集的大小定义为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mi mathvariant="script">I</mi><mi mathvariant="normal">∣</mi><mo>=</mo><mo>∑</mo><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">|\mathcal{I}|=\sum p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathcal" style="margin-right:0.07382em;">I</span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.00001em;vertical-align:-0.25001em;"></span><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi><mi mathvariant="normal">∣</mi><mi mathvariant="script">I</mi><mi mathvariant="normal">∣</mi><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></msubsup><msub><mi>p</mi><mi>i</mi></msub><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda|\mathcal{I}|=\sum_{i=1}^N p_i\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">λ</span><span class="mord">∣</span><span class="mord"><span class="mord mathcal" style="margin-right:0.07382em;">I</span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.2809409999999999em;vertical-align:-0.29971000000000003em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.981231em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault">λ</span></span></span></span>，和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi mathvariant="script">I</mi></mrow></msub><msub><mi>c</mi><mi>i</mi></msub><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></msubsup><msub><mi>p</mi><mi>i</mi></msub><msub><mi>c</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sum_{i\in\mathcal{I}}c_i=\sum_{i=1}^N p_ic_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.07708em;vertical-align:-0.32708000000000004em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.17862099999999992em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.07382em;">I</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.32708000000000004em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.2809409999999999em;vertical-align:-0.29971000000000003em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.981231em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。那么，(21) 等于</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form22.png" srcset="/img/loading.gif" lazyload alt="form22"></p>
+<p>对于 (22)，问题变为使用最佳决策变量 p 集最小化目标函数 C。在这个目标函数中，邻域共识值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>c</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><mi>i</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>N</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{c_i|i=1,2,..,N\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">}</span></span></span></span>是固定的。它们可以提前计算，因为一旦给定假定的对应关系 S，邻域结构和拓扑都是固定的。然后，很容易发现任何具有一致值 ci 小于 λ 的匹配 i 都会导致负项，从而降低目标函数。相反，任何与 ci &gt;λ 的匹配都会导致正项，从而增加目标函数。因此，最小化目标函数 C 的闭式解是保留所有负值 (ci &lt;λ)，即</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form23.png" srcset="/img/loading.gif" lazyload alt="form23"></p>
+<p>因此，最终的内部匹配集获得为</p>
+<h2 id="36-算法复杂度"><a class="markdownIt-Anchor" href="#36-算法复杂度"></a> 3.6 算法复杂度</h2>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/alg1.png" srcset="/img/loading.gif" lazyload alt="alg1"></p>
+<p>该算法的流程总结在算法1中，其时间复杂度与LPM和GLPM相似。主要由邻域的构建、局部相对缩放和旋转的计算、三个共识度量的计算三部分组成。在邻域的构建中，我们搜索 5KNNs 来寻找规模鲁棒的邻域。 K-D树可用于搜索最近邻，其时间复杂度接近O((5K + N) log N)。使用 (12) 计算局部相对缩放和旋转<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>z</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>a</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><mi>i</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>N</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{z_i,a_i|i=1,2,..,N\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">}</span></span></span></span>的线性复杂度为 O(N)。三个共识度量的复杂度也是线性的 O(KN)。因此，我们的 F-LPM 的总时间复杂度约为 O((5K + N) log N)。由于 5K远小于N，时间复杂度可以认为是 O(N log N)，这样我们的 LPM 具有线性时间复杂度.此外，为了记住最近的邻居及其对应的距离，空间复杂度约为 O(KN)。</p>
+<h1 id="4-实验"><a class="markdownIt-Anchor" href="#4-实验"></a> 4. 实验</h1>
+<h2 id="41-实验装置"><a class="markdownIt-Anchor" href="#41-实验装置"></a> 4.1 实验装置</h2>
+<p>在本节中，我们通过实验评估所提出方法的性能，并将其与其他最先进的方法进行比较。为了对所提出的算法进行全面评估，我们使用了四个数据集，如图 7 所示。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic7.png" srcset="/img/loading.gif" lazyload alt="pic7"></p>
+<blockquote>
+<p>图7. 从左到右：数据集 1、数据集 2、数据集 3 和数据集 4。正如我们所见，这些图像涉及显着的缩放、旋转或视点变化。</p>
+</blockquote>
+<ul>
+<li>数据集 1：该数据集包含 11 对光学、SAR 和红外图像对。这些图像是从几项相关研究中收集的[4]、[47]、[48]，涉及到显着的照度和外观变化、重噪声和大规模几何变换（在某些情况下缩放比高达 5）的挑战）。该数据集中图像对的异常值比率大多超过 80%。</li>
+<li>数据集 2：这是本文建立的一个新数据集，旨在衡量大规模几何变换的性能，特别是在缩放和旋转方面。数据集中有 45 个大小为 920 × 614 的图像对。数据集中图像对之间的旋转从 0° 到 360° 不等，而缩放因子最大为 5。该数据集由无人机 (KC1600) 捕获的无人机 (UAV) 数据集 [49] 生成中国湖南省永州市上空。原始图像的大小为 3680 × 2456，地面分辨率为 20 cm，并且在建立我们的数据集时最多将重新采样降低 6 倍。由于物理分辨率的显着差异和低重叠率，该数据集中的图像对大多包含超过 90% 的异常值。</li>
+<li>数据集 3：这也是一个用于评估大规模转换的数据集，由公共资源构建。该数据集的一个特点是易于访问。从两个流行的数据集 VGG [50] 和 Heinly [51] 中收集了 12 对图像，包括 Venice（缩放）、Boat（旋转和缩放）、Bark（旋转和缩放）、Wall（视点变化）和 Graffiti（观点变化）。除了“威尼斯”之外，仅使用这些数据集中最具挑战性的图像对，总共有 12 个图像对。</li>
+<li>数据集 4：该数据集在第 IV-D 节中用于定量评估不同缩放比例的性能。数据集中有五个子集，每个子集由四个图像对组成，缩放比例分别为 2、3、4 和 5。这些图像也来自无人机数据集 [49]。</li>
+</ul>
+<p>数据集 1 和 3 的基本事实由制造商提供。对于数据集 2，ground truth 由自主开发的软件以原始分辨率计算。最后，构建网格对应关系，并使用步骤 2 中的方法再次计算精确变换。为了设置参数 K、τ、λ、η 和 θ，我们使用 Dataset 1 进行了实验（我们也在 Datasets 上进行了测试） 2 和 3 的结果相似）。在实验中，发现 F-LPM 对参数 K、τ 和 λ 非常鲁棒，如图8所示。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic8.png" srcset="/img/loading.gif" lazyload alt="pic8"></p>
+<blockquote>
+<p>图8. 参数分析。测试所有五个参数，其中 K = 5、τ = 0.3 和 λ = 0.6 用于测试 η 和 θ。</p>
+</blockquote>
+<p>对于 η 和 θ，我们根据图 8 中的结果设置 η = 1.23 和 θ = π/6。使用六种最先进的方法进行比较，包括基于网格的运动统计与多缩放和多旋转 (GMS-SR) [19]、LPM [10]、GLPM [1]、局部线性变换 (LLT) [5]、mTopKRP [44] 和 OA-net [9]。 GMS-SR 是 GMS 的多尺度和多分辨率版本。 LPM 是我们提案的基础研究，它还涉及多尺度过程。 GLPM 和 mTopKRP 是 LPM 的两个变体。 LLT 是一种基于稳健高斯均匀混合模型的方法。 OAnet 是一种深度学习方法，它在图像匹配挑战中展示了最先进的性能。请注意，作者提供的预训练模型用于 OA-net，因为我们没有足够的数据进行再训练。有许多特征检测器可以产生尺度和方向知识，例如 SIFT 和 Speeded-Up Robust Features (SURF)，其中 SIFT 是最流行的一种。因此，SIFT 特征用于在实验中建立推定的匹配。 SIFT 的实现有很多，我们选择了著名的 VLFeat 工具箱中的一种 [42]。为了去除极差的匹配，通过 SIFT 比率方法 [14] 粗略地预选假定的匹配，阈值为 0.95。性能通过三个指标来评估——precision §、recall ® 和 F-measure (F)</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/form25.png" srcset="/img/loading.gif" lazyload alt="form25"></p>
+<h2 id="42-定性比较"><a class="markdownIt-Anchor" href="#42-定性比较"></a> 4.2 定性比较</h2>
+<p>我们首先使用四个有代表性的图像对来定性地评估所提出方法的匹配性能。如图 9 所示，四个样本的推定匹配中存在大量错误匹配（红线），其异常值比率分别为 95.6%、97.76%、96.94% 和 73.1%。总体而言，F-LPM 可以成功匹配四个样本，而大多数比较方法似乎在样本 1-3 上都失败了。通过将 F-LPM 的结果与假定的匹配进行比较，我们注意到 F-LPM 排除了几乎所有的异常值并保留了大部分的异常值。其他方法仅在样本 4 上表现出令人满意的性能，但无法匹配其他三个样本（主要是因为前三个样本的异常值比例都在 95% 以上，远高于样本 4 的 73.1%）。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic9.png" srcset="/img/loading.gif" lazyload alt="pic9"></p>
+<blockquote>
+<p>图9. 代表性样本的结果，其中蓝线和红线分别代表内点和异常点。样本 1 来自数据集 1，样本 2 和 3 属于数据集 2，样本 4 来自数据集 3。这些列显示了所涉及算法的假定匹配和匹配结果。我们看到 F-LPM 可以在所有样本上找到大部分的异常值和少数异常值。例如，样本 2 只有几个稀疏的正确匹配。所有比较算法都未能找到足够的正确匹配，但 F-LPM 可以将正确匹配与异常值区分开来，因为只有正确匹配在旋转和缩放方面是一致的。请注意，正确的匹配被绘制在错误的上方，以使正确的匹配清晰。</p>
+</blockquote>
+<h2 id="43-数据集的定量分析"><a class="markdownIt-Anchor" href="#43-数据集的定量分析"></a> 4.3 数据集的定量分析</h2>
+<p>在本节中，我们报告数据集 1-3 的定量结果。我们首先计算表 II 中的平均精度、召回率和 F-measure 来粗略比较这些方法，然后我们进一步绘制结果的累积分布以显示所有结果的分布。</p>
+<p>如表二所示，F-LPM 在九个比较中占主导地位，在另外两个比较中也排名第二。比较指标，我们看到 F-LPM 在精度和 F-measure 方面总是排名第一，在数据集 1 和 3 上的召回率方面仅输给 OA-net 或 mTopKRP。在数据集方面进行比较，我们发现 F-LPM 在数据集 2 上尤为突出，其精度和召回率超过所有其他方法 20%，F-measure 超过 30%。在另外两个数据集上，F-LPM 在精度和 F-measure 方面也是最好的。对于比较的方法，GMS-SR 和 LLT 是 F-measure 方面最差的两种方法，其中 GMS-SR 在精度和召回率之间也存在很大偏差。 LPM 也不令人满意，但在精确度和召回率之间非常平衡。两个 LPM 变体——mTopKRP 和 GLPM——在三个数据集上略好于 LPM。 OA-net 在数据集 1 和 3 上是公平的，但在数据集 2 上似乎无效。</p>
+<p>图 10 根据综合 F 度量度量比较了所涉及的方法。我们清楚地看到，F-LPM 优于所有比较方法，尤其是在数据集 2 上。图 11 报告了有关结果累积分布的更多细节，我们可以从中得出一致的结论。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic10.png" srcset="/img/loading.gif" lazyload alt="pic10"></p>
+<blockquote>
+<p>图10. F 测量值。 F-measure是衡量整体匹配性能的综合指标。就这一指标而言，我们清楚地看到 F-LPM 优于所有比较方法。</p>
+</blockquote>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic11.png" srcset="/img/loading.gif" lazyload alt="pic11"></p>
+<blockquote>
+<p>图11. 结果的累积分布。从上到下：数据集 1、数据集 2 和数据集 3。从左到右：精度、召回率和 F-measure。子图中的每条彩色曲线表示通过相应方法获得的结果的累积分布。图中每条彩色曲线代表一种方法的性能，曲线上坐标为 [a, b] 的点表示该方法获得的所有结果中有 a × 100% 的情况小于 b。曲线向左上方弯曲得越多，其性能就越好。</p>
+</blockquote>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/table2.png" srcset="/img/loading.gif" lazyload alt="table2"></p>
+<h2 id="44-缩放的定量分析"><a class="markdownIt-Anchor" href="#44-缩放的定量分析"></a> 4.4 缩放的定量分析</h2>
+<p>为了量化和比较缩放对方法的影响，我们建立了数据集 4，其中涉及一系列缩放比率。如前所述，数据集包含五个子集，每个子集包含四个缩放比例分别为 2、3、4 和 5 的图像。我们分别评估五个子集上的所有方法，并评估不同缩放比率下的性能，如图 12 所示。在图 12 中，这些方法在精度、召回率、F-measure 和邻域内点方面进行了比较比率。总体而言，F-LPM 在所有情况下都显示出最佳精度，并且在缩放比较大（例如，4 和 5）时显着优于所有其他方法。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic12.png" srcset="/img/loading.gif" lazyload alt="pic12"></p>
+<blockquote>
+<p>图12. 对不同缩放比例的性能进行定量分析。评估了四个指标，包括精度、召回率、邻域内点比率和 F 度量。水平轴是缩放比例，而垂直轴是相应的度量。图中的每个值都是五个样本的平均值。</p>
+</blockquote>
+<p>具体来说，在低变焦比（例如2）下，除LLT和GMS-SR外所有方法都有效，F-measure值大于0.6（注意，结果并不一定意味着LLT和GMS-SR不能解决低变焦比率，因为也有严重的异常值）。然而，随着缩放比从 2 增加到 5，F-LPM 可以保持良好的精度、召回率和 F-measure，而所有其他方法则迅速下降。当缩放比增加到 4 时，除 OA-net 之外的所有比较方法的 F-measures 均小于 0.2。 mTopKRP 在缩放比例为 2 或 3 时具有很好的召回率，但其精度值较低。 OA-net 似乎是比较方法中最好的一种，但是当缩放比进一步增加到 5 时，它的 F-measure 也降低到小于 0.2。此外，将 F-LPM 与其他 LPM 变体（例如 LPM 和 GLPM )，我们看到只有 F-LPM 不受变焦比增加的显着影响。这可能是由于我们的规模鲁棒邻域构建策略，它可以提高涉及缩放的图像对的邻域内点比率，从而增加召回率。</p>
+<p>仔细观察 F-LPM，我们发现 F-LPM 的召回率随着缩放比的增加而略有下降，这主要是因为当邻域内点比降低时，一些孤立的内点变得难以区分。不过，好在 F-LPM 的精度会随着变焦比的增加而增加。因此，F-LPM 的 F-measure 保持非常稳定。这可能表明当缩放比增加时，比例知识的约束变得更加有效。</p>
+<p>此外，我们还通过比较平均邻域内点比率，将提出的规模鲁棒邻域策略与常见的 KNN 邻域策略进行比较。我们在图 12 的左下角绘制了平均邻域内部比率。该图显示了邻域内部比率如何随着缩放比率的增加而变化。一般来说，邻域内点比率越高，识别出的内点就越多[1]，[39]。当缩放比增加时，提议的和 KNN 都变得较差，但提议的策略的内点率总是比 KNN 好得多（在所有情况下都超过 30%）。特别是，我们看到超过 50% 的邻居在最坏的情况下（缩放比 = 5）是提议的邻居，而 KNN 下降到不超过 20%。这证明了框架知识在构建邻域中的稳健性和有效性。</p>
+<p>图 13 可视化了匹配结果。我们在图中看到，只有 F-LPM 成功匹配了 4 倍和 5 倍变焦的图像对。</p>
+<p><img src="/2022/09/14/F_LPM%EF%BC%9A%E6%B6%89%E5%8F%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%8F%98%E6%8D%A2%E7%9A%84%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7%E4%BF%9D%E7%95%99%E5%8C%B9%E9%85%8D/pic13.png" srcset="/img/loading.gif" lazyload alt="pic13"></p>
+<blockquote>
+<p>图13. 不同缩放比例的可视化。我们从数据集 4 中选择一个具有挑战性的子集，并将匹配结果显示为不同的缩放比例。我们看到 F-LPM 可以很好地匹配所有图像，而所有比较的方法（包括 mTopKRP 和学习的 OA-net）在缩放比例为 4 和 5 时完全失败。</p>
+</blockquote>
+<h1 id="5-结论"><a class="markdownIt-Anchor" href="#5-结论"></a> 5. 结论</h1>
+<p>本文提出了一种利用框架知识来评估局部保存以实现鲁棒特征匹配的方法，特别是对于涉及大规模几何变换的图像。我们方法的关键思想是利用免费的几何知识，例如 SIFT 等共同特征的方向和尺度。我们发现框架知识对特征匹配非常重要，尤其是对于经过大规模缩放的图像。我们将框架知识融入流行的局部保存模型中，并提出了一种 F-LPM 方法。所提出的方法具有封闭形式的解决方案和线性时间复杂度，并且可以解决极端缩放（高达 5 倍）和高比例的异常值（高达 97%）。通过利用框架知识保留了更多的内部匹配，从而导致高召回率和 F-measure。大量的实验结果证明了该建议的有效性。 F-LPM 有时也受到限制，因为它需要比例和方向信息，这对于某些特征是无法获得的。例如，来自加速段测试 (FAST) 的特征不适用于我们的方法，因为它不能提供尺度信息。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%82%BB%E5%9F%9F%E6%8B%93%E6%89%91%E4%B8%80%E8%87%B4/">#邻域拓扑一致</a>
+      
+        <a href="/tags/F-LPM/">#F-LPM</a>
+      
+        <a href="/tags/%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/">#特征匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>F-LPM：涉及大规模变换的图像的基于帧的局部性保留匹配</div>
+      <div>http://example.com/2022/09/14/F_LPM：涉及大规模变换的图像的基于帧的局部性保留匹配/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月14日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/12/LGSC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%B1%80%E9%83%A8%E5%9B%BE%E7%BB%93%E6%9E%84%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/" title="LGSC：基于局部图结构一致性的鲁棒图像匹配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LGSC：基于局部图结构一致性的鲁棒图像匹配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/11/LAP%EF%BC%9A%E5%85%B7%E6%9C%89%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%B1%80%E9%83%A8%E4%BB%BF%E5%B0%84%E4%BF%9D%E7%95%99%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/" title="LAP：具有运动一致性的局部仿射保留遥感图像特征匹配">
+                        <span class="hidden-mobile">LAP：具有运动一致性的局部仿射保留遥感图像特征匹配</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

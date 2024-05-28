@@ -1,0 +1,870 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简单记录 实习期间复现基于单应性矩阵进行图像拼接的框架时遇到的一些问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于单应性矩阵进行图像拼接的技术文档">
+<meta property="og:url" content="http://example.com/2023/10/31/%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="简单记录 实习期间复现基于单应性矩阵进行图像拼接的框架时遇到的一些问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/10/31/%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/图像拼接.png">
+<meta property="og:image" content="http://example.com/2023/10/31/%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/blended_mask.jpg">
+<meta property="article:published_time" content="2023-10-31T10:40:00.000Z">
+<meta property="article:modified_time" content="2024-04-25T04:46:00.207Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="图像拼接">
+<meta property="article:tag" content="技术文档">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/10/31/%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/图像拼接.png">
+  
+  
+  
+  <title>基于单应性矩阵进行图像拼接的技术文档 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="基于单应性矩阵进行图像拼接的技术文档"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-31 18:40" pubdate>
+          2023年10月31日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          34 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">基于单应性矩阵进行图像拼接的技术文档</h1>
+            
+            <div class="markdown-body">
+              
+              <p>[toc]</p>
+<h1 id="基于单应性矩阵进行图像拼接的技术文档"><a class="markdownIt-Anchor" href="#基于单应性矩阵进行图像拼接的技术文档"></a> 基于单应性矩阵进行图像拼接的技术文档</h1>
+<p>我使用的图像拼接方法分为一下5个部分</p>
+<ul>
+<li>
+<p>特征提取和匹配</p>
+</li>
+<li>
+<p>单应性矩阵的计算和优化</p>
+</li>
+<li>
+<p>用户人为增加和删除特征点</p>
+</li>
+<li>
+<p>拼接缝的寻找</p>
+</li>
+<li>
+<p>拼接缝融合</p>
+</li>
+</ul>
+<p>之后想要完善图像拼接方法可以参照OpenCV的图像拼接框架：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/windxgz/article/details/108199036">OpenCV总结3——图像拼接Stitching_opencv stitching-CSDN博客</a></p>
+<img src="/2023/10/31/%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/图像拼接.png" srcset="/img/loading.gif" lazyload style="zoom: 100%;">
+<p>这是我理解OpenCV源码时的参考资料：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014531567/article/details/70213682/?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1--blog-78883794.235%5Ev38%5Epc_relevant_default_base&amp;spm=1001.2101.3001.4242.2&amp;utm_relevant_index=4">opencv stitching算法分析_opencv光束法平差-CSDN博客</a></p>
+<h2 id="1-特征提取和匹配"><a class="markdownIt-Anchor" href="#1-特征提取和匹配"></a> 1. 特征提取和匹配</h2>
+<p>使用的是OpenCV自带的SIFT、ORB、以及开源的LoFTR。</p>
+<p>LoFTR的链接：<a target="_blank" rel="noopener" href="https://github.com/zju3dv/LoFTR">zju3dv/LoFTR: Code for “LoFTR: Detector-Free Local Feature Matching with Transformers”, CVPR 2021, T-PAMI 2022 (github.com)</a></p>
+<h3 id="11-遇到的问题"><a class="markdownIt-Anchor" href="#11-遇到的问题"></a> 1.1 遇到的问题</h3>
+<ul>
+<li>SIFT直接处理原始分辨率图像会占用很大的内存
+<ul>
+<li>解决：将图像分patch放入SIFT，需要根据patch左上角的坐标还原特征点的坐标</li>
+</ul>
+</li>
+<li>LoFTR直接处理原始分辨率图像会占用很大的显存
+<ul>
+<li>未解决。理论上，LoFTR更好的处理特征稀疏的图像。也可以考虑使用其他的开源模型。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-单应性矩阵的计算和优化"><a class="markdownIt-Anchor" href="#2-单应性矩阵的计算和优化"></a> 2. 单应性矩阵的计算和优化</h2>
+<p>使用RANSAC计算单应性矩阵，使用Ceres库进行BA优化</p>
+<h3 id="21-ransac"><a class="markdownIt-Anchor" href="#21-ransac"></a> 2.1 RANSAC</h3>
+<p>使用RANSAC需要注意阈值的控制，一般是在(0,10]之间选择，阈值越小，约束的更严格。但是并不是越小越好，阈值过小可能会导致RANSAC以错误匹配点作为基准计算单应性矩阵。</p>
+<h4 id="211-实验"><a class="markdownIt-Anchor" href="#211-实验"></a> 2.1.1 实验</h4>
+<ul>
+<li>多次RANSAC：使用小阈值的RANSAC筛选由大阈值的RANSAC筛选出的内点。结果表明没有明显的改善。可以考虑进一步实验。</li>
+</ul>
+<h4 id="212-遇到的问题"><a class="markdownIt-Anchor" href="#212-遇到的问题"></a> 2.1.2 遇到的问题</h4>
+<ul>
+<li>单应性矩阵的叠加：对变换后的图像进行平移，不能直接在单应性矩阵的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>x</mi><mo separator="true">,</mo><mi>d</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">dx,dy</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span></span>分量上进行加减，而是使用矩阵相乘的方法进行叠加。例如，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mrow><mi mathvariant="normal">平</mi><mi mathvariant="normal">移</mi></mrow></msub><mo>×</mo><msub><mi>H</mi><mrow><mi>w</mi><mi>a</mi><mi>r</mi><mi>p</mi></mrow></msub><mo>×</mo><mtext>Point</mtext></mrow><annotation encoding="application/x-tex">H_{平移}\times H_{warp}\times \text{Point}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:-0.15em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord cjk_fallback mtight">平</span><span class="mord cjk_fallback mtight">移</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord text"><span class="mord">Point</span></span></span></span></span></li>
+</ul>
+<h3 id="22-基于ceres库的ba优化"><a class="markdownIt-Anchor" href="#22-基于ceres库的ba优化"></a> 2.2 基于Ceres库的BA优化</h3>
+<p>该优化参考《视觉SLAM十四讲》的第九讲P254进行编写。优化器实现的主函数是在<code>smv_optimer</code>文件中的<code>CeresSolver::performBADoubleGlobal_pairs</code></p>
+<h4 id="221-注意事项"><a class="markdownIt-Anchor" href="#221-注意事项"></a> 2.2.1 注意事项</h4>
+<ul>
+<li>
+<p><code>ceres::AutoDiffCostFunction</code>的参数: 在<code>smv_optimer.cpp</code>文件中，有<code>new ceres::AutoDiffCostFunction&lt;SnavelyReprojectionError, 2, 9, 9&gt;</code>，这其中的三个数值分别指的是残差(<code>residuals</code>)的维度、输入值x的维度、输入值y的维度。这里的输入值x和y是指输入ceres库用于优化的值，也就是两个单应性矩阵。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/tiancailx/article/details/117601117">ceres笔记_autodiffcostfunction_李太白lx的博客-CSDN博客</a></li>
+</ul>
+</li>
+<li>
+<p>每对矩阵只能出现一次：矩阵1和矩阵2输入到求解器后，不能再将矩阵2和矩阵1输入到求解器，即每种矩阵组合只能输入一次。我使用单向邻接链表<code>adjacent_indexes_direct</code>来构建矩阵对和特征点匹配对<code>point_pairs</code>。</p>
+<ul>
+<li>参考资料遗失，没找到</li>
+</ul>
+</li>
+<li>
+<p>固定一个矩阵作为基准：需要固定一个矩阵来保证优化后的图像在当前的平面上。固定的方式是使用<code>SetParameterBlockConstant</code></p>
+<ul>
+<li>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">if</span> (index_src == anchor) &#123;
+	problem.SetParameterBlockConstant(pp_src);
+&#125;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-用户人为增加和删除特征点"><a class="markdownIt-Anchor" href="#3-用户人为增加和删除特征点"></a> 3. 用户人为增加和删除特征点</h2>
+<p>获得用户添加的特征点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> -&gt; 以<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为中心划分出一个patch（patch_size在400左右） -&gt; 通过单应性矩阵计算<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>在目标图像上的映射<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> -&gt; 以<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为中心划分搜索窗口（search_size在20左右，匹配效果差的情况下，可以设的大一些） -&gt; 基于SIFT描述符和余弦相似度搜索匹配度最高的点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mi>y</mi><mo>^</mo></mover><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\hat{y}_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.19444em;">^</span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></p>
+<h3 id="31-注意事项"><a class="markdownIt-Anchor" href="#31-注意事项"></a> 3.1 注意事项</h3>
+<ul>
+<li>
+<p>坐标系的选择：在修改代码时，注意当前特征点所在的坐标系。我使用了三个坐标系，分别是全局坐标系（以整个拼接图像的左上角为原点）、overlap坐标系（以overlap的左上角为原点）、patch坐标系（以patch的左上角为原点）</p>
+</li>
+<li>
+<p>代码冗余：在后续编写接口函数时，因为要输出不同的数据，所以编写了几个不同的接口函数。但是实际上，这几个接口函数的内容都相差不大。之后可以考虑删除冗余代码</p>
+</li>
+<li>
+<p>上采样和亚像素：可以考虑对图像进行上采样之后再搜索，这样可以在亚像素级别搜索。效果不明显，可以进一步测试一下。</p>
+</li>
+</ul>
+<h2 id="4-拼接缝的寻找"><a class="markdownIt-Anchor" href="#4-拼接缝的寻找"></a> 4. 拼接缝的寻找</h2>
+<p>使用基于最小能量值的方法寻找拼接缝，步骤为：</p>
+<p>最后寻找最佳缝合线思想，步骤：</p>
+<ol>
+<li>
+<p>考虑强度值E的每一列都为一条最佳缝合线，首先从第一行开始，累计添加下一行的强度值；</p>
+</li>
+<li>
+<p>每一列强度值向下一行的左、中、右进行扫描，获取最小的强度累计值，并记录最小强度值的列号；</p>
+</li>
+<li>
+<p>统计出强度值最小的一条做为最佳缝合线。</p>
+</li>
+<li>
+<p>最后根据最佳缝合线进行图像的拼接融合，融合也可以采用改进加权平均融合。</p>
+</li>
+</ol>
+<p>参考资料：</p>
+<p>[python最佳缝合线(Image Stitching 2)_optimal seam的代码-CSDN博客](<a target="_blank" rel="noopener" href="https://blog.csdn.net/YMilton/article/details/103634234#:~:text=%E6%9C%80%E4%BD%B3%E7%BC%9D%E5%90%88%E7%BA%BF%E8%83%BD%E5%A4%9F%E6%9C%89%E6%95%88%E7%9A%84%E5%8E%BB%E9%99%A4%E6%8B%BC%E6%8E%A5%E4%B8%AD%E8%BF%90%E5%8A%A8%E7%89%A9%E4%BD%93%E7%A7%BB%E5%8A%A8%E5%87%BA%E7%8E%B0%E7%9A%84%E9%AC%BC%E5%BD%B1%EF%BC%8C%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%9C%80%E4%BD%B3%E7%BC%9D%E5%90%88%E7%BA%BF%E5%AF%B9%E4%BA%8E%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E5%8E%BB%E9%99%A4%E9%AC%BC%E5%BD%B1%E6%AF%94%E8%BE%83%E7%9A%84%E9%87%8D%E8%A6%81%E3%80%82">https://blog.csdn.net/YMilton/article/details/103634234#:~:text=最佳缝合线能够有效的去除拼接中运动物体移动出现的鬼影，如何寻找最佳缝合线对于图像拼接去除鬼影比较的重要。</a> 寻找最佳缝合线涉及到比较重要的一个思想是动态规划，寻找强度值最优的路径。 关于强度值的计算，具体情况如下： 以上公式 是重叠像素点的颜色值之差，,是结构值之差。 这里的结构值计算采用Sobel算子，也可以考虑其他的边缘检测算子，其中x%2Cy方向的算子如下： 最后寻找最佳缝合线思想，步骤： 1、考虑强度值E的每一列都为一条最佳缝合线，首先从第一行开始，累计添加下一行的强度值； 2、每一列强度值向下一行的左、中、右进行扫描，获取最小的强度累计值，并记录最小强度值的列号；)</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_56363716/article/details/131141312?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-131141312-blog-103634234.235%5Ev38%5Epc_relevant_default_base&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-131141312-blog-103634234.235%5Ev38%5Epc_relevant_default_base&amp;utm_relevant_index=1">基于最佳缝合线的多图像拼接【附python代码】_缝合线拼接-CSDN博客</a></p>
+<p>当前使用的拼接方法中没有使用这种方法。可以考虑在后续的研发中实现。</p>
+<p>当前使用的拼接缝寻找方法是基于overlap的长宽比，以较长的边的方向作为拼接缝的方向。但是基于长宽比的方法在重叠区域过大时会出现拼接缝方向错误的问题。之后使用了基于图像编号的方法来确定拼接缝的方向。</p>
+<h2 id="5-拼接缝融合"><a class="markdownIt-Anchor" href="#5-拼接缝融合"></a> 5. 拼接缝融合</h2>
+<p>使用拉普拉斯融合来进行拼接缝融合</p>
+<p>[数字图像处理Python实战–高斯&amp;拉普拉斯金字塔&amp;图像重建_python使用高斯和拉普拉斯完成图像拼接-CSDN博客](<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43836026/article/details/105565359?ops_request_misc=&amp;request_id=&amp;biz_id=102&amp;utm_term=%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E9%87%91%E5%AD%97%E5%A1%94%E6%8B%BC%E6%8E%A5">https://blog.csdn.net/qq_43836026/article/details/105565359?ops_request_misc=&amp;request_id=&amp;biz_id=102&amp;utm_term=拉普拉斯金字塔拼接</a> 线性过度&amp;utm_medium=distribute.pc_search_result.none-task-blog-2<sub>all</sub>sobaiduweb~default-1-105565359.142<sup>v96</sup>pc_search_result_base2&amp;spm=1018.2226.3001.4187)</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37059483/article/details/77652921">图像融合之拉普拉斯融合_图像拉普拉斯融合-CSDN博客</a></p>
+<h3 id="51-注意事项"><a class="markdownIt-Anchor" href="#51-注意事项"></a> 5.1 注意事项</h3>
+<ul>
+<li>融合的重叠区域：在之前的测试中，单纯根据下采样和上采样来融合拼接缝，这种方式的融合效果并不显著，仍然有比较明显的边缘存在。我在每次下采样的时候都在拼接缝设置了3个像素的重叠区域。具体来说，拉普拉斯融合是根据一个黑白图像mask来区分两个图像，白色区域属于图1，黑色区域属于图2 。对mask的白色区域进行3个像素的膨胀处理得到mask1，然后将mask1减去mask就可以得到一个3像素宽的重叠区域。在重叠区域进行<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0.5</mn><mo>∗</mo><mi mathvariant="normal">图</mi><mn>1</mn><mo>+</mo><mn>0.5</mn><mo>∗</mo><mi mathvariant="normal">图</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">0.5*图1 + 0.5*图2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord cjk_fallback">图</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord cjk_fallback">图</span><span class="mord">2</span></span></span></span>的简单融合。这样可以有效的改善融合效果。后续可以考虑使用非线性加权平均进行测试。
+<ul>
+<li>重叠区域的宽度不宜设置过高，因为 重叠区域的宽度X下采样倍数 才是实际重叠的宽度</li>
+<li>有看到过一个示意图，但是现在找不到了</li>
+</ul>
+</li>
+<li>只对拼接缝附近的图像进行融合：因为图像过大，所以将拼接缝附近的图像单独划分成patch进行融合。需要注意融合的重叠区域宽度不宜设置过高，否则融合后的patch会与原始图像有明显的分界线。根据划分patch的方式进行融合，最后融合的图像实际上是一个井字形。井字形的四个交点出会有4个patch重叠。我目前的拼接策略是，首先进行硬拼接，然后融合时从硬拼接图像中选取patch，将融合后的patch放回硬拼接图像，在下一次融合时再从硬拼接图像选取patch。这样可以保证井字形的四个交点，即4个patch的重叠区域没有明显分界线，但是会使得有一些patch会被多次融合。
+<ul>
+<li><img src="/2023/10/31/%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/blended_mask.jpg" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+</ul>
+<h2 id="6-其他注意事项"><a class="markdownIt-Anchor" href="#6-其他注意事项"></a> 6. 其他注意事项</h2>
+<ul>
+<li>头文件交叉引用：<code>smv_overlap.h</code>和<code>smv_interfaceImpl.h</code>存在交叉引用的风险。我目前是在<code>smv_interfaceImpl.h</code>中新定义了一个结构体<code>overlapAndFeatures</code>，避免需要在<code>smv_interfaceImpl.h</code>中调用<code>smv_overlap.h</code>的结构体<code>overlapAndFeatures</code>。这两个结构体的内容是一样的。</li>
+<li>内存泄漏：程序可能存在多处内存泄漏的问题，后续可以考虑进行内存优化。</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5/">#图像拼接</a>
+      
+        <a href="/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">#技术文档</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基于单应性矩阵进行图像拼接的技术文档</div>
+      <div>http://example.com/2023/10/31/基于单应性矩阵进行图像拼接的技术文档/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月31日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/" title="基于深度学习的3D重建：综述">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">基于深度学习的3D重建：综述</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/19/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A8%A1%E5%9E%8B%E6%94%B9%E8%BF%9B%E6%8A%80%E5%B7%A7/" title="深度学习的一些模型改进技巧">
+                        <span class="hidden-mobile">深度学习的一些模型改进技巧</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,775 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="关于图像匹配的一篇综述翻译（下）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像匹配综述翻译(2)：应用&amp;后续发展">
+<meta property="og:url" content="http://example.com/2022/05/24/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%BB%BC%E8%BF%B02/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="关于图像匹配的一篇综述翻译（下）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/05/24/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%BB%BC%E8%BF%B02/%E6%A0%87%E9%A2%982.png">
+<meta property="article:published_time" content="2022-05-24T06:58:00.000Z">
+<meta property="article:modified_time" content="2024-02-27T10:06:20.646Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="图像匹配">
+<meta property="article:tag" content="综述翻译">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/05/24/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%BB%BC%E8%BF%B02/%E6%A0%87%E9%A2%982.png">
+  
+  
+  
+  <title>图像匹配综述翻译(2)：应用&amp;后续发展 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="图像匹配综述翻译(2)：应用&amp;后续发展"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-05-24 14:58" pubdate>
+          2022年5月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          56 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">图像匹配综述翻译(2)：应用&amp;后续发展</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2022/05/24/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%BB%BC%E8%BF%B02/%E6%A0%87%E9%A2%982.png" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="从人为设定特征到深度特征的图像匹配综述-翻译2"><a class="markdownIt-Anchor" href="#从人为设定特征到深度特征的图像匹配综述-翻译2"></a> 从人为设定特征到深度特征的图像匹配：综述-翻译（2）</h1>
+<h1 id="相关链接"><a class="markdownIt-Anchor" href="#相关链接"></a> 相关链接：</h1>
+<p><a target="_blank" rel="noopener" href="https://link.springer.com/article/10.1007/s11263-020-01359-2">原文及参考文献下载地址</a></p>
+<h1 id="5-基于匹配的应用"><a class="markdownIt-Anchor" href="#5-基于匹配的应用"></a> 5. 基于匹配的应用</h1>
+<p>图像匹配是计算机视觉中的一个基本问题，在广泛的应用中被认为是一个关键的先决条件。在本节中，我们将简要回顾几个有代表性的应用程序。</p>
+<h2 id="51-运动结构"><a class="markdownIt-Anchor" href="#51-运动结构"></a> 5.1 运动结构</h2>
+<p>运动结构 (SfM) 涉及从一系列图像中恢复静止场景的 3-D 结构，这些图像是通过估计与这些图像对应的相机运动从不同视点获得的。 <strong>SfM 涉及三个主要阶段，即 (i) 跨图像的特征匹配，(ii) 相机姿态估计，以及 (iii) 使用估计的运动和特征恢复 3-D 结构。</strong> 它的功效很大程度上取决于可接受的特征匹配集。</p>
+<p>在现代 SfM 系统（Schonberger 和 Frahm 2016；Wu2018；Sweeney 等人 2015）中，特征匹配通道被广泛应用于图像，<strong>即特征检测、描述和最近邻匹配，以提供初始对应关系</strong>。 初始对应包含许多异常值。 因此，需要几何验证，这是通过使用 RANSAC 的估计基本矩阵来解决的（Fischler 和 Bolles 1981）。 这可以通过错配消除方法潜在地解决。</p>
+<p>同时，为了增强 SfM 任务，研究人员专注于执行稳健的特征匹配，即建立丰富而准确的对应关系。显然，高级描述符可以极大地影响这项任务（Fan et al. 2019）。此外，Shah 等人（2015）提出了一种几何感知方法，该方法最初使用一小部分特征来估计图像之间的对极几何，并利用它来引导剩余特征的匹配。林等人（2016b）利用 RANSAC 指导匹配一致性曲线的训练，以区分真假匹配。他们的方法追溯了重建现代城市的宽基线和重复结构的共同问题。这些对应关系也是相机姿态估计的先决条件，并且还研究了常用 RANSAC 对该任务的有效替代（Moo Yi et al. 2018），具有识别良好对应关系的前期阶段。</p>
+<h2 id="52-同时定位和建图"><a class="markdownIt-Anchor" href="#52-同时定位和建图"></a> 5.2 同时定位和建图</h2>
+<p>获取环境地图是自主移动机器人的一项基本任务，因此构成了许多不同的高级任务的基础，例如导航和定位。**同步定位和建图（SLAM）**问题（Davison et al. 2007; Mur-Artal et al. 2015; Sturm et al. 2012）在过去几十年中受到了广泛关注。</p>
+<p>在常见的SLAM系统中，需要进行特征匹配以建立帧之间的对应关系，然后将其用作估计相对相机姿态和定位的输入。与SfM类似，在大多数SLAM系统中使用了成熟的功能匹配管道。典型地，在Endres等人 (2012) 中，Endres等人引入了SLAM系统，其结合了特征匹配以从前端中的传感器数据建立空间关系。众所周知的<strong>SIFT</strong> (Lowe 2004) 、<strong>SURF</strong>(Bay等人2008) 、和<strong>ORB</strong>(Rublee等人2011) 算法可选地用于检测和描述特征，<strong>RANSAC</strong> (Fischler和Bolles 1981) 随后用于鲁棒匹配。</p>
+<p><strong>回环检测（SLAM 应用程序中的另一个核心模块）<strong>是指准确断言代理已返回到先前访问过的位置。 减少由累积误差引起的估计轨迹的漂移至关重要。 已经开发了一组基于外观的方法来使用图像相似性来识别以前访问过的地方。 特征匹配结果自然适用于测量两个场景的相似性，并且已成为许多最先进方法的基础。 例如，Liu and Zhang (2012) 在当前图像和每个之前访问过的图像之间使用 SIFT 进行特征匹配，然后根据结果中准确匹配的数量确定闭环。 张等人（2011）使用从图像中提取的原始特征的定向匹配来检测闭环事件。 为了实现闭环检测，Wu 等人  (2014)使用</strong>LSH</strong>作为基本技术，将机器人当前视图中的二值视觉特征与机器人外观图中的视觉特征进行匹配。 刘等人（2015a）开发了一个共识约束来修剪异常值，并验证了他们的闭环检测方法的优越性。</p>
+<h2 id="53-视觉归位导航"><a class="markdownIt-Anchor" href="#53-视觉归位导航"></a> 5.3 视觉归位导航</h2>
+<p><strong>视觉归位导航旨在仅基于视觉信息将机器人从任意起始位置导航到目标或原始位置。<strong>这通常通过从分别在当前位置和原始位置捕获的两个全景图像估计归位向量/方向（从当前位置指向原始位置）来实现。传统上，特征匹配是视觉归位导航研究中对应方法的基础（Möller et al. 2010）。在此类别中，可以通过</strong>将对应关系转换为运动流来确定归航向量</strong>（Ma et al. 2018b; Churchill and Vardy 2013; Liu et al. 2013; Zhao and Ma 2017）。</p>
+<p>拉米萨等人 （2011）将平均地标向量与在全景图像中自动检测到的不变特征点相结合，实现自主视觉归航。 然而，特征匹配仅由方法中描述符的相似性决定，从而导致许多不匹配。异常值的存在已被证实是视觉归航性能下降的原因（Schroeter and Newman 2008）。 为了解决不匹配造成的退化，刘等人  (2013) 使用类似 RANSAC 的方法去除不匹配。同时，Zhao 和 Ma (2017) 提出了一种视觉归航方法，通过在平滑先验下同时去除不匹配和稀疏运动流的鲁棒插值。 马等人（2018b）还提出了一种引导局部保持匹配方法来处理极大比例的异常值并提高视觉归航的鲁棒性。</p>
+<h2 id="54-图像配准与拼接"><a class="markdownIt-Anchor" href="#54-图像配准与拼接"></a> 5.4 图像配准与拼接</h2>
+<p>图像配准是将从不同视点、不同时间或不同传感器获得的同一场景的两幅或多幅图像对齐的过程（Zitova和Flusser 2003）。在过去的几十年中，以特征匹配为关键要求的基于特征的方法因其鲁棒性和效率而受到越来越多的关注。一旦建立了对应关系，图像配准就会减少，以估计变换模型（例如，刚性、仿射或投影）。最后，通过映射函数对源图像进行变换，映射函数依赖于一些插值技术（例如双线性和最近邻）。在特征匹配和图像配准方面，已经提出了大量的工作。Ma等人（2015b）提出了一种用于刚性和非刚性特征匹配和图像配准的贝叶斯公式。为了进一步利用几何线索，引入了局部线性变换约束。他们最近还提出了一种引导的局部保持匹配方法（Ma等人，2018a）。他们提出的方法可以显著降低计算复杂度，并且能够处理更复杂的转换模型。对于非刚性图像配准，Pilet et al.（2008）和Gay Bellie et al.（2008）提出了解决方案，其中鲁棒匹配技术对异常值不敏感。一些努力（Paul and Pati 2016；Maetal.2017b；Yang et al.2017a）也试图修改特征检测器和描述符，以改进注册过程。</p>
+<p>由于不同模态引起的外观高度可变性，多模态图像配准问题更加复杂，这在医学图像和多传感器图像分析中经常出现。例如，陈等人（2010）开发了<strong>部分强度不变特征描述符（PIIFD）来</strong>匹配视网膜图像，而Wang等人 (2015) 使用 SURF 检测器 (Bay et al. 2008) 和单个高斯点匹配模型在更强大的配准框架中扩展了 PIIFD。基于多模态图像的特点，Liu et al. (2018a) 提出了一种用于 IR 和可见图像配准的仿射和对比度不变描述符。杜等人（2018）还提出了<strong>一种基于尺度不变PIIFD特征和局部保持匹配的IR和可见图像配准方法</strong>。叶等人（2017）提出了一种基于图像结构属性的新型特征描述符，用于多模态配准。 Sotiras 等人 (2013)详细讨论了医学图像分析领域的基于特征匹配的多模态配准技术，这些技术被归类为几何方法。</p>
+<p>同时，图片拼接或图像拼接涉及从部分视图序列中获取场景的更宽视野（Ghosh和Kaabouch 2016）。与图像配准相比，图片拼接处理低重叠图像，需要在像素级进行准确对齐以避免视觉不连续。基于特征的拼接方法因其不变性和效率而在该领域很受欢迎。例如，为了识别几何一致的特征匹配并实现准确的单应性估计，Brown和Lowe（2007）提出使用SIFT（Lowe 2004）特征匹配和RANSAC（Fischler and Bolles 1981）算法。Lin et al.（2011）使用SIFT（Lowe 2004）预计算映射，然后联合估计匹配和平滑变化的仿射场以获得更好的拼接性能。感兴趣的读者可以参考综合调查（Ghosh和Kaabouch 2016；Bonny和Uddin 2016），了解更多基于特征的图像拼接和拼接方法。</p>
+<h2 id="55-图像融合"><a class="markdownIt-Anchor" href="#55-图像融合"></a> 5.5 图像融合</h2>
+<p>为了生成更有利于后续应用的图像，采用图像融合的方式，将不同传感器或不同拍摄设置下获取的图像中的有意义信息结合起来（Pohl and Van Genderen 1998），其中源图像已经预先精确对齐。图像融合的前提是使用特征匹配方法对源图像进行配准，配准的准确性直接影响融合质量。刘等人（2017）使用CNN联合生成多焦点图像融合的活动水平测量和融合规则。同时，马等人（2019c）提出了一种用于红外和可见光图像融合的端到端模型，该模型在生成对抗网络的框架下生成具有主要红外强度和额外可见梯度的图像。随后，他们引入了细节损失和目标边缘增强损失，以进一步丰富纹理细节（Ma et al. 2020）。</p>
+<p>一组基于局部特征的图像融合方法，其中最常用的是稠密SIFT。Liu等人（2015b）提出了多聚焦图像与稠密尺度不变特征变换的融合，其中局部特征描述符不仅用作活动水平度量，还用于匹配多幅源图像之间的误配准像素，以提高融合结果的质量。类似地，Hayat和Imran（2019）提出了一种无重影多曝光图像融合技术，该技术使用密集SIFT描述符和引导滤波器，可以使用普通相机生成高质量图像。此外，Chen et al.（2015）和Maet al.（2016a）介绍了一种可以同时执行图像配准和图像融合的方法，从而在未对齐的图像对上实现图像融合。</p>
+<h2 id="56-图像检索-目标识别和跟踪"><a class="markdownIt-Anchor" href="#56-图像检索-目标识别和跟踪"></a> 5.6 图像检索、目标识别和跟踪</h2>
+<p>特征匹配可用于测量图像之间的相似性，从而实现一系列高级应用，包括图像检索（Zhou et al. 2017）、对象识别和跟踪。图像检索的目标是检索给定查询图像表现出相似场景的所有图像。在基于局部特征的图像检索中，图像相似度本质上是由图像之间的特征匹配决定的。因此，可以通过聚合来自匹配特征的投票来获得图像相似度得分。在周等人（2011），相关性分数仅由两幅图像的特征匹配数量决定。在 Jégou 等人（2010），评分函数被定义为对共享视觉词的平方词频逆文档频率权重的累积，这本质上是内积特征的包。</p>
+<p>此外，几何上下文验证是一种优化初始图像检索结果的常用技术，它与特征匹配直接相关。通过结合几何信息，几何上下文验证技术可用于解决由局部描述符的模糊性和量化损失引起的错误匹配问题。对于图像检索，大量方法以显式方法估计转换模型以验证初步匹配。例如，菲尔宾等人 (2007) 使用类似 RANSAC 的方法来查找内部对应关系，而 Avrithis 和 Tolias (2014) 开发了一个简单的空间匹配模型，其灵感来自变换空间中的 Hough 投票。另一类工作解决了几何上下文验证，而不显式处理转换模型。例如，Sivic 和 Zisserman (2003) 利用局部特征组中空间上下文的一致性来验证初步的对应关系。周等人（2010）提出了空间编码方法，通过验证全局相对位置一致性来识别有效的视觉词匹配。</p>
+<p>此外，几何上下文验证是细化初始图像检索结果的常用技术，与特征匹配直接相关。通过结合几何信息，几何上下文验证技术可以解决由于局部描述符的模糊性和量化损失引起的错误匹配问题。对于图像检索，大量方法以显式方法估计transformationmodel，以验证暂定匹配。例如，Philbin等人（2007年）使用aRANSAClike方法找到内部对应，而Avrithis和Tolias（2014年）开发了一个简单的空间匹配模型，其灵感来自变换空间中的Hough投票。另一行工作涉及几何上下文验证，而无需显式处理转换模型。例如，Sivic和Zisserman（2003）利用局部特征组中空间上下文的一致性来验证暂定对应关系。Zhou等人（2010）提出了空间编码方法，通过验证全局相对位置一致性来识别有效的视觉单词匹配。特征匹配具有度量相似度的功能，在目标识别和跟踪中也起着重要作用。例如，Lowe et al.（1999）使用SIFT特征来匹配样本图像和新图像。在他们提出的方法中，通过Hough变换哈希表识别潜在的模型姿态，然后通过最小二乘拟合实现模型参数的最终估计。如果至少有三个键在残差较低的模型参数上一致，则对象的存在非常明显。现代物体识别的尝试还包括一些专门手工制作的功能（Dalal和Triggs 2005；Hinterstoisser等，2012），以及最近的深度学习方法（Wohlhart和Lepetit 2015）。</p>
+<p>特征匹配具有测量相似度的功能，在目标识别和跟踪中也发挥着重要作用。例如，Lowe 等人 (1999) 使用 SIFT 特征来匹配样本图像和新图像。在他们提出的方法中，潜在的模型姿态通过霍夫变换哈希表识别，然后通过最小二乘拟合来实现模型参数的最终估计。如果至少三个键与具有低残差的模型参数一致，则该对象的存在非常明显。对象识别的现代尝试还包括一些特别手工制作的特征（Dalal 和 Triggs 2005；Hinterstoisser 等人 2012）以及最近的深度学习方法（Wohlhart 和 Lepetit 2015）。</p>
+<p>跟踪基本上是指估计物体在图像上的轨迹。跨图像的特征匹配是基于特征跟踪的基础，文献中已经提出了针对这些任务的多种算法。在大多数视觉跟踪系统中采用特征匹配流水线，不同之处在于匹配被限制为预测接近所遇到位置的已知特征。读者可以参考Gauglitz等人 (2011) 对用于跟踪的不同特征检测器和描述符的综合评估，以及最近提出的基准 (Wu等人2015b)，其中涵盖了现代对象跟踪方法的回顾以及特征表示方法所发挥的作用。</p>
+<h1 id="6-实验"><a class="markdownIt-Anchor" href="#6-实验"></a> 6. 实验</h1>
+<p>pass</p>
+<h1 id="7总结和未来趋势"><a class="markdownIt-Anchor" href="#7总结和未来趋势"></a> 7.总结和未来趋势</h1>
+<p>图像匹配在各种视觉应用中都发挥了重要作用，并引起了广泛关注。在过去的几十年中，研究人员在该领域也取得了重大进展。因此，我们对现有的图像匹配方法 (从手工制作到可训练的方法) 进行了全面的回顾，以便为该领域的研究人员提供更好的参考和理解。</p>
+<p>图像匹配可以简单地分为基于区域的匹配和基于特征的匹配。基于区域的方法用于实现密集匹配，而无需从图像中检测任何显着特征点。它们在高重叠图像匹配 (如医学图像配准) 和窄基线立体 (如双目立体匹配) 中更受欢迎。基于深度学习的技术已经引起了越来越多的关注。因此，我们在第4节中简要回顾了这些类型的方法，更多地关注基于学习的方法。</p>
+<p>**基于特征的图像匹配可以有效解决大视点、宽基线和严重的非刚性图像匹配问题的局限性。它可以用于显着特征检测、判别描述和可靠匹配的通道中，通常包括转换模型估计。**按照这个过程，特征检测可以从图像中提取出独特的结构。同时，特征描述可以看作是一种图像表示方法，广泛用于图像编码和相似度测量。匹配步骤可以扩展为不同类型的匹配形式，例如图匹配、点集注册、描述符匹配和不匹配去除，以及3-D情况下的匹配任务。这些比基于区域的方法更灵活和适用，因此在图像匹配领域受到了相当大的关注。因此，我们以它们从传统技术到经典学习和深度学习的核心思想来回顾它们。此外，为了全面了解图像匹配的重要性，我们介绍了与图像匹配相关的几个应用。我们还通过对代表性数据集的广泛实验，对这些经典和基于深度学习的技术进行全面客观的比较和分析。</p>
+<p>尽管在理论和性能方面都取得了长足的进步，但图像匹配仍然是一个悬而未决的问题，需要进一步努力。</p>
+<ul>
+<li>在文献中已广泛采用的<strong>两阶段特征匹配策略</strong>仅在一小部分具有足够相似描述符的潜在对应关系上执行不匹配消除。但是，这可能会导致召回(准确率的一种)中的性能受限，这对于某些情况可能是有问题的。</li>
+<li>在不同的场景中，不是在不同图像中物理上相同点的投影之间寻求对应，而是在一个类别内不同实例的语义类比之间寻求对应。 这需要新的范式来进行特征描述和不匹配消除中的特征匹配。</li>
+<li>多幅图像的联合匹配已被证明可以极大地提高成对匹配的匹配性能，并且近年来引起了相当大的关注。 然而，复杂性仍然是问题的主要关注点。因此，需要实用且高效的算法。</li>
+<li>近年来，深度学习方案迅速发展并在许多与计算机视觉相关的研究领域中显示出巨大的进步。然而，在特征匹配的文献中，大多数作品都将深度学习技术应用于特征检测和描述。 因此，未来可以进一步探索准确特征匹配的潜在能力。</li>
+<li>多模态图像之间的图像匹配仍然是一个尚未解决的问题。将来，深度学习技术可以用于更好的特征检测和描述性能。</li>
+<li>特征匹配是计算机视觉中的一项基本任务。然而，它的应用还没有得到充分的探索。因此，一个有前途的研究方向是定制现代特征匹配技术以满足实际视觉任务的不同要求，例如 SfM 和 SLAM。</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BB%BC%E8%BF%B0%E7%BF%BB%E8%AF%91/" class="category-chain-item">综述翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/">#图像匹配</a>
+      
+        <a href="/tags/%E7%BB%BC%E8%BF%B0%E7%BF%BB%E8%AF%91/">#综述翻译</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>图像匹配综述翻译(2)：应用&amp;后续发展</div>
+      <div>http://example.com/2022/05/24/图像匹配综述2/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年5月24日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/01/%E5%9F%BA%E4%BA%8E%E9%87%8D%E9%87%87%E6%A0%B7%E7%9A%84%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/" title="基于重采样的匹配算法笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">基于重采样的匹配算法笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/23/%E4%BB%8E%E4%BA%BA%E4%B8%BA%E8%AE%BE%E5%AE%9A%E7%89%B9%E5%BE%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E7%89%B9%E5%BE%81%E7%9A%84%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%EF%BC%9A%E7%BB%BC%E8%BF%B0-%E7%BF%BB%E8%AF%91/" title="图像匹配综述翻译(1)：问题定义&amp;研究现状">
+                        <span class="hidden-mobile">图像匹配综述翻译(1)：问题定义&amp;研究现状</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

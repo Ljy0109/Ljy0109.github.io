@@ -1,0 +1,941 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="如题，经典开源多模态图像匹配算法LNIFT，2022 TGRS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LNIFT：用于旋转不变多模态特征匹配的局部归一化图像">
+<meta property="og:url" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="如题，经典开源多模态图像匹配算法LNIFT，2022 TGRS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/title.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig1.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq1.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq2.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq3.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig2.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig3.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table1.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq4.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq5.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq6.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig4.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table2.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig5.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table3.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq7.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig6.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table4.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table5.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table6.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table7.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table8.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig7.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig8.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig9.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig10.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table9.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table11.jpg">
+<meta property="og:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table12.jpg">
+<meta property="article:published_time" content="2024-05-13T07:30:00.000Z">
+<meta property="article:modified_time" content="2024-05-13T13:10:28.550Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="图像匹配">
+<meta property="article:tag" content="论文翻译">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="遥感">
+<meta property="article:tag" content="TGRS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/title.jpg">
+  
+  
+  
+  <title>LNIFT：用于旋转不变多模态特征匹配的局部归一化图像 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LNIFT：用于旋转不变多模态特征匹配的局部归一化图像"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-13 15:30" pubdate>
+          2024年5月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          135 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">LNIFT：用于旋转不变多模态特征匹配的局部归一化图像</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/title.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="lnift-locally-normalized-image-for-rotation-invariant-multimodal-feature-matching"><a class="markdownIt-Anchor" href="#lnift-locally-normalized-image-for-rotation-invariant-multimodal-feature-matching"></a> LNIFT: Locally Normalized Image for Rotation Invariant Multimodal Feature Matching</h1>
+<h1 id="lnift用于旋转不变多模态特征匹配的局部归一化图像"><a class="markdownIt-Anchor" href="#lnift用于旋转不变多模态特征匹配的局部归一化图像"></a> LNIFT：用于旋转不变多模态特征匹配的局部归一化图像</h1>
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=9751712">IEEE Xplore Full-Text PDF:</a></p>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要：</h1>
+<p>严重的非线性辐射失真（NRD）是多模态图像匹配的瓶颈问题。虽然在过去的几年中，已经做出了许多努力，如辐射变化不敏感的特征变换（RIFT）和定向相位一致性直方图（HOPC），几乎所有这些方法都是基于频域信息，遭受高计算开销和内存占用。在这篇文章中，我们提出了一个简单但非常有效的多模态特征匹配算法在空间域中，称为局部归一化图像特征变换（LNIFT）。我们首先提出了一个局部归一化滤波器，将原始图像转换为归一化图像进行特征检测和描述，这大大减少了多模态图像之间的NRD。我们证明，归一化匹配对有一个更大的相关系数比原来的。然后，我们在归一化图像上检测定向FAST和旋转简短（ORB）关键点，并使用自适应非最大抑制（ANMS）策略来改善关键点的分布。我们还基于方向梯度直方图（HOG）（如描述符）描述归一化图像上的关键点。我们的LNIFT实现旋转不变性相同的ORB没有任何额外的计算开销。因此，LNIFT可以在1024 × 1024像素的图像上近乎实时地执行（2500个关键点仅花费0.32 s）。使用了四个多模态图像数据集进行全面评估，共包含4000对匹配数据，包括合成孔径雷达（SAR）–光学、红外–光学和深度–光学数据集。实验结果显示，LNIFT在效率（1024 × 1024图像上0.49秒对比47.8秒）、成功率（99.9%对比79.85%）和正确匹配数（309对比119）方面，远优于RIFT。源代码和数据集将在https://ljy-rs.github.io/web上公开。</p>
+<p>关键词：深度光学，特征匹配，红外光学，局部描述符，多模式图像匹配，合成孔径雷达（SAR）—光学。</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1 引言</h1>
+<p>图像匹配是指从不同传感器或不同视角采集的同一场景图像中检测出可靠的对应关系的过程。基于图像匹配的相关应用不仅包括遥感中的空中三角测量，还包括定位导航中的视觉导航、机器人中的同步定位和地图绘制、智能交通中的目标跟踪等。图像匹配技术的发展可以有效地推动这些应用的进步。</p>
+<p>在过去的几十年里，图像匹配技术得到了广泛的研究。然而，目前的大多数方法(如尺度不变特征变换(SIFT)[1]、加速比稳健特征(SURF)[2]和形状上下文[3])仅适用于具有线性辐射失真的同源图像[4]、[5]。例如，Moghimi等人。[6]、[7]提出了一种基于这些匹配方法的多时相多传感器遥感图像相对辐射归一化技术。然而，他们指出，这些方法仅适用于线性辐射扭曲。它们在多模式图像上的表现非常差。多模式图像是指具有不同成像机制的传感器获取的图像，这些图像在同一地物上表现出较大的明显差异，并且通常遭受严重的非线性辐射失真(NRD)，如合成孔径雷达(SAR)光学、红外光学、深度光学和地图光学[8]。多模式图像匹配是当前的研究热点，也是特征匹配的一项具有挑战性的任务[5]。</p>
+<p>根据Li等人的说法。[8]、[9]，多模式图像匹配方法也可以分为两类：基于区域的方法和基于特征的方法。基于区域的匹配方法，如互信息(MI)[10]、[11]和定向相位一致性直方图(HOPC)[12]、[13]，也称为模板匹配法，非常适合于只有平移变化的图像对。但是，它们很难应用于具有旋转、缩放和透视更改的情况。与模板匹配相比，特征匹配对几何失真的鲁棒性更强，应用范围更广。它一般包括三个步骤，即特征检测、特征描述和关键点匹配。然而，目前的许多多峰特征匹配方法都是基于傅里叶变换的频域信息。例如，辐射变化不敏感特征变换(RIFT)[8]使用傅立叶变换将原始图像转换为LOG-Gabor序列和相位一致图，用于特征检测和描述。虽然快速傅立叶变换(FFT)将复杂度从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>O</mtext><mo stretchy="false">(</mo><msup><mi>N</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{O}(N^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>降低到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>O</mtext><mo stretchy="false">(</mo><mi>N</mi><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>N</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{O}(N\log(N))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">O</span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span>，但对于大规模问题(例如，对于1000×1000的图像，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>N</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1.38</mn><mo>×</mo><mn>1</mn><msup><mn>0</mn><mn>7</mn></msup></mrow><annotation encoding="application/x-tex">N\log(N)=1.38×10^7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">3</span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">7</span></span></span></span></span></span></span></span></span></span></span>)，它仍然非常慢。因此，目前的多模式特征匹配方法普遍存在计算开销大、占用内存大的问题，这极大地限制了其在实际应用中的潜力。</p>
+<p>多模式图像匹配的难点主要在于参考图像和目标图像之间的模式不一致，导致NRD较大，缺乏足够相似的图像结构。如果两个不同模式的图像可以转换成相同的中间模式，从而包含两个模式之间共享的信息，那么多模式图像匹配问题就可以转化为单模式匹配问题。此时，传统的方法或传统的深度学习方法也可以获得良好的性能。基于这一基本思想，我们提出了一种简单但非常有效的空域多模式特征匹配方法，称为局部归一化图像特征变换(LNIFT)。我们提出了一种局部归一化滤波器来将多模式图像转换为中间模式(归一化图像)。如图所示，中间模式图像的梯度比原始图像的归一化互相关系数(NCC)[14]大得多。为了提高效率，我们在滤光片中使用了积分成像技术。然后，我们在中间模式图像上执行改进的定向快速旋转简表(ORB)[15]检测器和定向梯度直方图(HOG)[16]来提取和描述特征。关键点的旋转角度的计算方法与ORB相同，没有任何额外的计算开销。我们使用了四个大规模数据集，总共4000个匹配对进行综合评估，包括2000个合成孔径雷达(SAR)-光学对、1000个红外-光学对和1000个深度-光学对。实验结果表明，我们的LNIFT算法比RIFT算法有更好的性能。LNIFT可以在具有5000个关键点的1024×1024图像上近乎实时地运行。</p>
+<p>本文的贡献如下。</p>
+<ol>
+<li>提出了一种多通道特征匹配算法LNIFT，该算法在匹配效率、匹配成功率和匹配正确率方面都远远优于RIFT算法。</li>
+<li>提出了一种局部归一化滤波器。随着归一化，多模式图像变得更加相似，并且具有更高的MI和NCC分数。为了加快滤波速度，还采用了积分成像技术。</li>
+<li>提出了一种改进的ORB关键点检测器，该检测器采用自适应非最大抑制ANMS策略来改善关键点的分布。</li>
+<li>与目前文献中只使用几个或几十个多峰图像对进行比较不同，我们收集了四个真实的大规模数据集，总共4000个图像对进行评估。</li>
+</ol>
+<h1 id="2-相关工作"><a class="markdownIt-Anchor" href="#2-相关工作"></a> 2 相关工作</h1>
+<p>根据其中心思想，多模式图像匹配方法可分为基于区域的匹配算法和基于特征的匹配算法。</p>
+<h2 id="21-基于区域的方法"><a class="markdownIt-Anchor" href="#21-基于区域的方法"></a> 2.1 基于区域的方法</h2>
+<p>基于区域匹配的核心思想是通过滑动窗口策略比较目标图像和参考图像之间的像素相似度，找出相似度最高的窗口对作为正确的对应关系。此过程也称为模板匹配。</p>
+<ol>
+<li>
+<p>互信息方法：互信息通常用于描述两个数据集或事件之间的相关性度量，在医学和遥感领域的多源图像配准中得到了广泛的应用[10]、[17]-[20]。基于MI的方法需要在整个搜索空间中搜索最佳相似度，这很难达到全局最优。此外，它们还存在计算开销高的问题。</p>
+</li>
+<li>
+<p>傅里叶变换方法：这些方法通常在基于傅里叶变换的频域中描述图像[21]。然而，如果图像对之间的光谱分量差异很大，这种方法将变得非常不可靠。最近，叶诗文等人[13]提出了方向梯度(CFOGs)的HOPC和信道特征[4]，它使用FFT进行频域特征表示。香等人[22]提出了一种改进的相位一致性模型。这些方法对NRD表现出较好的鲁棒性。然而，它们一般依赖于地理信息的先验。此外，如上所述，FFT还存在较高的计算开销和内存占用。</p>
+</li>
+<li>
+<p>基于学习的方法：将DL技术用于多模式图像配准也是一个研究热点。例如，暹罗卷积神经网络[23]-[27]展示了多模式模板匹配的潜力。Merkle等人。[26]利用合成孔径雷达-光学匹配暹罗网络来提高光学卫星图像的地理定位精度。Hughes et al.[28]使用硬负挖掘策略来提高深层网络的性能。然而，随着数据驱动的方法的临近，基于深度学习的方法严重依赖于训练数据集的多样性(多模式图像匹配问题包含许多不同的图像模式，如SAR、光学、深度、夜间、红外、MAP和LiDAR强度)，并且需要更高的计算资源[29]。此外，这些块匹配方法对大的几何变换(如大旋转)也很敏感[5]，[30]。</p>
+</li>
+</ol>
+<h2 id="22-基于特征的匹配"><a class="markdownIt-Anchor" href="#22-基于特征的匹配"></a> 2.2 基于特征的匹配</h2>
+<p>特征通常是指突出的关键点，例如图像中的角点。基于特征的匹配包括三个主要阶段：特征检测(例如，来自加速分段测试(FAST)[31]、Harris[32]和Differenceof-Gauss(DOG)[1]的特征)、特征描述(例如，SIFT[1]、SURF[2]和RIFT[8])和关键点匹配(例如，随机样本一致性(RANSAC)族[9]、[33]和稳健估计器[34]-[38])。</p>
+<p>在过去的几十年里，同源图像的特征匹配已经得到了很好的研究。已经提出了许多著名的方法，如SIFT[1]、SURF[2]、仿射SIFT(ASIFT)[39]、ORB[15]、学习不变特征变换(LIFT)[40]和超点[41]。然而，这些方法通常不适合多模式特征匹配，因为它们没有考虑NRD[5]。还开发了几种用于异质特征匹配的方法，例如局部自相似(LSS)描述符[5]、[42]、[43]、部分强度不变特征描述符(PIIFD)[44]、位置尺度定向SIFT(PSO-SIFT)[45]、光学-SAR SIFT(OS-SIFT)[46]及其变体[47]、以及基于DL的匹配[48]。这些方法在特定的图像类型上取得了较好的效果。然而，它们一般不适合其他类型的图像，这在很大程度上限制了它们的应用。</p>
+<p>最近，Li等人提出了自己的观点。[8]提出了一种适用于红外光学、SAR光学、深度光学和MAP光学等不同类型图像的裂隙，以应对严重的NRD。崔等人。[49]扩大了裂缝以实现比例不变性。然而，这些方法都是频域方法，计算复杂度较高。此外，它们对严重的斑点噪声非常敏感。</p>
+<p>事实上，多通道特征匹配远未解决问题。在本文中，我们的目标是开发一种实用的多模式特征匹配方法，该方法具有效率高、对NRDS具有良好的鲁棒性和旋转不变性的特点。首先，为了达到高效率，我们在空间域检测和描述特征，而目前的大多数方法都是基于频率信息的。我们使用一个简单的滤波器来提取结构信息，每个像素的复杂度仅为O(1)。因此，我们的LNIFT可以在具有5000个关键点的1024×1024图像上近乎实时地运行。其次，为了实现对NRDS的高鲁棒性，我们引入了这样的思想：如果两个不同的模式可以转换成相同的中间模式，那么多模式图像匹配问题就可以转化为同源匹配问题。提出了一种局部归一化滤波，使不同模式的图像变得更加相似。因此，我们的LNIFT在多模式图像上的性能远远优于RIFT。</p>
+<h1 id="3-方法"><a class="markdownIt-Anchor" href="#3-方法"></a> 3 方法</h1>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图1.我们的LNIFT框架。首先基于局部归一化滤波将给定的多模式图像对转换成相同的中间模式。然后，对归一化后的图像应用改进的ORB检测器和类HOG描述子来检测和描述关键点。</p>
+</blockquote>
+<p>图1显示了我们的LNIFT的框架。对于给定的一对多模式图像，我们首先基于局部归一化滤波将它们转换成相同的中间模式图像。然后，将改进的ORB检测器应用于归一化后的图像，提取均匀分布的特征。这些关键点由类似HOG的描述符编码成特征向量。最后，我们使用暴力搜索策略来建立对应关系。每个阶段的详细信息如下所述。</p>
+<h2 id="31-局部归一化滤波"><a class="markdownIt-Anchor" href="#31-局部归一化滤波"></a> 3.1 局部归一化滤波</h2>
+<p>如上所述，如果我们能够将多模式图像转换成包含两个模式之间共同信息的相同的中间模式，那么多模式图像匹配问题就变成了传统的图像匹配问题。因此，可以采用典型的手工和基于学习的特征匹配方法。在这一部分，我们提出了一个局部归一化过滤器来实现这一目标，其数学定义如下</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>I</mi><mi>N</mi></msub></mrow><annotation encoding="application/x-tex">I_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>分别表示归一化图像及其原始图像；<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>表示二维图像坐标；<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>W</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>s</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">W(x,y,s)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">s</span><span class="mclose">)</span></span></span></span>是以<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>为中心的局部窗口，其大小为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>2</mn><mi mathvariant="normal">∗</mi><mi>s</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>×</mo><mo stretchy="false">(</mo><mn>2</mn><mi mathvariant="normal">∗</mi><mi>s</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(2∗s+1)×(2∗s+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mord">∗</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mord">∗</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>。</p>
+<p>从本质上讲，我们的局部归一化过滤器等于图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>减去它的平均过滤结果。平均滤波器是一个平滑的滤波器，它去除了图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>中的细节，因此，我们的滤波器只保留了细节成分，即归一化图像包含了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>中的大部分结构信息，这对于多模式图像匹配非常重要。这就是我们的方法在多模式图像上运行良好的理论原因。事实上，有许多过滤器可用于分离详图构件。使用这些滤镜而不是(1)中的平均滤镜也可以获得良好的结果。我们之所以选择平均过滤器，是因为它的效率。在计算了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>的积分像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>I</mi><mi mathvariant="normal">Σ</mi></msub></mrow><annotation encoding="application/x-tex">I_\Sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">Σ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>之后</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>我们的局部归一化滤波器可以在O(1)时间内实现。方程(1)变为</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>从理论上讲，局部归一化滤波可以很大程度上降低多模式图像之间的NRD。然后，归一化图像对的重叠区域应该与原始多模式图像的重叠区域更相似。因此，归一化图像应该具有比多模式图像更高的相似性分数。为了验证这一结论，我们在具有2000幅图像对的SAR-光学数据集上进行了实验。每个图像对都是预先注册的。对于每一对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">I^1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">I^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，我们计算它们的归一化图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>I</mi><mi>N</mi><mn>1</mn></msubsup></mrow><annotation encoding="application/x-tex">I^1_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>I</mi><mi>N</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">I^2_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>。由于梯度将用于特征描述，我们也计算这些图像的梯度，得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msup><mi>I</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">gI^1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msup><mi>I</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">gI^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msubsup><mi>I</mi><mi>N</mi><mn>1</mn></msubsup></mrow><annotation encoding="application/x-tex">gI^1_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msubsup><mi>I</mi><mi>N</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">gI^2_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>。然后，我们使用MI度量来度量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">I^1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">I^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>I</mi><mi>N</mi><mn>1</mn></msubsup></mrow><annotation encoding="application/x-tex">I^1_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>I</mi><mi>N</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">I^2_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>)之间的相似性，并采用NCC度量来度量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msup><mi>I</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">gI^1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msup><mi>I</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">gI^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msubsup><mi>I</mi><mi>N</mi><mn>1</mn></msubsup></mrow><annotation encoding="application/x-tex">gI^1_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><msubsup><mi>I</mi><mi>N</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">gI^2_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>)之间的相似性。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图2.多模式图像的示例对。(a)一对合成孔径雷达光学图像[原始光学图像和合成孔径雷达图像(MI=0.165和NCC=0.018)]。(b) (a)[局部归一化图像(MI=0.315和Ncc=0.407)]的相应归一化图像。归一化后，图像变得更加相似，即MI和NCC变得更高。</p>
+</blockquote>
+<p>图2提供了一个示例。如图所示，合成孔径雷达图像与光学图像之间的NRD是严重的。例如，人造物体(如道路和水泥地)在SAR图像中是黑色的，而在光学图像中是白色或灰色的。幸运的是，在归一化后，它们变得更加相似，即MI和NCC大大增加。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图3.增量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="normal">Δ</mi><mtext>NCC</mtext></msub><mo>=</mo><mtext>NCC</mtext><mo stretchy="false">(</mo><msub><mi>I</mi><mi>N</mi></msub><mo stretchy="false">)</mo><mo>−</mo><mtext>NCC</mtext><mo stretchy="false">(</mo><mi>I</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Delta_{\text{NCC}}=\text{NCC}(I_N)-\text{NCC}(I)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">NCC</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">NCC</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">NCC</span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mclose">)</span></span></span></span>的概率分布。(a)概率分布。(b)累计分配。</p>
+</blockquote>
+<p>在图3中，我们分析了增量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="normal">Δ</mi><mtext>NCC</mtext></msub><mo>=</mo><mtext>NCC</mtext><mo stretchy="false">(</mo><msub><mi>I</mi><mi>N</mi></msub><mo stretchy="false">)</mo><mo>−</mo><mtext>NCC</mtext><mo stretchy="false">(</mo><mi>I</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Delta_{\text{NCC}}=\text{NCC}(I_N)-\text{NCC}(I)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">NCC</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">NCC</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">NCC</span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mclose">)</span></span></span></span>的概率分布。在98%的匹配对中，归一化图像具有比原始图像更高的NCC分数。MI和NCC的平均结果如表I所示，归一化图像的MI是原始图像的两倍，NCC是原始图像的三倍(MI和NCC都越大越好)。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="32-改进的orb探测器"><a class="markdownIt-Anchor" href="#32-改进的orb探测器"></a> 3.2 改进的ORB探测器</h2>
+<p>我们提出了一种改进的ORB检测器来提取归一化图像上的关键点，因为与SIFT[1]和SURF[2]检测器相比，ORB检测器具有非常高的效率。ORB改进了FAST[31]检测器以实现旋转不变性。它使用FAST-9(圆形半径为9)来检测特征，并基于Harris角点度量对这些关键点进行排序。然后，它挑选具有最高哈里斯分数的最佳N个关键点。对于遥感图像，通过地面采样距离(GSD)的先验可以很容易地消除尺度差异。虽然ORB检测器实现了基于尺度金字塔的尺度不变性，但它大大增加了计算复杂度。因此，我们从经典的ORB检测器中去掉了尺度金字塔结构，只检测第一级(原始分辨率)的特征。</p>
+<p>与ORB类似，我们也使用强度质心来计算每个关键点的主导角度，以实现旋转不变性。不同的是，我们将角度规格化为[0◦，180◦)，而不是[0◦，360◦)。正如在[46]和[50]中所提到的，在多模式图像中，例如SAR光学图像和红外光学图像中，强度通常具有反转。因此，我们认为取向θ和θ+180◦是相同的。强度质心的计算基于图像矩MPQ，其定义如下：</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Omega(k_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Ω</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>是以关键点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">k_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为中心的局部图像面片。然后，面片的强度质心<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Omega(k_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Ω</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>为</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mrow><msub><mi>k</mi><mi>i</mi></msub><mi>C</mi></mrow><mo stretchy="true">→</mo></mover></mrow><annotation encoding="application/x-tex">\overrightarrow{k_iC}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3664399999999999em;vertical-align:-0.15em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.21644em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span><span class="svg-align" style="top:-3.69444em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="height:0.522em;min-width:0.888em;"><svg width="400em" height="0.522em" viewbox="0 0 400000 522" preserveaspectratio="xMaxYMin slice"><path d="M0 241v40h399891c-47.3 35.3-84 78-110 128
+-16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
+ 11 8 0 13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7
+ 39-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85
+-40.5-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+ 151.7 139 205zm0 0v40h399900v-40z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span>是patch的主要方向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Omega(k_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Ω</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，角度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mi>θ</mi><mo>~</mo></mover><msub><mi>k</mi><mi>i</mi></msub></msub><mo>=</mo><mi>arctan</mi><mo>⁡</mo><mn>2</mn><mo stretchy="false">(</mo><mo stretchy="false">(</mo><msub><mi>m</mi><mn>01</mn></msub><mi mathvariant="normal">/</mi><msub><mi>m</mi><mn>10</mn></msub><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\tilde{\theta}_{k_i}=\arctan2((m_{01}/m_{10}))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1813999999999998em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9312999999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span></span></span><span style="top:-3.61344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.16666em;">~</span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03148em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">arctan</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mopen">(</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>arctan</mi><mo>⁡</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\arctan 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mop">arctan</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span></span></span></span>表示象限感知版本的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>arctan</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\arctan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mop">arctan</span></span></span></span>。考虑强度反转问题，关键点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">k_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的取向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><msub><mi>k</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">\theta_{k_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9445399999999999em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03148em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>为</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>改进的ORB检测器的一个问题是关键点的聚集现象[参见图4(A)]，这降低了运动或配准的结构的准确性，并增加了冗余信息。为了获得均匀分布的关键点，我们引入了一种ANMS策略来抑制聚类特征。假设ANMS的输出是M个均匀分布的关键点，我们首先降低FAST的参数，得到一个按Harris分数排序的大尺寸<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>&gt;</mo><mn>2</mn><mi>M</mi></mrow><annotation encoding="application/x-tex">N&gt;2M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>个关键点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi><mo>=</mo><mo stretchy="false">{</mo><msub><mi>k</mi><mi>i</mi></msub><msubsup><mo stretchy="false">}</mo><mn>1</mn><mi>N</mi></msubsup></mrow><annotation encoding="application/x-tex">K=\{k_i\}_1^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.0913309999999998em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>。对于每个<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>i</mi></msub><mo>∈</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">k_i\in K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span></span></span></span>，我们使用KD-树在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi>w</mi><mo separator="true">⋅</mo><mi>h</mi><mi mathvariant="normal">/</mi><mn>4</mn><mi>M</mi><mo stretchy="false">)</mo><msup><mo stretchy="false">)</mo><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">((w·h/4M))^{1/2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.138em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">h</span><span class="mord">/</span><span class="mord">4</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mclose">)</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8879999999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">/</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>的范围内搜索它的邻居<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>K</mi><msub><mi>k</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">K_{k_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03148em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>，并将它们从K中删除，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>h</mi></mrow><annotation encoding="application/x-tex">h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">h</span></span></span></span>是图像的宽度和高度。最后，我们选择剩余<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span></span></span></span>个中的前<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>个关键点作为输出。图4(b)显示了我们的ORB使用ANMS检测器(表示为IORB)的示例结果。由此可见，关键点分布均匀，覆盖了整个图像，探测器的重复性甚至比原始的ORB还要好。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图4.原始ORB和我们改进的ORB关键点分布的比较。(A)原始球体探测器(重复性=21.84%)。(B)我们的ORB带有ANMS检测器(重复性=29.04%)。</p>
+</blockquote>
+<p>为了展示局部归一化滤波对特征检测的影响，我们在一个有1000幅图像对的深度光学数据集上进行了实验。我们对每个原始图像(记为IROBori)和归一化图像(记为IROBlni)分别执行IORB，以获得5000个关键点。然后，将我们的类HOG描述符应用于归一化图像(记为IHOGlni)来描述两种检测策略的特征。IROBlni+IHOGlni的组合是我们的LNIFT算法，IROBori+IHOGlni的组合称为LNIFT-DETECT。通过暴力搜索匹配特征向量，无需最近邻距离比(NNDR)测试。我们使用正确匹配数n和正确匹配率(CMR)作为评价指标，其中正确匹配表示在地面真实变换下残差小于3个像素的对应，CMR定义为n与匹配总数之间的比率。结果汇总在表II中。据报道，使用局部归一化进行特征检测，正确匹配的数量和CMR增加了三倍多。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表二 评估局部归一化过滤器对特征检测和描述的影响(LNIFT-DETECT：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>R</mi><mi>O</mi><msub><mi>B</mi><mrow><mi>O</mi><mi>R</mi><mi>I</mi></mrow></msub><mo>+</mo><mi>I</mi><mi>H</mi><mi>O</mi><msub><mi>G</mi><mrow><mi>l</mi><mi>n</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IROB_{ORI}+IHOG_{lni}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">O</span><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span><span class="mord mathdefault mtight" style="margin-right:0.07847em;">I</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>；LNIFT-DESCRIBE：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>R</mi><mi>O</mi><msub><mi>B</mi><mrow><mi>l</mi><mi>n</mi><mi>i</mi></mrow></msub><mo>+</mo><mi>I</mi><mi>H</mi><mi>O</mi><msub><mi>G</mi><mrow><mi>o</mi><mi>r</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IROB_{lni}+IHOG_{ori}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>；以及LNIFT：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>R</mi><mi>O</mi><msub><mi>B</mi><mrow><mi>l</mi><mi>n</mi><mi>i</mi></mrow></msub><mo>+</mo><mi>I</mi><mi>H</mi><mi>O</mi><msub><mi>G</mi><mrow><mi>l</mi><mi>n</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IROB_{lni}+IHOG_{lni}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)</p>
+</blockquote>
+<h2 id="33-类hog描述符"><a class="markdownIt-Anchor" href="#33-类hog描述符"></a> 3.3 类HOG描述符</h2>
+<p>对于每个特征<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">k_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，我们首先根据主导角度旋转其局部图像块，以实现旋转不变性。然后，我们给出了一个简单的猪样描述符来描述这个局部补丁。如第III-A节所述，与原始多模式图像相比，局部归一化图像(LNIs)可以大大减少NRDs。因此，我们计算归一化图像的梯度而不是原始图像的梯度来进行描述。与传统的基于梯度的描述子不同，我们将梯度方向归一化为[0◦，180◦)，因为如上所述，在多模式图像中，梯度方向经常会出现反转。假设局部块的大小为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi><mo>×</mo><mi>J</mi></mrow><annotation encoding="application/x-tex">J×J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>个像素；由于块的大小比SIFT大得多，所以我们将其划分为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn><mo>×</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">8×8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span>个网格。在类似SIFT的描述符中，他们为每个网格中的方向[属于[0◦，360◦]]构建了一个八柱直方图。在我们的例子中，方向属于[0◦，180◦)。因此，我们只计算一个分布直方图，每个网格有四个柱状图(见图5)。最后，将64个直方图拼接在一起，得到KI的特征向量，并将其归一化为单位向量，以获得对光照变化的不变性。因此，我们的类HOG描述符的长度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn><mo>×</mo><mn>8</mn><mo>×</mo><mn>4</mn><mo>=</mo><mn>256</mn></mrow><annotation encoding="application/x-tex">8×8×4=256</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">5</span><span class="mord">6</span></span></span></span>。我们的类HOG描述符和HOG描述符有三个不同之处：第一，我们的描述符构建在LNI之上；第二，我们描述符中的网格彼此之间没有重叠，这类似于SIFT；第三，我们只使用四元直方图来编码[0◦，180◦)方向。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图5. 我们的HOG描述符，其中红点表示关键点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">k_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。将局部图像块划分为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn><mo>×</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">8×8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span>个网格。每个栅格被编码成一个四元的定向渐变直方图，其中方向被归一化为[0◦，180◦)。</p>
+</blockquote>
+<p>为了展示我们的局部归一化过滤器对特征描述的影响，我们还进行了一个类似于III-B节中的实验。首先，应用我们的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>R</mi><mi>O</mi><msub><mi>B</mi><mrow><mi>l</mi><mi>n</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IROB_{lni}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>检测器获取5000个关键点。然后，我们对每个原始图像(记为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>R</mi><mi>O</mi><msub><mi>B</mi><mrow><mi>o</mi><mi>r</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IROB_{ori}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)和归一化图像(记为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>H</mi><mi>O</mi><msub><mi>G</mi><mrow><mi>l</mi><mi>n</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IHOG_{lni}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)执行我们的IHOG描述符以进行描述。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>R</mi><mi>O</mi><msub><mi>B</mi><mrow><mi>l</mi><mi>n</mi><mi>i</mi></mrow></msub><mo>+</mo><mi>I</mi><mi>H</mi><mi>O</mi><msub><mi>G</mi><mrow><mi>o</mi><mi>r</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IROB_{lni}+IHOG_{ori}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的组合被表示为LNIFT-DESCRIBE。表II还汇总了正确匹配数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>和CMR结果。据报道，通过对特征描述进行局部归一化，正确匹配数和CMR增加了30%以上。</p>
+<h1 id="4-实验"><a class="markdownIt-Anchor" href="#4-实验"></a> 4 实验</h1>
+<p>在这一部分中，我们将在四个真实的多模式数据集上全面评估我们的LNIFT。不同于传统的使用几个或几十个图像对进行测试的方法，我们使用4000个图像对进行比较。建议的LNIFT与四种基线或最先进的方法进行了比较，包括SIFT[1]、PSO-SIFT[45]、OS-SIFT[46]和RIFT[8]。为了公平比较，我们使用作者提供的每个方法的官方实现(除了由VLFeat工具箱实现的SIFT)，并微调它们的参数，以在4000对上实现最佳的总体性能。例如，我们将OS-SIFT的Harris函数阈值设置得很小(0.001)，以提取尽可能多的特征点。我们还将SIFT、PSO-SIFT和OS-SIFT关键点的比例固定为4，以便它们用于描述的局部块的大小为96×96像素，这与我们的LNIFT相同。所有比较的方法都采用相同的匹配策略，即通过暴力搜索匹配特征向量，而不进行NNDR测试。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表III 每种比较算法的详细设置(MNOFREPRESENTS最大功能数)</p>
+</blockquote>
+<p>表III总结了每种比较算法的参数设置和实现细节。我们使用成功率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">γ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span></span></span></span>、正确匹配次数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>和均方根误差(RMSE)<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span></span></span></span>作为定量评估指标。与上面相同，正确的匹配表示其在地面真实变换下的残差小于三个像素的对应。成功率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">γ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span></span></span></span>是正确匹配的图像对的数量与图像对的总数之间的比率。如果图像对的正确匹配数目<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>不小于10，则该图像对被认为是正确匹配的，因为太小的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>将使稳健估计技术失败。RMSE的公式为</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/eq7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span>是正确匹配的个数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi><mo stretchy="false">(</mo><mo separator="true">⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">T(·)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mopen">(</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">)</span></span></span></span>是基本事实变换，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">)</mo><msubsup><mo stretchy="false">}</mo><mn>1</mn><mi>C</mi></msubsup></mrow><annotation encoding="application/x-tex">\{(x_i,y_i)\}_1^C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913309999999998em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>是正确匹配。如果一个图像对不正确匹配(即，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>&lt;</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">n&lt;10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span></span></span></span>)，则其RMSE设置为20像素。所有的实验都是在一台配备了3.6 GHz的i9-10850K处理器和64 GB内存的PC机上进行的。</p>
+<h2 id="41-数据集"><a class="markdownIt-Anchor" href="#41-数据集"></a> 4.1 数据集</h2>
+<p>我们收集了四个真实的多模式数据集进行评估，包括SAR光学数据集、深度光学数据集和红外光学数据集。每个数据集的详细信息如下所述。图6显示了我们的数据集的几个样本图像对。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图6. 我们的四个多模式图像数据集的样本数据。(a)数据集1：无旋转的合成孔径雷达光学系统(1000对)。(b)数据集2：带旋转的合成孔径雷达光学系统(1000对)。©数据集3：无旋转的深度光学(1000对)。(d)数据集4：带旋转的红外光学系统(1000对)。</p>
+</blockquote>
+<ol>
+<li>
+<p>数据集1：这是一个没有旋转的SAR-光学数据集。我们从QXS-SAROPT[51]数据集中随机选取了1,000幅大小为256×256像素的图像作为数据集1。QXS-SAROPT数据集包括20000幅高分辨率1m的合成孔径雷达光学图像对，其中受到严重相干斑噪声影响的合成孔径雷达图像来自高分三号合成孔径雷达卫星，光学对应图像来自Google Earth。这对情侣分布在多个场景，包括上海、青岛和圣地亚哥。因为每一对都是注册的，所以它的地面-真理变换是一个单位矩阵。</p>
+</li>
+<li>
+<p>数据集2：这是一个带旋转的SAR-光学数据集。我们从OS-DataSet[22]中随机选取1,000个大小为512x512像素的图像对来构建我们的数据集2。然后，每个选择的图像对在[0◦，90◦]内按照随机生成的角度围绕其中心旋转。基于图像中心的坐标和旋转角度，我们可以建立该图像对的地面-真实变换。OS-DataSet包含2673幅高分辨率的SAR-光学图像对，其类型与QXS-SAROPT数据集相同。这些影像覆盖了全球超过15个城市，包括北京、武汉、雷恩、奥马哈、杜瓦卡等。</p>
+</li>
+<li>
+<p>数据集3：这是一个没有旋转的深度光学数据集。我们从DIML/CVL RGB-D[52]数据集中随机选取500个注册的室内图像对和500个注册的室外图像对。利用Microsoft Kinect v2 RGBD摄像头采集了512×288像素的室内图像。这些图像涵盖了韩国的各种场景(如宿舍、办公室、展览中心和房间)。ZED摄像机采集了640×384像素的室外光学图像。它们对应的深度图像由立体匹配算法生成。这些户外图像覆盖了道路、公园、建筑物等场景。图像对的地面-真实变换也是一个单位矩阵。</p>
+</li>
+<li>
+<p>数据集4：这是一个带旋转的热红外光学数据集。我们从LLVIP[53]数据集中随机选取了1000个大小为320×256像素的配准图像对来构建我们的数据集4。与数据集2类似，每个选择的图像对都按照随机角度旋转。地面-事实的转换也是建立的。LLVIP数据集由16836对图像组成，由双目相机系统(可见光相机和热红外相机)在微光条件下从26个不同位置拍摄。</p>
+</li>
+</ol>
+<h2 id="42-参数研究"><a class="markdownIt-Anchor" href="#42-参数研究"></a> 4.2 参数研究</h2>
+<p>影响LNIFT性能的参数主要有四个：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>是用于特征描述的块大小，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>表示有向直方图的面元数目，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>是局部图像块内的子网格数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>是局部归一化过滤器窗口大小的一半。小<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>可能不包含用于关键点描述的足够信息，这降低了特征的区分性。参数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>主要用于对空间信息进行编码。如果<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>较小，则描述符可能对局部几何扭曲非常敏感。但是，较大的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>值会极大地增加计算复杂性。较小的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>保留的图像细节较少。不过，一个较大的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>会凸显出更多的噪音。因此，学习合适的参数以平衡精度和效率是非常重要的。在这里，我们在数据集2上进行了四个独立的实验来研究这四个参数。在每个实验中，只有一个参数被视为变量，其他参数都是固定的。表IV提供了详细的实验设置。结果汇总于表五至八。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>根据结果可以看出，如果<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>的值太小，则正确匹配的数量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>较少。例如，当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>=4时，其正确匹配数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>117</mn></mrow><annotation encoding="application/x-tex">n=117</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">1</span><span class="mord">7</span></span></span></span>，仅为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>=10的一半。然而，并不是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>或<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>越大，性能就越好。当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>或<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>达到某个值(例如，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi><mo>=</mo><mn>96</mn></mrow><annotation encoding="application/x-tex">J=96</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mord">6</span></span></span></span>且<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">n_{bin}=4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span>)时，性能仅随着其值的增加而略有变化。较大的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>或<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>值将显著增加计算复杂性。对于参数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>，值越大意味着性能越好。然而，如果<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>=10，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>=4，我们的描述符的维度是400，这太大了，会大大降低效率。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>参数对性能影响不大。综合考虑性能和效率，在后续的实验中，我们设置了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>=96，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>b</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{bin}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>=4，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mrow><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{grid}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>=8，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>=3。</p>
+<h2 id="43-定性评价"><a class="markdownIt-Anchor" href="#43-定性评价"></a> 4.3 定性评价</h2>
+<p>从每个多峰数据集中选择三个图像对进行定性比较，如图7-10所示。其中，图7遭受严重的斑点噪声。图8的图像质量比图7好，但它受到旋转变化的影响。图9在成像机制上存在非常大的差异。严格地说，深度图并不是真正的图像。图10包含了光线的巨大变化(RGB夜间和红外图像)，并受到旋转变化的影响。因此，匹配这些图像对是非常具有挑战性的。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图7. 数据集1的定性比较结果。红色圆圈和绿色十字准线分别是参考图像和目标图像的关键点；黄线表示正确的匹配。RMSE <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mo>=</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">r=\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord">∞</span></span></span></span>的方法表示它无法匹配此图像对。为了更好地可视化，显示的匹配项不超过200个。(a)SIFT结果。(B)PSO-SIFT结果。©OS-SIFT结果。(D)RIFT 结果。(E)我们的LNIFT结果。</p>
+</blockquote>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图8. 数据集2上的定性比较结果。红色圆圈和绿色十字准线分别是参考图像和目标图像的关键点；黄线表示正确匹配。RMSE <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mo>=</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">r=\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord">∞</span></span></span></span>的方法表示它无法匹配此图像对。为了更好地可视化，显示的匹配项不超过200个。(a)SIFT结果。(B)PSO-SIFT结果。©OS-SIFT结果。(D)RIFT 结果。(E)我们的LNIFT结果。</p>
+</blockquote>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图9.数据集3上的定性比较结果。红色圆圈和绿色十字准线分别是参考图像和目标图像的关键点；黄线表示正确匹配。RMSE <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mo>=</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">r=\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord">∞</span></span></span></span>的方法表示它无法匹配此图像对。为了更好地可视化，显示的匹配项不超过200个。(a)SIFT结果。(B)PSO-SIFT结果。©OS-SIFT结果。(D)RIFT 结果。(E)我们的LNIFT结果。</p>
+</blockquote>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/fig10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图10.数据集4上的定性比较结果。红色圆圈和绿色十字准线分别是参考图像和目标图像的关键点；黄线表示正确的匹配。RMSE <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mo>=</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">r=\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord">∞</span></span></span></span>的方法表示它无法匹配此图像对。为了更好地可视化，显示的匹配项不超过200个。(a)SIFT结果。(B)PSO-SIFT结果。©OS-SIFT结果。(D)RIFT 结果。(E)我们的LNIFT结果。</p>
+</blockquote>
+<p>从结果可以看出，SIFT在所有12个图像对上都失败了。正如在[8]中所分析的，基于典型梯度的描述符对NRD非常敏感，不适合多模式图像匹配。这是SIFT表现如此糟糕的根本原因。PSO-SIFT算法改进了SIFT算法的梯度计算。然而，它只在3对图像上匹配成功，匹配成功率仅为25%。此外，虽然匹配成功，但正确匹配的数量n很少。OS-SIFT算法的性能略好于PSO-SIFT算法，成功率为33.3%。OS-SIFT基于多尺度Harris函数检测特征，该函数通常比ORB等其他函数提取的关键点更少。与上述方法相比，RIFT方法取得了更好的结果。这12对上裂口成功率为50%。该算法利用相位一致性图进行特征检测，利用最大索引图进行特征描述。这两张地图是专门为减少NRD的影响而设计的。因此，RIFT非常适合于多模式图像匹配问题。然而，裂隙对严重的斑点噪声非常敏感。例如，它在数据集1上完全失败。原因可能是严重的斑点噪声导致相位同余图中的边缘结构信息不准确。相比之下，我们提出的LNIFT取得了最好的结果。它在所有图像对上都表现得非常好，即100%的成功率。此外，我们的正确匹配数n比其他人高得多。例如，我们的LNIFT获得的正确匹配数是RIFT的四倍。这可能有两方面的原因：1)基于局部归一化滤波，将两种不同的模式转换成相同的中间模式，从而大大减少了NRD；2)我们精心设计了特征检测器和描述子，使其适用于多模式图像。</p>
+<h2 id="44-定量评价"><a class="markdownIt-Anchor" href="#44-定量评价"></a> 4.4 定量评价</h2>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表九 四个数据集的定量比较结果。EACH报告的值是所有匹配对的平均值</p>
+</blockquote>
+<p>表九总结了每个数据集的定量结果，其中RMSE越低越好，而成功率和n越高越好。据报道，SIFT的最高成功率仍低于7%。也就是说，它几乎在所有图像对上都失败，这是意料之中的，因为SIFT不是为多模式图像匹配而设计的。PSO-SIFT算法比SIFT算法获得了更好的结果。它在数据集3上的成功率为47.8%，而在其他三个数据集上的成功率不到30%。平均正确匹配数n只有8个，这种能力远远不能满足实际应用的需要。OS-SIFT在数据集2上的性能略好于PSO-SIFT，因为它是为SAR-光学匹配而设计的。尽管如此，OS-SIFT在数据集2上的成功率仅为41.3%，与RIFT和我们的LNIFT相比，这是非常糟糕的。由于严重的斑点噪声，数据集1极具挑战性。SIFT、PSO-SIFT和OS-SIFT几乎完全失败。RIFT在成功率方面的第二好表现仍然低于35%。在所有比较的方法中，RIFT排名第二。它在数据集2-数据集4上取得了非常令人印象深刻的结果，其成功率超过90%。然而，RIFT的相位一致性中的边缘信息对相干斑噪声非常敏感，这就是为什么RIFT在数据集1上表现得如此之差的原因。与上述方法相比，我们的LNIFT在所有数据集上都取得了最好的结果，即获得了最小的均方根误差和最高的成功率和n，在所有数据集上我们的成功率接近100%。</p>
+<p>SIFT、PSO-SIFT、OS-SIFT、RIFT和我们的LNIFT在所有四个数据集上的平均成功率分别为3.0%、26.0%、28.6%、79.85%和99.9%。我们的LNIFT比RIFT提高了20%，比OS-SIFT提高了70%以上。SIFT、PSO-SIFT、OS-SIFT、RIFT和我们的LNIFT的平均正确匹配数n分别为3、8、10、119和309。我们的LNIFT获得的正确匹配几乎是RIFT的三倍，是OS-SIFT和PSO-SIFT的30倍。我们的LNIFT的平均RMSE为2.05像素，这足以满足许多遥感应用。此外，基于模板的方法可以用于改进LNIFT的结果，这是一种典型的图像配准策略，称为从粗到精。</p>
+<h2 id="45-消融实验"><a class="markdownIt-Anchor" href="#45-消融实验"></a> 4.5 消融实验</h2>
+<p>我们在数据集3(深度-光学)上进行了烧蚀实验，以证明所提出的LNIFT算法每一处改进的必要性。表10总结了不同组件配置下的定量结果，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mi>R</mi><msub><mi>B</mi><mrow><mi>o</mi><mi>r</mi><mi>i</mi></mrow></msub><mo>+</mo><mi>H</mi><mi>O</mi><msub><mi>G</mi><mrow><mi>o</mi><mi>r</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">ORB_{ori}+HOG_{ori}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05017em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是基线，IORB表示改进的ORB检测器，IHOG是类似HOG的描述符，下标ORI表示对原始图像执行的操作，下标LnI表示对LNI执行的操作。可以看出，删除对LNIFT的任何改进都会降低性能，这证明我们的设计可以提高所提出的方法。虽然我们的ORB检测器主要专注于改善关键点的分布，但它仍然将成功率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">γ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span></span></span></span>提高了10%.随着我们对猪的改进，正确比赛的数量翻了一番。最主要的贡献，即LNI，大大提高了绩效。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表10 消融研究结果(IORB：我们改进的ORB；IHOG：我们类似HOG的描述符；下标ORI：对原始图像进行的手术；下标LNI：对我们的LNI进行的手术；SR：成功率；A和CMN：正确的匹配数)</p>
+</blockquote>
+<h2 id="46-运行时间分析"><a class="markdownIt-Anchor" href="#46-运行时间分析"></a> 4.6 运行时间分析</h2>
+<p>实验比较了每种方法在数据集3上的运行时间。具体来说，我们将数据集3的图像大小调整为256×256、512×512、768×768和1024×1024像素，生成了四个不同分辨率的数据集。结果汇总于表11，表11运行时间分析，其中LNIFT5000和LNIFT2500表示我们的LNIFT提取关键点的数量分别为5000和2500。</p>
+<p>据报道，当映像大小较小时，SIFT、PSO-SIFT和OS-SIFT在运行时间上与我们的LNIFT5000相当。然而，随着图像大小的增加，它们变得比我们的方法慢得多。例如，在1024×1024的图像上，LNIFT5000比SIFT和PSO-SIFT快约10倍，比OS-SIFT快50多倍。原因可能有两个。首先，SIFT、PSO-SIFT和OS-SIFT只能检测小尺寸图像上的少量关键点(远远小于5000个)。然后，他们的特征描述花费更少的时间。其次，这些方法的计算时间超过O(N)。RIFT是这些方法中速度最慢的，因为它是一种频域方法。我们的LNIFT是最快的。在1024×1024的图像上，LNIFT5000和LNIFT2500分别比RIFT快100倍和150倍。</p>
+<p>在我们的LNIFT中，在计算了积分像[成本O(N)]之后，我们的局部归一化过滤器中涉及的剩余操作是O(1)。LNIFT特征检测和描述的主要运行时间取决于关键点的数量，而不是图像的大小。这一点也可以在表11中得到反映。可以看出，当图像大小从256×256增加到512×512时，运行时间仅略有增加。相比之下，当关键点数量从2500个增加到5000个时，运行时间几乎增加了两倍。因此，如果任务对正确匹配的次数要求不高，我们可以减少关键点数量，以达到实时性能。</p>
+<p><img src="/2024/05/13/LNIFT%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E5%BD%92%E4%B8%80%E5%8C%96%E5%9B%BE%E5%83%8F/table12.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表11 运行时间分析</p>
+</blockquote>
+<h2 id="47-限制"><a class="markdownIt-Anchor" href="#47-限制"></a> 4.7 限制</h2>
+<p>限制我们的LNIFT主要有两个缺点。首先，LNIFT没有尺度不变性，因为我们为了提高效率而放弃了ORB的尺度空间。目前，LNIFT只对平移和旋转变化保持不变。因此，它不适合于遭受复杂几何失真的图像对，例如大透视变化和非刚性失真。尺度不变性可以基于卫星图像的GSD先验或基于高斯尺度空间来实现。其次，由于严重的斑点噪声，LNIFT在SAR光学图像上的CMR不高(一般小于10%)。因此，我们需要提取多个关键点来保证正确匹配的数量。如果我们提取少量的关键点(例如500个)，我们的LNIFT可能只得到几个正确的匹配。这一问题可以通过SAR去噪预处理阶段得到缓解。</p>
+<h1 id="5-结论"><a class="markdownIt-Anchor" href="#5-结论"></a> 5 结论</h1>
+<p>本文提出了一种空域多模式特征匹配方法LNIFT，该方法对严重的NRD具有较强的鲁棒性。LNIFT实现了旋转不变性，可以在1024×1024的图像上近实时运行。它首先尝试基于局部归一化过滤器将不同的模式转换为相同的模式。然后，采用改进的ORB检测器提取均匀分布的关键点，并设计了一种类HOG描述子进行特征描述。对LNIS进行检测和描述。我们在四个大规模数据集上对LNIFT进行了评估，总共有4000个多峰图像对。综合实验表明，LNIFT算法远远优于目前的方法，即我们的成功率比RIFT高20%，比OS-SIFT高70%；我们的正确匹配次数大约是RIFT的三倍；在中等大小的图像上，我们的运行时间几乎是RIFT的100倍。在未来，我们将在并行计算和GPU的基础上重新实现我们的LNIFT算法，以实现对大尺寸图像的实时性能，并通过增加尺度空间构造阶段来实现尺度不变性。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/">#图像匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/">#多模态</a>
+      
+        <a href="/tags/%E9%81%A5%E6%84%9F/">#遥感</a>
+      
+        <a href="/tags/TGRS/">#TGRS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LNIFT：用于旋转不变多模态特征匹配的局部归一化图像</div>
+      <div>http://example.com/2024/05/13/LNIFT：用于旋转不变多模态特征匹配的局部归一化图像/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/05/22/ChatGPT%E4%B8%BA%E5%AD%A6%E7%94%9F%E5%B8%A6%E6%9D%A5%E4%BA%86%E8%AE%B8%E5%A4%9A%E5%A5%BD%E5%A4%84/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/04/25/PSO-SIFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E6%94%B9%E8%BF%9BSIFT%E5%92%8C%E5%A2%9E%E5%BC%BA%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/" title="PSO-SIFT：基于改进SIFT和增强特征匹配的遥感图像配准">
+                        <span class="hidden-mobile">PSO-SIFT：基于改进SIFT和增强特征匹配的遥感图像配准</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="（2022）注意力机制，未看，感觉不如LoFTR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GANet：通过图注意网络学习失配去除">
+<meta property="og:url" content="http://example.com/2023/04/12/GANet%EF%BC%9A%E9%80%9A%E8%BF%87%E5%9B%BE%E6%B3%A8%E6%84%8F%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%A4%B1%E9%85%8D%E5%8E%BB%E9%99%A4/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="（2022）注意力机制，未看，感觉不如LoFTR">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/04/12/GANet%EF%BC%9A%E9%80%9A%E8%BF%87%E5%9B%BE%E6%B3%A8%E6%84%8F%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%A4%B1%E9%85%8D%E5%8E%BB%E9%99%A4/title.png">
+<meta property="article:published_time" content="2023-04-12T07:39:00.000Z">
+<meta property="article:modified_time" content="2024-02-27T07:40:06.076Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="特征匹配">
+<meta property="article:tag" content="论文翻译">
+<meta property="article:tag" content="GANet">
+<meta property="article:tag" content="注意力机制">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/04/12/GANet%EF%BC%9A%E9%80%9A%E8%BF%87%E5%9B%BE%E6%B3%A8%E6%84%8F%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%A4%B1%E9%85%8D%E5%8E%BB%E9%99%A4/title.png">
+  
+  
+  
+  <title>GANet：通过图注意网络学习失配去除 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="GANet：通过图注意网络学习失配去除"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-12 15:39" pubdate>
+          2023年4月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          64 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">GANet：通过图注意网络学习失配去除</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2023/04/12/GANet%EF%BC%9A%E9%80%9A%E8%BF%87%E5%9B%BE%E6%B3%A8%E6%84%8F%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%A4%B1%E9%85%8D%E5%8E%BB%E9%99%A4/title.png" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="learning-for-mismatch-removal-via-graph-attention-networks"><a class="markdownIt-Anchor" href="#learning-for-mismatch-removal-via-graph-attention-networks"></a> Learning for mismatch removal via graph attention networks</h1>
+<h1 id="ganet通过图注意网络学习失配去除"><a class="markdownIt-Anchor" href="#ganet通过图注意网络学习失配去除"></a> GANet：通过图注意网络学习失配去除</h1>
+<h2 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h2>
+<p>从双视角图像中恢复相机姿态是摄影测量和计算机视觉中的一个关键问题。对于复杂的场景，由现成的特征匹配器(如SIFT)构建的点对应将被大量的离群值所破坏。在这种情况下，传统的采样一致性或基于运动/几何相干性的方法将在确保其假设方面遭受很大的损失。为此，我们提出了一种深度技术，以更好地从高维特征空间中提取底层的几何信息，用于两视图几何估计。与现有的深度方法使用基于分布的标准化或显式聚集相邻通信不同，我们提出了一种具有多头机制的图注意操作，称为GANet，以潜在地捕获这些损坏的通信之间的细粒度上下文/几何关系。这鼓励我们的网络学习信息表示，以确保高的图相似度，从而更多地关注内层和限制离群值。在此基础上，我们的网络可以更容易地推断出最适合恢复相机姿态的内层。此外，我们还观察到，每个节点的图相似度计算只支持部分节点特征。在这方面，我们进一步提出了一个图注意力的轻量级实现，即稀疏GANet，它是通过学习一个基于块操作和Sinkhorn归一化的稀疏注意映射来实现的。这种稀疏策略可以在保持性能的同时大大减少内存和计算请求。在不同具有挑战性的数据集上进行了大量的姿态估计、离群值剔除和图像配准实验，以及使用不同的描述子匹配器和鲁棒估计器进行组合测试，证明了我们的方法相对于目前最先进的方法的优越性和很强的通用性。特别是，我们实现了至少1.5%和0.6%的地图(%)@5◦增强对YFCC和SUN3D数据的姿态估计。而我们的稀疏GANet可以将模型大小降低到仅0.28 MB，时间成本降低到16 ms，这明显优于SuperGlue，后者需要12.02 MB和68 ms(源代码可以在https://github.com/StaRainJ/Code-of-GANet上找到)。</p>
+<p><strong>关键词</strong>：点对应、离群点、摄像机姿态估计、图像配准、图注意</p>
+<h2 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1. 引言</h2>
+<p>​		根据两幅图像之间给定的2D-2D点对应关系估计标定相机的相对位姿是摄影测量和计算机视觉中的一项基本任务，是由结构到运动(SfM)、同时定位和映射(SLAM)、多视图立体视觉、视觉测程和图像配准(Ma et al.， 2021;Jiang等人，2021年;Zhang et al.， 2021b;Hughes等人，2020年;Zhang et al.， 2022;李等，2022)。因此，开发精确、实时的摄像机姿态估计技术对于许多视觉相关的应用是十分必要的。</p>
+<p>​		横跨两幅图像的相机姿态，通常被建模为基本矩阵或基本矩阵，通常从2D-2D点对应恢复。为此，广泛使用的关键点检测器和描述符如SIFT (Lowe, 2004)是建立假定点匹配集的先决条件。但该假设集合中存在大量的异常值或错误对应，影响了姿态估计的成功。这主要是由于成像条件的干扰和局部描述的模糊性造成的。</p>
+<p>​		如何从严重损坏的数据中准确有效地估计相机的姿态是许多研究者关注的焦点。一种流行的解决方案是通过应用5点或8点算法来进行基本或基本矩阵估计，在一个采样然后验证的循环中，比如随机采样共识(RANSAC) (Fischler and Bolles, 1981)。但该方法高度依赖于抽样子集的可靠性，因此其执行时间会随着离群值的比例呈指数增长(Ma et al.， 2021)。另一种流行的策略倾向于将其作为离群值移除，然后提出估计问题。这些方法基于平滑运动或空间一致性的假设(Bian等人，2017;Ma et al.， 2019c;Ma et al.， 2019b)，可以使估计过程更容易。但他们会牺牲许多真实的通信，而这些通信可能是恢复姿态的最好方法。如果只考虑局部运动行为，则很容易保留一致性较差的局部离群点，从而导致姿态估计存在较大偏差。</p>
+<p>​		除了使用低级线索或基于先验知识的手工设计，深度学习在将图像匹配重构为数据驱动范式方面取得了许多进展。与手工方法相比，它在大规模和具有挑战性的数据集中显示了巨大的潜力。与在处理图像级任务时使用深度技术(如关键点检测、局部特征描述或度量学习)不同，将深度学习应用于稀疏点数据进行分类和回归更为困难。一方面，稀疏点的空间分布是非结构化和离散的，这使得在高维空间中表示它们或捕捉这些点之间的潜在关系面临很大的挑战。另一方面，完全监督的标记需要为两幅图像中的每个点标注对应。对于大规模的数据集来说，这是非常昂贵的。</p>
+<p>​		针对上述挑战，研究人员在设计有效的网络结构、归一化方法、损耗函数、学习估计两视图几何模型等方面付出了大量的努力。特别是，两种网络结构被验证成功地解决了这一基于点的任务，即图神经网络(GNN) (Wu et al.， 2021)和多层感知器(Yi et al.， 2018;Choy等人，2020年)。GNN试图通过图的卷积直接捕捉空间关系，为每个点生成信息表示，但在训练和测试中需要可扩展性操作时，难以保证效率、收敛性和图的完整性(Wu et al.， 2021)。最近的一种方法(Sarlin et al.， 2020)主要是将GNN连接到它们的描述子学习范式中，以构建更精确的对应关系，这在基于稀疏点的学习中应用图结构一致性方面显示了巨大的潜力。相比之下，MLPs可以将单点映射到高维特征空间，显示出它更灵活、更容易训练。这种范式的核心挑战是开发一种全球操作，以挖掘空间或特征级的源点之间的几何关系。本课题前期工作(Yi et al.， 2018;Sun等人，2020年)使用基于分布的标准化(如上下文标准化)来整合全球信息。但统计策略容易忽略细粒度结构，导致性能不佳。一些研究关注于在其网络中明确施加局部运动一致性约束，以提高最终性能(赵等人，2019;张等，2019)。这些明确的约束仍然依赖于低级线索，在很大程度上限制了它的准确性。</p>
+<p>​		在本文中，我们同样认为关键点之间的图结构会稳定地保持不变，不受观点变化的影响。为了更好地利用这个固有结构，我们在MLPs管道中利用一个图形注意操作来潜在地捕获严重损坏的通信之间的几何关系。这鼓励我们的网络更多地关注潜在的内层，以在高级特征空间中获得高的图相似度(不同于现有的基于分布或基于显式邻域构造的方法)，如图2(a)所示的那些最上面的响应对应，从而使内层在其注意图中具有较高的平均权重(反过来可能会抑制离群值)，如图2(b)所示。这可以很容易地让我们的方法通过直接使用加权最小二乘解来推断出最适合恢复相机姿态的内层，或者在ransac系列中设置8点求解器作为后处理。</p>
+<p>​		我们的主要贡献有三方面:</p>
+<ul>
+<li>在MLPs流水线中，我们提出了一种多头机制的图注意操作，该方法可以捕获细粒度和更深层次的特征来表示通信之间的关系，从而鼓励我们的网络更多地关注潜在的真正通信，并抑制离群值，以确保高的图相似度。</li>
+<li>本文提出了一种基于分块运算和稀疏Sinkhorn归一化的图注意稀疏实现方法，该方法在保持图注意精度的同时，大大减少了内存和计算量。</li>
+<li>在具有挑战性的数据集上进行的大量实验和健壮性测试w.r.t.不同的前端或后端技术和离群值比率，已经证明了我们的方法比最先进的方法有显著的增强。对遥感图像配准和三维重建的推广也表明了我们的方法具有很强的通用性。</li>
+</ul>
+<p>本文的其余部分组织如下。第2节描述背景材料和相关工作。第3节介绍了一个通用的深管道的双视图几何学习问题。在第4节中，我们在此视觉问题的基础上，详细介绍了我们的图注意网络及其稀疏实现。第五节给出了相机位姿估计和异常值剔除的实验结果，证明了该方法的优越性。结束语载于第6节。</p>
+<h2 id="2-相关工作"><a class="markdownIt-Anchor" href="#2-相关工作"></a> 2. 相关工作</h2>
+<p>​		5点/ 8点算法已被广泛用于从二维-二维对应关系中估计最优本质/基本矩阵。然而，当异常值出现时，该方法在将其合并到异常值鲁棒框架之前是不适用的。接下来，我们简要回顾了用于鲁棒估计的手工制作和基于学习的方案。</p>
+<h3 id="21-手工制作方法"><a class="markdownIt-Anchor" href="#21-手工制作方法"></a> 2.1 手工制作方法</h3>
+<p>​		在过去的几十年里，类似ransac的技术一直是几何估计最流行的解决方案。为了提高纯RANSAC的效率和准确性，已有许多后续研究提出，其中常见的修改是对模型质量或抽样策略的验证。具体来说，最大似然估计样本一致性(MLESAC) (Torr和Zisserman, 2000)显示了在解决图像几何问题时的改进。而渐进样本一致性(PROSAC) (Chum和Matas, 2005)可以利用预测内部概率的先验来大大加快估计过程。此外，最小二乘中位数(least median of squares, LMEDS) (Rousseeuw and Leroy, 2005)也常用来代替RAN - SAC。另一种方法倾向于基于内层的先验属性修改抽样策略(Ni等人，2009)。其中一个通用的框架，即USAC (Raguram et al.， 2012)，将多个进展组合成一个统一的框架，并表现出卓越的性能。最近，在MAGSAC中，σ-consensus策略通过在一系列噪声尺度上边缘化来消除用户自定义阈值的需求(Barath等人，2019)。然后扩展到利用局部结构进行全局采样和参数模型估计(Barath等人，2020年)。此外，还提出了用于点云配准的图形增强样本一致性(Li et al.， 2020)。但实际上，这些方法高度依赖于抽样子集的可靠性，当假定的匹配集包含大量和百分比的离群值时，其可靠性受到限制甚至失败。</p>
+<p>​		非参数化方法是处理刚性和非刚性图像场景的有效策略。这类方法的代表性是通过定义高维形式的变形函数，如三角形二维网格(Pilet et al.， 2008)，相应的函数(Li and Hu, 2010)或再现核Hilbert空间的Tikhonov正则化(Ma et al.， 2014;Ma et al.， 2015;Ma等人，2019b)。这些方法通常将内寻任务转化为非线性回归问题，并在运动相干先验假设下恢复密集的转换场。然而，如果图像场景中含有较高的离群值比例，非参数模型估计的精度将不可避免地降低。</p>
+<p>​		另一种策略称为基于图的匹配，也得到了广泛的研究。这类方法通常将特征匹配表述为二次分配问题(Yan et al.， 2016)。光谱弛豫方法(Leordeanu和Hebert, 2005;江等人，2014)是这一领域的代表。此外，多重图(Swoboda et al.， 2019;Bernard et al.， 2019;Jiang等人，2021)和超图匹配(Zass和Shashua, 2008;Yan et al.， 2015)是近年来被广泛研究的一种方法，即联合匹配多个具有一致对应关系的图，将问题以高阶形式表述，分别主要探索几何线索。然而，基于图的匹配的性能受到节点的两两亲和性的限制，这需要对特定数据的先验知识。</p>
+<p>​		此外，提出了几种新颖而宽松的方法作为利用几何约束首先过滤离群点的前步骤，如局部保持匹配(LPM) (Ma et al.， 2019c)、局部仿射不变匹配(Li et al.， 2019)、基于网格的运动统计(GMS) (Bian et al.， 2017)、邻域流形表示一致性(Ma et al.， 2022)和基于空间聚类的策略(Jiang et al.， 2020)。这些方法通常假设局部通信具有相似的运动行为，鼓励它们在准确性和效率方面取得良好的性能。虽然这些方法计算复杂度低、效率高，但当假设集包含大量的离群值和/或内层分布分散时，这些方法都不能很好地工作。同时，它们很容易保留局部的离群值，这些离群值保持较弱的一致性，从而在姿态估计中造成较大的误差。</p>
+<p>​		除基于点的匹配外，线特征检测与匹配在摄影测量和计算机视觉中也得到了广泛的研究，因为线特征检测与匹配可以提供更多信息的几何线索，从而提高了特征匹配的准确性和鲁棒性。其中，Liu和Marlet(2012)提出了一种虚拟线描述符，将一条线的局部邻域划分为多个磁盘，并使用类筛描述符描述每个磁盘的圆形局部区域。该描述符可用于现有图匹配器的二阶项，以显著提高其准确性。在此基础上，Jiang和Jiang(2019)结合Delaunay三角剖分的优点，结合光度约束和几何约束，实现了图像匹配。其中提出了一种可靠的图像匹配算法，该算法通过顺序执行离群点消除和匹配扩展的三个约束条件来实现。该方法对刚性和非刚性图像场景都具有良好的匹配性能。此外，为了充分利用线特征，有效解决匹配结果中的冲突，Wang等(2021)引入了双层矩阵，并提出了一种有效的匹配结果检查策略。最近，Zhang等人(2021a)开发了一种高效的线段检测器和描述方法(ELSE)，以端到端可训练的方式预测线段特征检测和描述。该网络是通过基于随机单应性的自我监督来学习的。然而，线特征匹配对包含足够的线结构(如建筑物或道路)的匹配场景要求较高，限制了线特征的泛化。</p>
+<h3 id="22-基于学习的几何估计"><a class="markdownIt-Anchor" href="#22-基于学习的几何估计"></a> 2.2 基于学习的几何估计</h3>
+<p>​		基于稀疏点的深度卷积用于内寻和几何位姿估计是近年来研究的热点。Yi等人(2018)首次尝试引入一种基于学习的技术，称为学习寻找良好的通信(LFGC-Net)。该方法的目标是在参数几何约束下，从一组稀疏的假定匹配集合和相机本征训练出一个网络。该方法将离群点移除任务和位姿估计分别转化为二元分类问题和回归问题。受到PointNet (Qi等人，2017)的启发，MLPs体系结构被用于为每个通信生成高级特征表示。通过引入简单的上下文归一化，使特征映射能够编码场景几何和摄像机运动等上下文信息。然而，所提议的标准化不能仅仅使用基于发行版的操作就完全捕获上下文信息。</p>
+<p>​		为了提高LFGC-Net的性能，提出了各种改进方案。Zhao等人(2019)引入了可靠的对应的局部邻域模型，以明确地从邻域提取更多的特征。可靠的邻域关系，类似于手工放松方法，已被证明有助于提高分类结果。基于KNN的连续确定性松弛，Pl¨otz和Roth(2018)提出了一种神经最近邻块(N3块)来利用通信的自相似特征，结合使用可以获得更好的性能(Yi等人，2018)。Ma等人(2019a)提出了一种名为LMR的可学习分类器，用于正确和错误对应分类，但它仍然使用传统的para - digm学习，并在很大程度上依赖于手工构建的特征。此外，Zhang等人(2019)专注于基于顺序感知网络(OANet)的几何恢复，并在姿态估计方面取得了显著的改进。最近，Sun等人(2020)引入了一种简单而有效的全局操作，称为关注上下文标准化，以构建对异常值具有鲁棒性的置换等变网络。然而，这种特别设计的规范化仍然不能捕获细粒度的图形信息。</p>
+<p>​		在图像匹配领域，有两种方法在其网络中类似地使用了注意机制(AM)，即SuperGLue (Sarlin et al.， 2020)和LoFTR (Sun et al.， 2021)。SuperGLue以提取的关键点和描述向量(如SIFT)为输入，目标是在两个独立的局部特征集之间寻找局部赋值问题，即将其视为二次赋值问题。SuperGLue使用AM作为自我注意和交叉注意，其中自我注意是为了生成信息更丰富的特征表示，而交叉注意是为了实现点对点的对应。然而，由于使用了简单注意策略，它会产生很高的计算和内存负担。而将描述符作为输入的要求会严重降低其泛化能力。我们的图像配准实验也揭示了这一点。在LoFTR中，以一对原始图像作为输入，通过无检测器的流水线输出点匹配。LoFTR类似地利用自注意和交叉注意来捕捉几何信息，就像超级胶水一样，但它们是以潜在形式使用的，而且AM是由变压器更新的。显然，上述两种方法在技术路线和注意形式上都与我们提出的图注意方法及其稀疏版不同。具体来说，我们的网络的输入是一组假定的匹配，即一个N× 4矩阵，其中N为匹配数。它主要是通过推断潜在的正确匹配(内层)来最好地恢复相机的姿态或几何模型。在这方面，我们的方法作为类似ransac方法的前端和类似于LFGC和OANet等特征匹配器的后端进行了开发。这些方法可以在保持内层数的情况下大幅度提高内层比，从而使RANSAC在几次迭代中就能准确地估计出真实模型。这一技术路线的核心挑战是设计一个新颖的块捕捉一致的几何线索，以最好地识别内衣裤。与LFGC或OANet等现有策略不同的是，我们利用图形注意机制实现了细粒度几何关系的潜在提取，并开发了稀疏注意块，以实现较低的时间和内存成本。</p>
+<h3 id="23-注意机制"><a class="markdownIt-Anchor" href="#23-注意机制"></a> 2.3 注意机制</h3>
+<p>​		注意机制最初是在机器翻译社团中提出的，用来提取深度特征空间下两个序列之间的关系。特别是Vaswani et al.(2017)首次尝试从不同的方面，即使是长序列输入句子中捕获核心语义上下文，从而提出了多头注意机制。目标是获得一个注意值，它是由一个注意函数生成的，表明一个元素对另一个元素的重要性。总之，AM使神经网络能够关注输入的关键元素(Vaswani等人，2017;Sun等人，2020)。近年来，AM已发展成许多品种，以适应不同类型的输入。现有的CNN模型在图像/视频识别任务中通常依赖于增加深度来建模远程关系，这是非常低效的。继AM之后，Chen et al.(2018)提出了用于收集和分布长程特征的双注意块。该方法计算量小，能显著提高图像/视频的识别性能。此外，考虑到通道维度之间的不同关系，Hu等人(2018)引入了一种新型的“squeeze -and dexcitation”块，该块通过显式建模通道之间的相互依赖性，自适应地重新校准通道方向的特征响应。Dai等人(2019)提出了一种更强大的特征表达和特征相关学习的二阶注意网络(second-order attention network, SAN)。该方法利用二阶特征统计量对通道特征进行自适应缩放以获得更强的鉴别性表示，并在图像超分辨率任务中展示了其优越性。</p>
+<p>​		为了处理点云并实现分类，Yang等(2019a)引入了多头注意的思想，对点之间的空间关系进行建模，即发现哪些点位于相同的结构或空间中。而在特征匹配社区，Sun等人(2020)开发了一种细心的上下文归一化处理稀疏或无序的点数据，有效地构建了对异常值鲁棒的置换等变网络。结果表明，在特征匹配问题中，AM算法在学习几何一致性方面具有良好的优越性。但由于比赛数据的性质，注意程序仍需定制。此外，由于整个元素之间的充分注意会导致巨大的计算和内存请求，因此探索稀疏或更经济的注意实现也很有意义。这鼓励我们开发更有效的注意策略，捕捉细粒度和更深层次的特征来表示稀疏元素之间的关系，并探索稀疏注意的实现。</p>
+<h2 id="6-结论"><a class="markdownIt-Anchor" href="#6-结论"></a> 6. 结论</h2>
+<p>​		本文提出了一种带图注意操作的深度方法用于两视图几何估计。基于多头机制的图注意使得我们的模型能够全面地捕捉假定对应关系之间的上下文关系。这可以鼓励我们的网络学习内部两个方面的高级表示。一方面，我们仍然需要一个可靠的特征匹配器作为预处理，例如SIFT，这也会影响我们方法的性能。提出一种端到端的深度框架，同时输入原始图像对进行关键点提取、匹配和几何验证，从而实现全局优化。另一方面，该方法只关注于参数模型估计，如本质矩阵或基矩阵。因此，将几何模型建模为非刚性情况，从而获得更好的泛化效果也是值得研究的。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/">#特征匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
+      
+        <a href="/tags/GANet/">#GANet</a>
+      
+        <a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">#注意力机制</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>GANet：通过图注意网络学习失配去除</div>
+      <div>http://example.com/2023/04/12/GANet：通过图注意网络学习失配去除/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月12日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/12/MCDM%EF%BC%9A%E5%9F%BA%E4%BA%8E%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E9%A9%B1%E5%8A%A8%E6%A6%82%E7%8E%87%E5%9B%BE%E5%BD%A2%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/" title="MCDM：基于运动一致性驱动概率图形模型的特征匹配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MCDM：基于运动一致性驱动概率图形模型的特征匹配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/12/LAV%EF%BC%9A%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%9A%84%E5%B1%80%E9%83%A8%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%BB%BF%E5%B0%84%E9%AA%8C%E8%AF%81/" title="LAV：多传感器图像匹配的局部非线性仿射验证">
+                        <span class="hidden-mobile">LAV：多传感器图像匹配的局部非线性仿射验证</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1049 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="关于深度学习三维重建的一篇综述翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于深度学习的3D重建：综述">
+<meta property="og:url" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="关于深度学习三维重建的一篇综述翻译">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/%E6%A0%87%E9%A2%98.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig1.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig2.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig3.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig4.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig5.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig6.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig7.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig8.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig9.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig10.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig11.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq1.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/seq1.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/seq2.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq2.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig12.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig13.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig14.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig15.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig16.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq3.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig17.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig18.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig19.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table1.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table2.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig20.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig21.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig22.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig23.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq4.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq5.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/seq3.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq6.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq7.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq8.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq9.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq10.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq11.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table3.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig24.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig25.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig26.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table4.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table5.png">
+<meta property="og:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table6.png">
+<meta property="article:published_time" content="2024-02-27T10:05:00.000Z">
+<meta property="article:modified_time" content="2024-02-28T06:54:27.519Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="综述翻译">
+<meta property="article:tag" content="三维重建">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/%E6%A0%87%E9%A2%98.png">
+  
+  
+  
+  <title>基于深度学习的3D重建：综述 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="基于深度学习的3D重建：综述"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-27 18:05" pubdate>
+          2024年2月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          29k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          243 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">基于深度学习的3D重建：综述</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/%E6%A0%87%E9%A2%98.png" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="deep-learningbased-3d-reconstruction-a-survey"><a class="markdownIt-Anchor" href="#deep-learningbased-3d-reconstruction-a-survey"></a> Deep learning‑based 3D reconstruction: a survey</h1>
+<h1 id="基于深度学习的3d重建综述"><a class="markdownIt-Anchor" href="#基于深度学习的3d重建综述"></a> 基于深度学习的3D重建：综述</h1>
+<p><a target="_blank" rel="noopener" href="https://link.springer.com/article/10.1007/s10462-023-10399-2">Deep learning-based 3D reconstruction: a survey | Artificial Intelligence Review (springer.com)</a></p>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h1>
+<p>基于图像的三维重建是在计算机视觉和图形学范围内定义的一个长期存在的不适定问题。基于图像的三维重建的目的是从一组输入图像中检索目标物体或场景的三维结构和几何形状。这项任务在机器人、虚拟现实和医学成像等各个领域都有广泛的应用。近年来，基于学习的三维重建方法在世界范围内引起了许多研究者的关注。这些新方法可以以端到端的方式隐式估计物体或场景的三维形状，从而省去了开发关键点检测和匹配等多个阶段的需要。此外，这些新方法可以从单个输入图像中重建物体的形状。由于该领域的快速发展，以及提高3D重建方法性能的众多机会，对该领域的算法进行彻底的审查似乎是必要的。因此，本研究对基于图像的三维重建领域的最新发展提供了一个完整的概述。从输入类型、模型结构、输出表示和训练策略等几个角度对所研究的方法进行了检查。还为读者提供了详细的比较。最后，讨论了尚未解决的挑战、潜在问题和可能的未来工作。</p>
+<p><strong>关键词</strong> 3D物体重建· 3D形状表示·深度学习·计算机视觉</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1 引言</h1>
+<p>近几十年来，基于图像的3D重建在许多应用中发挥了重要作用，消除了对激光扫描仪等昂贵设备的需求。作为人类，我们能够在几秒钟内推断出以前看不见的物体的确切形状和结构。机器可以做同样的事情的想法在现代一直在追求，为此已经发表了大量的研究，并取得了各种进步。</p>
+<p>给定单个或多个2D图像作为输入，3D重建的任务旨在重建感兴趣场景中存在的对象的3D结构和几何形状。在数学术语中，给定<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mo>=</mo><mo stretchy="false">{</mo><msub><mi>I</mi><mi>m</mi></msub><mo separator="true">,</mo><mi>m</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">I=\{I_m,m=1,...,n\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">m</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">m</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">}</span></span></span></span>作为2D输入图像的集合，3D重建旨在产生场景中存在的对象的3D形状。重建的形状<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>X</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{X}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9467699999999999em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9467699999999999em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span></span></span><span style="top:-3.25233em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.16666em;">^</span></span></span></span></span></span></span></span></span>应该尽可能接近原始形状<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span></span></span></span>。</p>
+<p>近年来，基于学习的方法以其优越的性能在许多研究领域取代了传统方法。通常，这些新技术不仅效率更高，而且还提供了新的功能。3D计算机视觉，更具体地说，3D重建也是如此。例如，提出的深度学习模型可以端到端进行训练，从而消除了设计多个手工制作阶段的需要。以学习为基础的方法也可以同时处理多个任务。因此，单个模型可以同时预测给定场景图像的3D形状和语义分割，如Murez等人(2020)所述。多任务处理有可能扩大模型的用例，同时提高特征表示能力并加速学习过程(Crawshaw 2020)。随着基于学习的方法的能力的展示和神经网络开发框架的进步，在包括3D重建在内的各个领域相继发表了研究成果。同时，在短时间内，新发表论文的结果明显优于以往的工作。鉴于这一活跃且快速发展的研究领域，每个研究人员都必须对这些工作进行彻底的审查，以全面了解最新进展。</p>
+<p>Fu等人(2021)、Fahim等人(2021)和Salvi等人(2020)是最近对基于深度学习的3D重建的综述。Fu et al. (2021)， Fahim et al.(2021)只回顾了单幅图像三维物体重建方法。Fu等人(2021)讨论了当前的挑战，回顾了所提出方法的网络结构及其训练细节，并介绍了常见的评估指标和相关数据集。这项工作的一个主要优势是，还实施了一系列实验来分析所审查方法的优点和缺点。Fahim等人(2021)提供了每个作品的许多细节，并包含有洞察力的插图和表格。尽管上述两部作品都有优点，但它们都只关注单幅图像的3D重建，这对于想要全面了解单幅图像和多幅图像3D重建的读者来说是不合适的。Gao等人(2019)综述了单视图和多视图方法。然而，这项研究是有限的，所涵盖的论文是2019年之前的。Han等人(2019)是另一项详细且组织良好的工作，涵盖了单图像和多图像方法。阐述了当前面临的挑战和未来的研究方向。然而，它不包括2019年以后发表的最新研究。</p>
+<p>本研究旨在为读者提供一个全面的，结构化的洞察最新的基于深度学习的三维重建方法。我们试图以最小的模糊性来回顾最新的研究，涵盖所有必要的细节。包括单图像和多图像的三维重建方法。我们还讨论了超越3D重建的各种活动，利用它作为下游任务来实现其他目标。我们涵盖了自2014年以来在顶级期刊和会议上发表的相当数量的研究。</p>
+<p>接下来的部分分为以下几部分:第2节讨论了基于深度学习的基本深度估计思想和方法。第3至5节分别回顾了基于体积、点云和网格表示的3D重建方法。第6节致力于3D重建的新型隐式表示，并涵盖了该主题的重要研究。前几节所回顾的作品主要是单对象重建，而第7节所回顾的作品则是能够进行多对象三维重建甚至场景重建的作品。第8节重点介绍了基于学习的多视图立体方法，这是基于图像的三维重建的重要组成部分。第9节解释了如何生成对抗网络(gan)可以用于3D重建。第10部分包括使用3D重建作为下游任务以实现其他目标的作品。最流行的损失函数和公共数据集在第11节和第12节中进行了解释和列出。详细的比较和讨论的审查算法将在第13节提出。在最后一节中，我们对所回顾的工作和未来的研究方向进行了概述。图1提供了这项研究的可视化概述。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig1.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>本研究的视觉概述。基于不同的特性对三维重建算法进行了分类和综述</li>
+</ul>
+<h1 id="2-主要任务深度估计"><a class="markdownIt-Anchor" href="#2-主要任务深度估计"></a> 2 主要任务：深度估计</h1>
+<p>三维重建中最基本的问题之一是估计图像像素的深度。深度估计的任务是指从二维图像中推断出场景的空间结构。实际上，该任务的目标是恢复捕获图像时在3D到2D投影过程中丢失的关键空间信息。在传统的三维重建方法中，利用三角剖分技术和极面几何来估计像素的深度。然而，这些方法需要知道相机的内在和外在参数，并且需要在相机旋转和平移的微小变化下捕获图像。最近，基于深度学习的算法已被用于从一组图像(Huang et al. 2018)甚至单个图像(Eigen et al. 2014;Godard et al. 2017)。然而，后者在经典算法中是不可能实现的。</p>
+<p>在Eigen et al.(2014)中，使用双流卷积神经网络，通过第一流获得输入图像的粗深度估计。这个初始估计然后通过第二个流输入，产生最终的精细深度图。然而，由于在训练过程中使用L2损失，估计的深度图是模糊的。</p>
+<p>有些作品首先从单幅图像中推断出多个深度图，然后融合它们来重建物体的3D形状(Tatarchenko et al. 2016;Lin et al. 2018)。例如，Tatarchenko等人(2016)提出了一种基于编码器-解码器的CNN，该CNN接收物体的单个RGB图像以及所需的视角<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span></span></span></span>，以将物体呈现为所需姿态及其相应的深度图。通过多次调用网络，每次使用不同的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span></span></span></span>，并使用后处理步骤将结果重新投影到公共3D空间并推断完整的3D形状，可以实现3D重建。</p>
+<p>在深度估计方面，无论是单幅图像还是多幅图像，都做了大量的研究。由于3D重建的目的是推断物体的完整3D结构，读者可以参考Bhoi(2019)和Laga et al.(2020)了解更多深度估计方法。</p>
+<h1 id="3-立方世界以体素格式重建"><a class="markdownIt-Anchor" href="#3-立方世界以体素格式重建"></a> 3 立方世界:以体素格式重建</h1>
+<p><strong>占用网格</strong>:这种表示将三维空间离散成均匀的立方部分网格。每个部分都有两种状态:空的或被占用的。由于内存限制，网格分辨率通常限制在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>102</mn><msup><mn>4</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">1024^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mord">2</span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>或更低。尽管存在这种限制，但这种类型的表示很容易适应深度学习框架。因此，使用这种表示来推断3D形状的模型非常容易实现。</p>
+<p>Choy等人(2016)提出了一种基于3D卷积和LSTM (Hochreiter和Schmidhuber 1997)网络的端到端3D重建方法。他们的算法，即“3D- R2N2”，通过接收物体的一张或多张图像及其边界框作为输入，在体素空间中生成物体的3D模型。他们提出了两种网络结构;第一个模型没有返回连接，而且更浅。第二个模型更深入，有返回连接。两种模式都有三个主要部分。这些部分包括:编码器、3D卷积LSTM和解码器(图2)。编码器部分将每个输入图像编码为1024维向量。然后将该向量输入到三维卷积LSTM中，该LSTM由4 × 4 × 4修改的LSTM单元格组成。上述LSTM细胞没有输出门，它们的隐藏状态h(t)是基于对相邻细胞的隐藏状态应用卷积计算的。直观地说，该模块充当模型的存储器，并考虑来自对象的不同观点的信息。最后，解码部分在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><msup><mn>2</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">32^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>体素网格中恢复物体的三维形状。由于输入图像的顺序处理，输出的低分辨率和缓慢的推理时间可以被列为缺点。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig2.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>3D-R2N2中的模型结构(Choy et al. 2016)。一个编码器-解码器，中间有一个改进的卷积LSTM，作为存储模块来存储交叉视图信息</li>
+</ul>
+<p>为了能够在不增加资源需求三次增长的情况下提高体素空间分辨率，Tatarchenko等人(2017)提出了OGN (OCTree Generating Network)。它们使用基于octree的结构在体素空间中表示3D模型(Meagher 1980)。该模型具有基于编码器-解码器的结构。在编码阶段之后，解码器生成一个粗糙的、低分辨率的3D模型。然后通过一些八叉树生成层来增加分辨率。每一层根据是否被占用将每个体素分成8个部分。如果体素为空，则层不会细分它，从而节省内存。另一方面，如果输入体素被占用，则将其分成更小的部分。然后，网络将这些较小的体素分类为已占用、混合或空。分类为“混合”的体素被传播到下一层以进一步细化。作者使用分类交叉熵作为训练目标。图3更详细地描述了学习过程。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig3.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>OGN的学习过程(Tatarchenko et al. 2017)，其中通过对体素进行分层划分和分类，进一步细化粗体素估计</li>
+</ul>
+<p>在Xie等人(2019)中，研究人员提出了一种基于编码器-解码器的3D重建模型，该模型在IoU方面的性能比OGN的性能高出6%，而参数数量只有OGN的一半。上下文感知融合模块从编码器中获取粗容量预测，并将信息融合到一个准确的预测中。然而，他们的方法只能在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><msup><mn>2</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">32^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>体素空间中重建，并且模型在更高分辨率下的性能尚未研究。后来，为了支持更高的分辨率(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn><msup><mn>4</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">64^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>12</mn><msup><mn>8</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">128^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">2</span><span class="mord"><span class="mord">8</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>)，作者提出了Pix2Vox++ (Xie et al. 2020)。所提出的方法在编码器部分使用ResNet (He et al. 2016)主干，而不是VGG-16 (Simonyan and Zisserman 2014)，这将参数计数减少了25%，推理时间减少了5%。此外，ShapeNet (Chang et al. 2015)数据集上的总体IoU增加了1.5%。</p>
+<p>给定物体的单一RGBD图像作为输入，3D- RVP (Zhao et al. 2021b)分两个阶段重建物体的三维几何形状。在第一阶段，从输入深度图像中获得体素表示，并通过带有跳过连接的编码器-解码器网络对物体形状进行粗略估计。在点采样策略的帮助下，从体素网格中采样模型不确定的点(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mrow><mi mathvariant="normal">占</mi><mi mathvariant="normal">用</mi><mi mathvariant="normal">率</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{占用率}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:-0.15em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord cjk_fallback mtight">占</span><span class="mord cjk_fallback mtight">用</span><span class="mord cjk_fallback mtight">率</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>≈0.5)。对每个点插值编码器-解码器网络的特征映射，得到逐点特征。一个名为“point-head”的共享MLP使用逐点特征预测这些采样点的占用概率。最后，通过将编码器-解码器网络的4倍上采样结果与点头预测相结合，在体素网格中形成细粒度的3D形状。</p>
+<p>自Vaswani等人(2017)引入transformers 以来，它们在NLP的各种任务中表现出了良好的效果。计算机视觉领域最近的工作集中在将transformers整合到他们的模型中。这是在一些作品在transformers的帮助下实现了最先进的任务性能之后发生的，例如ViT (Dosovitskiy等人，2020)，它在一系列图像补丁上使用transformers编码器。同样，VoiT (Wang et al. 2021a)的目标是在给定多视图图像的情况下重建物体的三维形状。这是通过对特征编码和多视图融合使用转换器来实现的。该模型由一个2d视图编码器和一个3d音量解码器组成。在第一阶段，共享权重CNN从每个输入视图中提取一组特征。包含初始视图嵌入的结果向量通过6个基本编码器块的堆栈，每个编码器块由发散增强的视图注意和位置前馈神经网络组成。注意层探索多个视图之间的全局关系。第二阶段，三维体解码器借助多头体注意层学习不同空间位置之间的全局相关性。它通过“多头视图体关注”层来探索视图与空间域之间的关系。前一阶段得到的结果通过一个位置前馈网络。线性函数将每个3D体的输出嵌入投影到3D输出空间中。最后，对预测的三维体块进行重塑和分组，形成最终的重建形状。该方法在ShapeNet (Chang et al. 2015)上实现了多视图3D重建的新技术(Chang et al. 2015)，其参数比其他近期基于cnn的方法少30%。它在输入视图的数量上也有更好的缩放能力。多视图模型的缩放能力详见图26第13节。</p>
+<p><strong>总结</strong>:由于体素网格是离散的，由于资源限制，输出分辨率必须保持在较低的水平。因此，重建的形状细节较低，重建精度较低。此外，这种类型的表示不能直接用于游戏和电影行业等一些应用程序，因为它需要不同的算法来获得更灵活和自然的输出。虽然大多数回顾的作品使用基于编码器-解码器结构的3D cnn，但3D- r2n2使用卷积lstm来记忆不同视点的形状信息。然而，lstm由于其序列性而增加了训练和推理时间。Pix2Vox很容易实现，但不支持多视图输入。而且，重建分辨率很低。pix2vox++具有4倍高的输出分辨率，并支持多视图输入，实现更好的精度。OCTree通过提出一种可学习的OCTree生成框架，减轻了基于体素表示的内存限制。因此，输出分辨率可高达1024 × 1024。VoiT利用transformers进行3D形状重建，并以比其他最近基于cnn的方法少30%的参数实现最先进的结果。该算法的缺点是输出分辨率仍然限制在32 × 32。</p>
+<h1 id="4-xyz基于点云的3d重建"><a class="markdownIt-Anchor" href="#4-xyz基于点云的3d重建"></a> 4 XYZ:基于点云的3D重建</h1>
+<p>点云就是坐标系中无序的3D点的集合。与存储组合连接模式的网格等有序结构相比，在点云表示中预测3D形状的挑战较小。</p>
+<p>Fan等人(2017)提出了PSGN，该算法采用单个物体的RGB图像，并通过预测相应的3D点云来重建其形状。他们提供了三种模型:香草模型、双分支预测模型和沙漏模型。每个模型包括两个主要部分:编码器和预测器。编码器对输入执行一组卷积操作并产生一个特征向量。然后将该向量输入到预测模块中，生成N = 1024个3D点的点集。算法中还加入了一个随机变量来模拟训练阶段单幅图像重构中的不确定性。对于每个输入图像，使用n个不同的随机变量预测n个输出。然后计算预测点集与地面真值点集之间的距离。此外，“N的最小值”(MoN)损耗确保与 ground truth 相比，最小N个距离足够小。使用了两种距离测量方法，即倒角距离(CD)和地球移动距离(EMD)。根据定性比较结果，使用CD损失训练的网络在重建细节方面表现更好，而EMD产生的结果更紧凑。</p>
+<p>为了产生更密集的结果，Mandikal和Radhakrishnan(2019)提出了“DensePCR”，能够预测16倍以上的点。在DensePCR中，多级模型通过预测一个稀疏的3D n点集来估计输入图像的粗形状。通过应用“密集重建网络”，这些结果变得更加密集。每个DRN模块对点计数上采样4倍。设<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>X</mi><mrow><mi>p</mi><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">X_{p1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>表示粗点云估计值对应的点。DRN模块从三维n点集中提取全局特征<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>X</mi><mi>g</mi></msub></mrow><annotation encoding="application/x-tex">X_g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>和局部特征<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>X</mi><mi>l</mi></msub></mrow><annotation encoding="application/x-tex">X_l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，然后将它们连接成单个向量。将此向量输入到MLP中，生成一组16N个3D点，其中N = 1024。EMD和CD损失函数分别用于第一个粗略估计和接下来的两个DRN输出。该方法在ShapeNet上优于PSGN，在CD和EMD方面分别高出5%和65%。</p>
+<p>Lin等人(2018)提出了一种名为“EDPCG”的3D生成框架，能够从单张图像中重建密集点云中的物体。首先使用一组二维卷积将输入图像编码为潜在表示。然后将潜在表示输入到由二维转置卷积层堆叠组成的结构生成器网络中。结构生成器模块从N个不同的角度估计对象的结构。每个估计包含每个像素位置可见部分的三维坐标，以及区分背景和目标像素的二进制掩码。利用相机的固有参数和每次估计中的目标姿态，将不同视点的三维点转换为标准坐标。然后，借助可微渲染模块对训练数据进行优化，该模块从密集的点云中合成新的深度图像。根据作者的说法，这种2D优化方法比基于3d的优化方法(如Chamfer distance)快100倍。损失函数的值是通过将二值掩模损失和深度值的L1距离相加得到的。图4描述了该方法的概述。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig4.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>Lin et al.(2018)中的模型结构和训练过程。在伪渲染器的帮助下，模型在2D监督下进行训练。实验表明，与3D优化相比，训练时间减少了100倍</li>
+</ul>
+<p>3D- lmnet (Mandikal et al. 2018)阐明了学习3D点云的良好先验对于在2D和3D域之间进行单视图3D重建任务的有效知识转移的重要性。作者首先在三维点云数据上训练了一个自动编码器。点云编码器网络以倒角距离为训练目标，学习三维点云的潜在空间。一旦训练了自编码器，就会训练一个图像编码器来将输入映射到这个学习的嵌入空间。更准确地说，给定输入图像及其对应的地面真值点云，图像编码器网络对图像进行处理以生成潜在向量(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>Z</mi><mi>l</mi></msub></mrow><annotation encoding="application/x-tex">Z_l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)。同时，将地面真实点云输入到冻结的三维自编码器中，生成潜在目标向量(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>Z</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">Z_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>)。优化图像编码器权重以最小化这些潜在向量之间的L2或L1损失。此外，在第二种变体中，作者使用了变分自动编码器(VAE)的想法(Kingma和Welling 2013)来生成多个可信的输出，而不是一个。与PSGN类似，本研究提供了一种处理单幅图像重建不确定性的解决方案。图5显示了训练阶段。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig5.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>Mandikal等人(2018)的训练阶段概述。在第一阶段，通过最小化倒角距离来训练自编码器。在第二阶段，对编码器网络进行微调，通过最小化潜在匹配损失来产生与目标三维点云相同的潜在表示</li>
+</ul>
+<p>Zou和Hoiem(2020)提出了从单个RGB图像重建物体密集点云的SGPCR。除了优于许多点云重建方法的性能外，该方法的新颖之处在于它可以通过完成预测的可见轮廓来重建部分遮挡的物体。在重建步骤之前，先训练一个U-Net结构的神经网络来完成被遮挡的轮廓。作者生成了一个用于网络训练和轮廓完成的合成数据集。在完成步骤之后，具有ResNet-50主干的编码器-解码器网络从完成的轮廓推断出3D点云。首先推导出由1024个点组成的粗点云。点云细化步骤-以四倍的系数对点进行采样。最后，一个后细化步骤拟合点云上的表面，平滑它们，并再次从光滑的表面均匀地重新采样点。三维重建网络的损失函数是不同损失的组合，包括Chamfer和2D重投影。与ShapeNet上的3D-LMNET相比，该方法的CD稍差(高1%)，EMD好得多(低15.2%)。</p>
+<p><strong>总结</strong>:使用点云表示的方法在固定内存使用方面比那些在体素网格中表示形状的方法表现得更好。在审阅的作品中，PSGN网络架构相对简单，输出分辨率有限。DensePCR的重建分辨率较高，但由于在算法的多个阶段采用了三维监督，训练时间较长。3D-LMNET产生精确的重建;然而，必须执行两个训练阶段，并且解码器的知识仅限于训练数据中存在的形状类别。EDPCG通过使用2D监督代替3D监督，将训练时间提高了100倍，但重建的一些形状缺乏细节。SGPCR适用于2D和3D的训练和处理闭塞更好。</p>
+<h2 id="41-点云补全"><a class="markdownIt-Anchor" href="#41-点云补全"></a> 4.1 点云补全</h2>
+<p>给定稀疏或部分输入观察值，挑战涉及检索无序点集的丢失部分。这个问题是由算法错误引起的，这可能是由物体遮挡、缺乏输入数据或复杂的物体结构引起的。值得一提的是，一些激光扫描仪，如LiDAR，由于各种原因，包括环境噪声，可能会产生不完整的点云。这强调了开发点云补全技术的重要性。由于该任务与基于图像的三维重建的原始任务并不完全相关，因此我们只提到了一些作品。</p>
+<p>Huang等人(2020)提出了PF-Net用于点云补全。他们的模型接收一个不完整的点云，并试图以一种从粗到精的方式完成输入点集。该模型由三个主要部分组成:三尺度编码器、金字塔解码器和鉴别器网络。图6演示了点云完成过程。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig6.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>Huang et al.(2020)的点云补全过程示意图</li>
+</ul>
+<p>首先在三个不同的尺度上对输入点云进行采样。为了在采样期间保持3D模型的结构，使用迭代最远点采样(IFPS) (Eldar et al. 1997)算法。编码器部分从这三个尺度中提取特征并将它们连接在一起。从得到的1920 × 3向量，使用MLP生成1920 × 1向量V。在解码器部分，向量V被馈送到一个三层的全连接网络中。然后，每一层分层地预测不完整部分对应的点。这样，从最上面的全连通层得到一个低密度、低精度的点集。顶层FC层的结果与中间层的结果相结合。然后将这个结果与底层结合起来创建最终结果。使用CD作为代价函数，将金字塔解码器的每一层的结果与其参考点云进行比较。还训练了一个对抗性鉴别器网络(Goodfellow et al. 2014)，以提高模型的准确性。图7显示了解码过程和对抗性训练过程。与PointNet相比，本研究提出了一种增强的点编码器(Qi et al. 2017a)。它不是对最后一个特征向量应用最大池化来获得最终的编码向量，而是将多层特征连接起来形成它，同时捕获局部和全局点特征。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig7.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>Huang et al.(2020)中的解码器结构。编码阶段结束后，将多分辨率特征(V)馈送到3层MLP中，分层预测完成的点云。判别器网络负责提高预测质量</li>
+</ul>
+<p>Zhang等人(2020)在研究中使用Pointnet++ (Qi et al. 2017b)，通过多阶段采样和分组，同时考虑局部和全局特征，提取点特征。在完成过程之前，它们通过分离对象的已知部分和缺失部分的特征，为模型提供更多线索。然后将这些特征扩展并给出一个共享的MLP来预测一个粗模型，该模型使用另一个网络进一步细化。</p>
+<p>SnowflakeNet (Xiang et al. 2021)通过利用transformers的表示和解码能力对所审查的工作进行了改进。特征提取器使用来自PointNet++的三层集合抽象以及点转换器模型(Zhao et al. 2021a)将不完整的输入形状编码为形状代码。种子生成模块用于生成粗糙但完整的点集，该点集保持目标形状的几何形状和结构。更详细地说，该模块提取点的特征，捕捉形状的缺失和已知部分。然后，该模块推断出与输入的原始点连接的形状的粗点集。采用最远点采样(FPS) (Qi et al. 2017b)获得指定分辨率下的最终种子形状。提出了一种新的雪花点反褶积(SPD)模块，分三步逐步增加雪花点的个数。子点是从输入的父点生成的，每个子点都继承父点的特征。为了使连续的spd能够连贯地分割点，提出了一种跳跃变换来捕捉形状上下文以及父点和子点之间的空间关系。</p>
+<p>还有许多其他方法可以解决形状补全任务;其中包括Huang等人(2021)，他们专注于减少网络参数和推理时间，同时通过引入一种新的递归前向网络来完成点云，并取得了有希望的结果，以及Sarmad等人(2019)，他们利用强化学习。</p>
+<h1 id="5-基于曲面的三维重建"><a class="markdownIt-Anchor" href="#5-基于曲面的三维重建"></a> 5 基于曲面的三维重建</h1>
+<p>以前审查过（reviewed）的表示不能直接用于某些应用，例如动画和电影。基于表面的表示具有可以直接用于各种应用程序的优点。这些表示是均匀可变形的，并且比基于体素的表示消耗更少的内存，因为它们只对表面进行建模。然而，这种表示不容易适应深度学习框架。</p>
+<p>Wang等人(2018a)提出了Pixel2Mesh，它将物体的单个2D图像作为输入，并利用图卷积网络(GCN)推断出相应的3D网格(Scarselli et al. 2008;Bronstein et al. 2017;Defferrard et al. 2016)。该模型分三个阶段对初始椭球网格进行变形以重建目标。初始椭球首先被馈送到网格变形块中(图8)，该块使用输入图像的早期感知特征对输入网格进行变形。在接下来的两个阶段中，在对网格模型应用基于边缘的上采样之后，上采样的网格被馈送到一个变形块中以进一步细化。网格变形块通过将三维网格模型的顶点投影到二维空间来细化前一阶段的上采样结果。然后，通过将二维顶点位置与从输入图像中提取的相应感知特征对齐，为每个顶点分配一个特征向量。然后，它通过对这些特征应用一组图形卷积块来推断每个顶点的新位置。在损失函数方面，研究人员使用了Chamfer loss和normal loss。正态损失函数在第11节中定义为Eq. 8。它迫使每个目标表面法线垂直于最近的预测边。为了解决网络容易陷入局部极小值的收敛问题，在损失函数中加入了拉普拉斯和边长两个正则化项。烧蚀研究表明，边长正则化和正态损失对重建质量影响最大。该算法的一个局限性是只能接收单幅图像作为输入，不能进行多视图图像重建。这使得模型难以估计被遮挡物体部分的三维结构。此外，该模型不能重建多个对象的场景，因为它是为单对象重建而训练的。这些限制促使研究人员开发了一种新的模型。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig8.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>(上)网格变形块。该块通过使用GCN (Scarselli et al. 2008)使上采样网格变形，以产生具有更精细细节的精细3D模型。(下)感知特征池化过程的描述(Wang et al. 2018a)</li>
+</ul>
+<p>一年后，Pixel2Mesh++ (Wen et al. 2019)被引入。它接收从不同视点捕获的多幅图像来重建物体。该算法首先使用先前训练的Pixel2Mesh模型估计对象的粗3D网格模型。这个估计然后被馈送到一个多视图变形网络。该网络首先为粗三维模型的每个顶点生成几个假设。每个假设都是给定顶点的一个可能的新位置，具有指定的概率。在为每个顶点形成假设图后，用图CNN预测顶点的运动。下一步，为每个假设分配一个特征向量，就像在Pixel2Mesh中一样。这是通过将粗3D模型投影到输入图像特征映射上并提取每个顶点的相应特征来完成的。这里唯一的区别是必须处理对象的多视图特性。多视图特征拼接的问题在于特征向量长度不是恒定的，而是随着输入图像数量的增加而增加。为了解决这个问题，对于每个假设，将多视图特征的均值、最大值和方差向量连接在一个固定大小的向量中。在下一步中，变形推理块为每个顶点分配一个新位置。该块为每个假设分配一个权重，并将其传递给softmax函数。顶点的最终位置是其假设的加权和。</p>
+<p>先前的3D网格重建方法仅学习模板网格的位移以将其变形为目标网格，而Pan等人(2019)引入了一种新颖的拓扑修改模块来修剪明显偏离地面真相的面。为了消除这些误差，网络必须正确地估计误差。因此，用二次损失训练误差估计网络，对重构误差进行回归。结合网格变形模块，该方法可以在高分辨率下从0类模板网格中重建复杂的类型。此外，边界细化网络还负责细化边界条件，以提高重构网格的质量。图9提供了整个管道的概览。报告了五类ShapeNet的定量结果。这些结果表明，与Pixel2Mesh相比，CD提高了17%，EMD提高了13.7%。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig9.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>Pan et al.(2019)的重建管道概述。初始Genus-0模板网格在多个阶段逐渐变形以产生最终形状。拓扑修改模块对每个阶段的错误区域进行回归并移除</li>
+</ul>
+<p>为此，尽管获得了很高的几何精度，但所审查的网格重建方法产生的模型具有自相交网格。神经网格流(NMF) (Gupta and Chandraker 2020)专注于推断具有高流形的3D网格。与使用GCNs对模板网格进行变形不同(Defferrard et al. 2016)，变形是通过学习从0类模板网格到目标网格的微分同态流来完成的。异胚流是独特的，并保持方向;因此，在变形后，输入模板网格的流形得以保留。作者使用神经ode对差胚流进行建模(Chen et al. 2018)。此外，为了增强多形状类别的表示能力，作者将三层神经ode堆叠起来，逐步估计变形流。它们还对输入和隐藏特征应用实例规范化层。将Chamfer损失函数应用于所有三个变形阶段来训练网络。</p>
+<p><strong>总结</strong>:基于表面的表示是可变形的，比基于体素的表示需要更少的资源。Pixel2Mesh是第一个利用图cnn来估计网格表示中物体的3D形状的算法之一。Pixel2Mesh++提高了重建精度，并支持多视图输入。Pan等人(2019)引入了一种学习错误修剪网络，以去除明显偏离地面真相的面孔。前一种方法的缺点是存在非封闭网格和缺乏多视图输入支持。NMF通过从0类模板网格中学习微分同态流来生成高流形网格。然而，结果网格是过度平滑的。</p>
+<h1 id="6-使用隐式表示的三维重建"><a class="markdownIt-Anchor" href="#6-使用隐式表示的三维重建"></a> 6 使用隐式表示的三维重建</h1>
+<p>隐式神经表示是一种参数化不同类型信号的新方法。传统的信号表示通常是离散的;例如，3D形状被参数化为体素网格、点云或网格。相比之下，隐式神经表征将信号参数化为一个连续函数，该函数将信号的域(如3D坐标)映射到该坐标(占用概率，签名距离函数(SDF)值)上的任何内容。隐式神经表示通过MLP网络近似该函数。该MLP具有足够的层数和隐藏单元，能够以任意精度逼近任意函数。这些方法具有存储效率的优势，使网络能够在任意分辨率下更准确地推断复杂的3D形状，而无需担心资源限制。</p>
+<p>ONet (Mescheder et al. 2019)使用神经网络近似三维物体的占用函数，表示为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi><mo>:</mo><msup><mi mathvariant="double-struck">R</mi><mn>3</mn></msup><mo>→</mo><mo stretchy="false">{</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">o:\R^3\to\{0,1\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose">}</span></span></span></span>。网络以另一个输入向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>∈</mo><mi>χ</mi></mrow><annotation encoding="application/x-tex">x\in\chi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">χ</span></span></span></span>为条件，取一个查询点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>q</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">q\in\R^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>，并预测该点的占用概率为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mo>∈</mo><mi mathvariant="double-struck">R</mi></mrow><annotation encoding="application/x-tex">p\in\R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68889em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbb">R</span></span></span></span></span>。为了生成上述向量x，作者使用基于resnet18 (He et al. 2016)的编码器对输入图像进行编码。他们进一步使用条件批处理规范化对编码特征的查询点进行条件化(De Vries et al. 2017)。训练通过从每个训练样本中抽取K个点，并预测每个查询点对应的占用概率来完成。通过最小化交叉熵分类损失，网络学习从单个输入图像推断3D形状。在推理过程中，首先将体积空间离散为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><msup><mn>2</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">32^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>个点的网格，网络根据占用概率阈值预测这些点的占用情况。在推断出粗糙的3D形状后，通过增量构建八叉树对被占用区域中的点进行上采样。然后，网络评估每个新生成的点，以确定它们的占用状态。这种机制被称为多分辨率等面提取(MISE)，如图10所示。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig10.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>IM-NET (Chen and Zhang 2019)接受由形状编码器提取的特征向量以及3D或2D点坐标，返回一个值，表明点相对于形状(内部或外部)的状态。解码器结构如图11所示。编码器可以是CNN或PointNet。换句话说，通过学习映射函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>f</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f_{\theta}(p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">θ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span>来训练网络来解决一个二元分类问题，该映射函数将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><msup><mo stretchy="false">]</mo><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">p\in[0,1]^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">]</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>映射到一个二元占用值。该网络能够进行单视图3D重建。作者首先在训练集上训练了一个自编码器，以产生一个真实特征表示。在获得这些基础真值特征表示后，他们对预训练的ResNet (He et al. 2016)编码器进行了微调，以最小化预测特征向量之间的均方损失。这种方法比直接训练图像到形状的翻译器效果更好。正如作者所述，预训练编码器提供了强大的先验，可以减少单视图重构的模糊性，并通过在自编码器阶段对无二义性数据进行训练来缩短训练时间。这种方法的一个主要限制是输出结果具有低频误差(例如，厚度或厚度等全局形状特征)，这似乎可以通过回归每个输入点的SDF值而不是预测二进制占用值来减轻。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig11.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>IM-Net的解码器结构(Chen and Zhang 2019)。该网络根据编码特征预测查询点的内部/外部状态。此外，跳跃式联系有助于促进学习过程</li>
+</ul>
+<p>Deep SDF (Park et al. 2019)隐式地将3D形状的零等值面表示为前馈神经网络的决策边界。该网络在三维空间中输入一个潜码Z和一个查询点，并根据形状码回归相应的SDF值。SDF = 0的点隐式地表示对象的等面，可以通过光线投射或网格的栅格化来渲染，例如，Marching Cubes (Lorensen and Cline 1987)。为了重建形状的精细细节，网络被迫将其预测集中在物体表面附近(零水平集)。为了实现这一点，预测的SDF值(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>f</mi><mi>θ</mi></msub></mrow><annotation encoding="application/x-tex">f_{\theta}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">θ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)和目标值(S)被一个小阈值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>δ</mi></mrow><annotation encoding="application/x-tex">\delta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span></span></span></span>截断。然后用被截断的值来计算L1损耗。该损失函数如式(1)所示。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq1.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中，<img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/seq1.png" srcset="/img/loading.gif" lazyload style="zoom:75%;">。作者还声称，由于训练的编码器在测试时未使用，因此不清楚在训练期间使用编码器是否最有效地利用了计算资源。所以他们提出了一个自动解码器而不是自动编码器。在训练开始时，为每个形状分配一个随机初始代码。在训练过程中，自编码器与解码器权值共同学习最优潜码。在训练时，它们对单个形状代码<img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/seq2.png" srcset="/img/loading.gif" lazyload style="zoom:75%;">和网络参数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span></span></span></span>最大化所有训练形状的联合对数后验:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq2.png" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>总结</strong>:表面可以隐式地建模为由MLP学习的函数的零水平集。隐式表示具有较高的记忆效率;因此，它们可以以高分辨率表示形状。然而，这些方法的推断时间相当长，特别是在高分辨率下。审查作品的另一个限制是，它们只接受单视图输入，而不考虑多视图输入的管道。</p>
+<h2 id="61-穿衣服人体隐式三维重建"><a class="markdownIt-Anchor" href="#61-穿衣服人体隐式三维重建"></a> 6.1 穿衣服人体隐式三维重建</h2>
+<p>服装人体三维重建在虚拟现实和医学成像中有着广泛的应用。近年来，研究人员提出了一种基于有效隐式函数的人体重构方法。下面，我们将回顾一些最新的研究成果。</p>
+<p>给定一个人的单个或多个背景提取的彩色图像，PIFu(Saito等人，2019)通过使用由MLP学习的像素对齐隐式函数来推断该人的纹理3D表面模型。提取输入图像特征后，在三维空间x中得到每个查询点对应的特征，得到其在输入二维图像上的投影。这些特征，伴随着查询点相对于相机的深度值，然后被输入到MLP中，以预测该点的内外概率。如图12所示，提出了两种不同的流，一种用于表面重建，另一种用于纹理推断。后者的网络结构与前者相同，不同的只是输出，即每个查询点的RGB值。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig12.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>PIFu管道概述:给定一个输入图像，一个像素对齐的隐式函数(PIFu)预测穿着衣服的人的连续内外概率场。类似地，用于纹理推断的PIFu (Tex-PIFu)在给定的具有任意拓扑的表面几何形状的3D位置推断RGB值(Saito et al. 2019)。</li>
+</ul>
+<p>Geo-PIFu(He et al. 2020)不提供纹理推理流;相反，它增加了一个新的流来提取潜在的3D特征，并预测一个粗糙的体积形状。对于三维空间中的每个查询点，将三线性插值的三维潜在特征与二维UNet提取的二维潜在特征相连接。然后将生成的几何形状和像素对齐的特征输入到MLP中以预测占用状态。Zheng等人(2021)有一个类似于Geo-PIFu的框架，但在输入图像的几何特征组成阶段使用了推断参数模型(蒙皮多人线性模型，或SMPL)的编码特征。提出了一个主体参考优化步骤，以防止网络输出依赖于初始SMPL估计。</p>
+<p>PIFuHD (Saito et al. 2020)通过增加骨干输出的特征分辨率来改进PIFu。他们认为，虽然隐式表示可以在任意分辨率下表示三维几何，但特征的表达性可以进一步提高。研究人员还增加了另一个输入要求，即正面和背面的法线图，以减轻单视图重建的不适定问题。这些法线图由pix2pixHD (Wang et al. 2018b)生成，并作为特征馈送到像素对齐的预测器中。如图13所示，所提出的模型有两个分支:一个用于粗预测，其输出用于第二个分支，该分支具有更高的输入、特征和输出分辨率。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig13.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>Saito et al.(2020)概述。两个像素对齐的分支有助于产生高分辨率的3D重建。粗分支(顶部)捕获全局3D结构，而细分支为形状添加高分辨率细节</li>
+</ul>
+<p>总之，由于输入查询点是连续的，因此所提出的使用隐式表示的人体重建方法能够实现高分辨率重建。在被评审的作品中，PIFu的参数数量最少(约1500万个)。虽然它不能精确地重建物体的背面，但它仍然产生了有希望的结果。Geo-PIFu的参数是PIFu的两倍，并使用几何感知的3D特征和像素特征。此外，考虑到对粗体积形状也进行了监督，提高了MLP网络观测空间的维数和质量。定量和定性结果支持前者的说法。然而，与PIFu相比，该模型中的3D流增加了相当多的内存需求和运行时间。PIFuHD能够更好地重建物体的背面，并恢复更精细的细节。然而，模型参数的大小是巨大的，有3.87亿个参数(大约是PIFu的25倍)。研究(Zheng et al. 2021)很好地处理了具有挑战性的姿势，但需要SMPL模型作为输入，这在许多现实应用中是不可用的。</p>
+<h1 id="7-多目标重建"><a class="markdownIt-Anchor" href="#7-多目标重建"></a> 7 多目标重建</h1>
+<p>所有先前审查的作品都能够重建单个物体的形状。现实世界的任务，如机器人导航或操作和3D场景理解需要推断多个对象甚至整个场景的3D形状。下面概述了几个旨在重建多个物体的研究。</p>
+<p>3D- rcnn (Kundu et al. 2018)通过接收带有一组相关对象边界框的单个2D图像，恢复场景中所有当前对象的3D形状和姿势。该方法通过学习每个对象类别的小参数模型，利用关于对象类别及其形状的先验知识来推断对象的三维结构。所提出的模型是使用一个称为“渲染和比较”的成本函数来训练的。前向传递后，模型推断出三维形状，利用已知的相机内外参数得到相应的深度图和语义分割，然后与地面真实值进行比较。图14详细显示了模型的不同部分。该算法的一个缺点是它使用有限的三维形状先验。因此，该模型只能重构训练数据中存在的形状类别。此外，由于该方法对目标进行顺序处理，因此对多目标场景进行重构的推理时间相对较高。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig14.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>3D-RCNN概述(Kundu et al. 2018)。在提取roi后，每个roi依次通过三个流。这些流包括:模态边界盒回归、对象规范中心预测、姿态和形状预测。“渲染和比较”方法有助于在2D中监督训练过程</li>
+</ul>
+<p>Mesh-RCNN (Gkioxari等人，2019)是一种多任务算法，给定单个2D图像，首先检测对象及其类别。在每个对象周围绘制边界框后，生成其相关的3D网格模型。为了推断3D形状，它首先估计一个基于粗体素的形状，然后使用Cubify (Gkioxari et al. 2019)算法将其转换为网格。图15显示了这个过程。几个图卷积层被用来进一步细化预测网格。在训练阶段，分别对体素和网格使用二元交叉熵和Chamfer损失函数。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig15.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>网格- rcnn管道概述。该算法对输入图像中的物体进行定位并预测其形状类别。在下一阶段，它为每个对象推断一个基于粗体素的形状。然后将形状转换为网格表示，并通过应用一组图形卷积操作对其进行细化。Gkioxari等人(2019)</li>
+</ul>
+<p>Popov等人(2020)提出了“CoReNet”，它能够从单个图像中重建多个对象，每个对象都处于其原始姿势，而不是许多作品以其规范姿势重建对象(Choy等人，2016;Wang et al. 2018a;Fan et al. 2017)。这个模型，就像之前的大多数作品一样，有一个编码器-解码器架构，但在编码器和解码器网络之间增加了光线跟踪的跳过连接。跳过连接允许以正确的物理方式将局部2D信息传播到3D空间。图16显示了模型架构和光线跟踪的跳过连接。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig16.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>CoReNet模型架构。编码器和解码器部件之间的跳线连接将光线从编码器跟踪到每个解码器层中的相应元素。解码器网格偏移使高分辨率重建成为可能。这是通过使用不同的偏移值多次调用网络来完成的(Popov et al. 2020)。</li>
+</ul>
+<p>研究人员引入了一种新的混合输出表示，它结合了体素网格和隐式表示的优点。输出是一个W× H × D的点网格，彼此之间的距离为v。这些网格点的位置可以用小于v的偏移量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>o</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{o}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.63056em;vertical-align:0em;"></span><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.63056em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">o</span></span></span><span style="top:-3.55056em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span></span></span></span>来改变。以任何所需的分辨率推断物体的三维形状;用不同的网格偏移值重复调用该算法。这有助于在重建精细细节时保持内存使用恒定。在每次调用中，网格的查询点也被馈送到网络中，以产生它们在C个不同类别上的占用概率。C的值表示场景中存在的最大对象数量加上一个额外的背景类。这有助于网络在重建多个对象时处理对象遮挡。研究人员认为，分类交叉熵作为训练目标导致输出的高稀疏性，因为大多数网格点仍然未被占用。因此，他们引入了一个基于IoU的新的训练目标，它支持连续值和多个类。损失函数表示为:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq3.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mrow><mi>p</mi><mi>c</mi></mrow></msub></mrow><annotation encoding="application/x-tex">y_{pc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mord mathdefault mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mi>y</mi><mo>^</mo></mover><mrow><mi>p</mi><mi>c</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\hat{y}_{pc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.19444em;">^</span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mord mathdefault mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>分别为点p属于c类的真值和预测占用概率。G表示网格点的集合。由于在基础真值编码中，C−1值为零，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>μ</mi><msub><mi>y</mi><mrow><mi>p</mi><mi>c</mi></mrow></msub></msub></mrow><annotation encoding="application/x-tex">\mu_{y_{pc}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7778799999999999em;vertical-align:-0.34731999999999996em;"></span><span class="mord"><span class="mord mathdefault">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285716em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mord mathdefault mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2818857142857143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34731999999999996em;"><span></span></span></span></span></span></span></span></span></span>平衡了这种稀疏性。</p>
+<p>Engelmann等人(2021)提出了一种从单幅图像进行实时多目标3D重建的方法。基于CenterNet的思想(Zhou et al. 2019)，该方法首先将物体检测为场景中的点。对于每个检测到的目标中心，网络首先从训练数据的先验知识中检索目标的类。然后，网络预测每个对象的9-DoF (sRT)边界框。在碰撞损失的帮助下，重建结果在物理上是可信的，没有物体之间的相交。ShapeNet上的绝对3D IoU分数并不比之前的作品“CoReNet”好。然而，报道的Pix3D (Sun et al. 2018)的mIoU比“CoReNet”略有改善。</p>
+<p>Shin等人(2019)以单个RGB图像作为输入，使用全卷积神经网络实时重建场景的整个3D结构。为了表示3D形状，作者使用了多层深度表示。这种表示比基于体素的表示消耗更少的内存，允许以更高的分辨率进行重建。与3D- r2n2等以对象为中心进行预测的算法不同，该方法以观众为中心的方式推断3D场景结构。这已被证明可以提高算法的泛化性(Shin et al. 2018)。从2D输入图像中提取特征后，得到5层深度图(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><mo stretchy="false">{</mo><msub><mi>D</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><mi>i</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">D=\{D_i|i=1,2,..,5\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">5</span><span class="mclose">}</span></span></span></span>)以及深度层1和3的语义分割，使用具有跳过连接的基于编码器-解码器的网络结构进行估计。语义分割网络的结构与深度预测网络相同，只是它的输出有80个通道(每个深度图40个不同的对象类)。由于物体不可见部分的深度尚未估计，研究人员引入了“极极特征transformers”(EFT)网络来估计场景的完整3D结构。前一阶段的2.5D预测与特征图一起被输入EFT网络。这些预测用于从新的虚拟视图中估计场景的深度和语义分割。在场景中有许多对象的情况下，使用虚拟俯视视图。这意味着虚拟摄像机位于场景的上方和中心。EFT网络通过对原始输入图像特征进行适当的变换来估计新虚拟视图的特征。在对两种不同视点的多层深度图进行预测后，以三角形网格或体素的形式估计场景的三维结构。为了实现这一目标，研究人员考虑了一个具有高空间分辨率的空占用网格。然后将每个体素投影到相机平面上。根据深度图，如果像素的深度d落在一定范围内(D1 &lt; d &lt; D2或D3 &lt; d &lt; D4)，则认为体素网格中相应的单元被占用。该方法的三维重建精度约为Tulsiani et al.(2018)等先前算法的两倍。</p>
+<p>Murez等人(2020)开发了一种名为ATLAS的3D场景重建算法，该算法可以推断整个场景的3D网格模型和当前物体的语义分割。这一切都是通过接收场景的多个姿势图像来完成的。该算法以二维图像、相机参数和姿态作为输入。然后CNN提取图像的特征。然后，将输入二维图像中每个像素的相应特征沿参考占用网格中的光线投影到每个体素上。在输入图像有重叠的情况下，为相应的体素生成多个特征向量。为了获得参考网格中每个体素的固定大小的特征向量，作者计算了这些向量的加权移动平均值。在这一步之后，使用基于编码器和解码器的CNN网络来预测占用网格的trunted - sdf值。这种方法的优点包括端到端训练和模型的多任务能力。如前所述，除了3D网格模型之外，还预测了3D对象的语义分割。然而，它的分割性能远低于专门为此任务训练的模型。例如，在3D语义分割任务中，ScanNet (Dai et al. 2017)数据集上获得的平均IoU为34%，而MinkowskiNet (Choy et al. 2019)实现了73.4%。</p>
+<p>像(Murez et al. 2020)这样的方法存在内存和时间效率问题，这些方法推断所有输入视图的多个卷，然后将它们聚合起来。此外，应用3D cnn处理巨大的3D特征量导致算法运行速度慢。与ATLAS相比，NeuralRecon (Sun et al. 2021)的运行时间提高了10倍，同时在ScanNet数据集上获得了稍好的F-Score。给定单目视频作为输入，NeuralRecon处理视频的局部片段以顺序重建整个场景。从每个局部片段中提取一组N个关键帧。预测局部TSDF体积的过程是在三个层次上完成的，从粗到细的方式。在此过程中，从关键帧中提取多层次特征后，将结果反投影到每个尺度对应的三个特征体中。MLP负责预测体素在每个尺度上的占用概率和TSDF值。通过使用隐式表示，提高了算法的存储效率。GRU的卷积变体负责使片段之间的重建保持一致。整个管道如图17所示。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig17.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>Sun et al.(2021)提出的用于整个场景三维重建的管道</li>
+</ul>
+<p><strong>总结</strong>:本节综述了一些多目标和场景重建技术。从3D- rcnn开始，它使用先验知识来重建给定单个图像的基于体素的3D形状。但是，它需要相应的对象边界框作为附加输入。此外，在训练过程中，该模型的重构覆盖范围局限于已知的对象类别，并且由于对当前对象的顺序处理，导致推理时间较高。另一方面，mesh - rcnn可以在网格表示中进行重构，这更节约资源，并且可以在实际应用中使用。然而，目标检测误差会影响重建精度。大多数先前的工作都有编码器-解码器架构，而CoReNet在编码器和解码器网络之间添加了光线跟踪跳过连接。它重建每个原始姿态中的每个形状，并使用混合表示，结合了体素网格和隐式表示的优点。尽管这项工作新颖，但推断时间仍然很高。Points2Objects的研究人员(Engelmann et al. 2021)遵循与Mesh-RCNN相似的步骤;但是使用基于点的物体检测器，并提出了一种新的碰撞损失，使结果在物理上似乎没有物体之间的相交。在回顾的场景重建方法中，Shin等人(2019)使用多层深度表示作为输出表示，所需资源较少。然而，该方法的能力仅限于单幅图像的重建。ATLAS和NeuralRecon都通过接收场景的多个姿势图像作为输入来重建3D场景。NeuralRecon提出了比ATLAS更有效的方法，使用隐式表面表示和gru来执行跨片段聚合。因此，它比ATLAS具有更高的内存效率，并且可以实时运行。</p>
+<h1 id="8-多视角立体"><a class="markdownIt-Anchor" href="#8-多视角立体"></a> 8 多视角立体</h1>
+<p>多视图立体(MVS)是一组使用立体对应作为主要线索并使用两个以上图像的技术的总称(Furukawa et al. 2015)。换句话说，“多视图立体”是指从不同视点捕获的校准重叠图像重建3D形状的任务(Sinha 2014)。图18描述了MVS管道的一个示例。根据应用的不同，这些算法可以使用不同的表示形式。大多数基于学习的方法使用深度图或体积表示。与依赖深度图的方法相比，体积表示存在空间离散误差和由于内存限制而导致的输出分辨率较低的缺点。基于最新的基准(Knapitsch et al. 2017;Aanæs et al. 2016)，基于深度图的方法提供了最先进的结果。所提出的方法大多基于平面扫描立体(Collins 1996)，将扭曲的多视图特征形成一个代价体，对其进行正则化，然后估计深度。下面，我们将回顾一些值得注意的作品。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig18.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>一个多视图立体管道的例子。顺时针方向:输入图像、摆位图像、重建3D几何、纹理3D几何(Furukawa et al. 2015)</li>
+</ul>
+<p>基于学习的MVS的第一个方法是SurfaceNet (Ji et al. 2017)，它将一组图像作为输入，并具有相应的相机参数，并输出体素表面重建。它首先为每个视图预先计算一个称为彩色体素立方体(CVC)的表示。这是通过将视图的像素投影到3D体素网格上来实现的，这样CVC中的每个体素都有一个颜色值。然后使用3D CNN来正则化和推断表面体素。</p>
+<p>MVSNet (Yao et al. 2018)通过首先从参考图像和源图像中提取2D特征来执行3D重建。提取的源图像特征分别被扭曲到参考相机截锥体的多个前平行平面上，形成N个特征体，其中N为视图数。然后，通过计算不同视图的成本卷之间的值方差，将这些卷聚合为单个成本卷。作为形成概率体的前一步，3D cnn帮助正则化代价体。然后，通过计算每个像素不同深度级别的概率值的软边际，将体积转换为深度图。软argmin优于argmax操作，因为它的可微分性和产生亚像素估计的能力。估计的深度图通过过滤离群深度预测进一步细化。通过融合不同视角的深度图，得到场景的点云三维重建。图19说明了所涉及的所有步骤。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig19.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>在实践中，为每个深度级别和视图形成3D成本体需要大量的内存，这限制了重建形状的分辨率。为了缓解这个问题，R-MVSNet (Yao et al. 2019)使用rnn沿深度维度替换3D cnn为连续2D cnn。这将所需的内存量减少了30%，但代价是运行时增加了25%。MVSNet+ (CAS-MVSNet) (Gu et al. 2020)通过自适应选择每个级联阶段的深度假设数量，对成本体积的形成过程进行了从粗到细的级联。与R-MVSNet相比，MVSNet+的运行时间提高了约65%，内存消耗提高了25%。</p>
+<p>Fast-MVS (Yu and Gao 2020)与MVSNet+相比运行时间稍低，内存消耗减少30%。Fast-MVS的主要思想是首先推断出一个稀疏代价体积，然后用它来构造一个稀疏深度图。在第二阶段，学习到的双边采样器帮助将稀疏深度图传播成密集深度图，同时考虑参考图像信息。在第三阶段，一个可微高斯-牛顿层进一步细化深度图。为了减少之前方法的运行时间和内存消耗，PatchmatchNet (Wang et al. 2021b)提出了Patchmatch算法(Barnes et al. 2009)的学习级联公式，而不是使用基于平面扫描的方法。</p>
+<p>表1和表2分别提供了所审查的MVS方法和最常见的公共数据集的性能比较。</p>
+<h1 id="9-gans如何提供帮助"><a class="markdownIt-Anchor" href="#9-gans如何提供帮助"></a> 9 GANs如何提供帮助?</h1>
+<p>gan中的对抗训练策略有助于获得高质量的输出。生成器和鉴别器网络在对抗损失的情况下进行联合训练，每个网络都试图欺骗对方。发生器试图以更高的质量产生更多的真实输出，而鉴别器试图增强其对假样本和真实样本的区分能力。已知对抗标准在捕获3D对象的结构差异方面比其他标准(如IoU或倒角距离)表现更好，这在某些情况下可能会产生误导，导致过度拟合。使用gan进行3D重建的另一个优点是，可以利用训练过的鉴别器的表示能力，并将其用于3D形状分类，就像3D- gan所做的那样(Wu et al. 2016)。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table1.png" srcset="/img/loading.gif" lazyload alt="结果来自Wang et al. (2021b)。Acc和Comp分别是准确性和完整性的简写"></p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table2.png" srcset="/img/loading.gif" lazyload alt="常用的公共数据集采用MVS方法"></p>
+<p>3D-GAN使用可变自动编码器(VAE)将输入图像编码为潜在表示。然后将潜在向量输入到所提出的3D-GAN模型中。该模型具有一个具有5个三维卷积层的生成器(作为潜在向量的解码器)，该生成器接收潜在向量并输出<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn><msup><mn>4</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">64^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>分辨率的体积三维形状。鉴别器是生成器的镜像版本，因此有五个卷积层来推断预测的形状是真的还是假的。损失函数由3D-GAN模型的交叉熵、限制图像编码器输出分布的KL散度损失和L2重建损失组成。然而，该方法由于使用体素网格表示而存在内存消耗大的缺点，限制了输出分辨率。</p>
+<p>在Yu(2019)中，作者提出了一种使用gan进行3D重建的半监督方法。给定一组已知相机姿势的2D地面真实图像以及初始粗糙的3D重建模型，生成器通过应用一组残差图卷积块在每个训练步骤中细化形状(以网格表示)。鉴别器接收生成的三维模型的二维真实图像以及渲染图像，称为“观测图像”。然后应用一组残差卷积块对观察到的图像进行真假分类。在坦克和模板数据集(Knapitsch等人，2017)上获得的结果显示，与COLMAP等MVS方法(Schonberger和Frahm 2016)相比，性能有所提高。由于这种方法的输出是用网格表示的，因此可以在许多应用中使用。然而，该方法需要一个粗略的3D模型作为输入，这可以通过空间映射等其他算法获得(Pillai et al. 2016)。因此，该方法的质量取决于初始重建的质量。</p>
+<p>研究(Pan et al. 2020)证明，2D图像上预训练的gan包含关于这些模型所训练的对象类别的丰富3D知识。研究人员提出了一种无监督的单图像3D重建方法。作为起始点，对象的形状初始化为一个椭球。然后使用一个可微分渲染器来渲染一些具有不同照明条件和视点的伪样本。由于形状尚未细化，渲染的伪样本是不可取的。为了优化形状，必须对每个伪样本都有基本的真值。在这种情况下，GAN反演可以通过预测每个伪样本对应于应用于原始图像的视图变化和光照条件的潜在偏移来提供帮助。然后使用反向代码恢复原始图像作为地面真值。因此，对伪样本进行GAN反演，得到投影样本。这些样本被用作渲染过程的ground truth，以优化3D形状。这些步骤被反复执行，以产生最终的、精细的形状。图20描述了算法的框架。有关GAN反演的更多信息，请参见Xia et al.(2022)。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig20.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>重构框架，由Pan等人(2020)提出并说明。通过渲染一些具有光照和视点变化的“伪样本”，并应用GAN反演生成用于渲染过程的地面真实数据，迭代地改进初始椭球体。这个过程是迭代地执行，以细化三维形状</li>
+</ul>
+<p>总结:总之，gan中的对抗训练策略有助于更详细的形状重建，特别是当判别器在估计的和真实的3D形状之间进行判断时。另一方面，训练这样的网络有很大的内存占用，限制了3D-GAN中的重建分辨率。三维地面真值数据并不总是可用于训练基于学习的方法。此外，获得三维地面真值形状也很耗时。在这种情况下，gan可以帮助设计半监督甚至无监督算法，如Yu (2019);潘等人(2020)。</p>
+<h1 id="10-超越3d重建"><a class="markdownIt-Anchor" href="#10-超越3d重建"></a> 10 超越3D重建</h1>
+<p>一些研究将三维重建作为下游任务来完成其他目标。这些方法主要属于物体姿态估计、新视图预测、三维语义分割、颜色重建和估计场景中合成物体渲染的光照条件等领域。下面将对其中的一些方法进行说明。</p>
+<h2 id="101-新颖视角合成"><a class="markdownIt-Anchor" href="#101-新颖视角合成"></a> 10.1 新颖视角合成</h2>
+<p>SynSin是在/citepwiles2020synsin中提出的一种新的视图预测算法。提出的模型从RGB图像中预测深度图(D)并提取图像特征(F)。以这两个元素作为输入和变换(T)，一种新的可微渲染器生成代表场景3D结构的特征点云。除了允许梯度传播外，所提出的可微分渲染器生成特征而不是RGB颜色(与传统技术不同)。细化网络(生成器)细化并绘制以输入图像为条件的目标视图的不完整区域。需要注意的是，代价函数只适用于输出图像，而不适用于点云。为了提高预测质量，还与生成器对抗性地联合训练了鉴别器网络。图21显示了这些步骤。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig21.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>SynSin概述(Wiles et al. 2020)。首先，对用点云表示的场景三维结构进行估计;通过对点云进行变换并进行渲染，得到新的场景视图</li>
+</ul>
+<h3 id="1011-神经辐射场nerf"><a class="markdownIt-Anchor" href="#1011-神经辐射场nerf"></a> 10.1.1 神经辐射场(NeRF)</h3>
+<p>随着NeRF的引入(Mildenhall et al. 2020)，为小说视图合成建立了一个全新的方向。给定一组从不同角度捕获感兴趣的物体的稀疏图像，NeRF学习一个隐式函数来表示复杂的3D形状，从而可以合成物体的新姿态。隐式函数由MLP学习。如图22所示，该函数的输入是由三维点坐标(x, y, z)和观察方向(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ϕ</mi></mrow><annotation encoding="application/x-tex">\phi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">ϕ</span></span></span></span>)组成的5D矢量。输出是由发射颜色(r, g, b)和体积密度<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span></span></span></span>组成的4D矢量。然而，正如作者所建议的，许多方面都需要改进。原始NeRF的训练和推理次数高;因此，神经稀疏体素场(Neural Sparse Voxel Fields, NSVF) (Liu et al. 2020)不是将整个场景表示为单个隐式场，而是将场景组织为稀疏体素八叉树，并将一组隐式函数绑定到其体素上。这使渲染速度提高了十倍。虽然NeRF只在静态场景上运行，但还有一些其他方法可以处理动态场景。其中包括Nerfies (Park et al. 2021)、time - time Neural Radiance Fields (Xian et al. 2021)和NeR-Flow (Du et al. 2021)。例如，给定一个视频，“Nerfies”除了使用第二个MLP学习颜色密度外，还学习每个视频帧的变形场。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig22.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>概述了神经辐射场场景表示和可微分渲染过程</li>
+</ul>
+<h2 id="102-色彩重建"><a class="markdownIt-Anchor" href="#102-色彩重建"></a> 10.2 色彩重建</h2>
+<p>一些研究，包括(L Navaneet et al. 2019)和(Liu et al. 2019)，不仅重建了物体的形状，还重建了推断出的3D形状的不同部分的颜色。例如，L Navaneet et al.(2019)使用回归来解决任务。使用可微模块将推断的点云中每个点的预测颜色投影到2D图像上。然后计算预测颜色与地面真值之间的L2距离。另一方面，Liu et al.(2019)通过分类解决了这个问题。其中，根据2D输入图像中存在的代表性颜色，由网络选择一组颜色作为调色板。另一个网络从2D图像中采样点进行着色。然后，根据学习到的调色板，恢复每个采样点的最终颜色。</p>
+<h2 id="103-3d语义分割"><a class="markdownIt-Anchor" href="#103-3d语义分割"></a> 10.3 3D语义分割</h2>
+<p>在一些应用中，比如机器人，机器人需要对场景有丰富的理解。三维语义分割为机器人智能体提供了有价值的数据来分析和与环境交互。一些作品，包括(Murez et al. 2020)、(Zhao et al. 2017)和(L Navaneet et al. 2019)，除了估计场景的3D形状外，还根据场景的不同部分和表面的语义进行分割。这被认为可以提高模型更准确地推断3D形状的能力，因为监控信号现在可以区分不同的表面和形状。</p>
+<h2 id="104-3d场景字幕"><a class="markdownIt-Anchor" href="#104-3d场景字幕"></a> 10.4 3D场景字幕</h2>
+<p>Chen等人(2021)提出，该任务是指对场景中每个当前对象进行联合3D定位和生成自然语言描述。例如，Chen等人(2021)使用RGB-D扫描作为输入，并以自然语言描述本地化的对象。本地化对象之间的关系编码在图中。MLP负责从图中提取增强的关系特征。在注意机制的帮助下，字幕模块生成单词形成描述。图23提供了采用这种方法的带有字幕的场景的示例。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig23.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>基于当前物体的视觉特征以及它们之间的物理关系的场景3D定位和字幕示例，由Chen等人(2021)生成。</li>
+</ul>
+<h1 id="11-损失函数及评价指标"><a class="markdownIt-Anchor" href="#11-损失函数及评价指标"></a> 11 损失函数及评价指标</h1>
+<p>本节列出并解释了用于训练基于深度学习的3D重建算法和标准评估指标的常见损失函数。根据模型的输出表示对损失函数进行分类。这些类别包括用于3D监控的基于体积、点和网格的损失，以及用于2D监控的损失函数。</p>
+<h2 id="111-基于体积的损失"><a class="markdownIt-Anchor" href="#111-基于体积的损失"></a> 11.1 基于体积的损失</h2>
+<p><strong>L2距离</strong>:定义为根据真值和预测体积之间计算的欧几里得范数。</p>
+<h2 id="112-负交除以并集"><a class="markdownIt-Anchor" href="#112-负交除以并集"></a> 11.2 负交除以并集</h2>
+<p>该函数定义为预测体积和目标体积的重叠面积与并集面积之比(Eq. 4)。该损失函数既适用于二进制占用，也适用于TSDF表示。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq4.png" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="113-交叉熵"><a class="markdownIt-Anchor" href="#113-交叉熵"></a> 11.3 交叉熵</h2>
+<p>该函数可用于二进制和概率占用输出，定义为:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq5.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中N为体素数，<img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/seq3.png" srcset="/img/loading.gif" lazyload style="zoom:75%;">为预测值，对应体素的ground truth占用概率。</p>
+<h2 id="114-基于点数的损失"><a class="markdownIt-Anchor" href="#114-基于点数的损失"></a> 11.4 基于点数的损失</h2>
+<h3 id="1141-倒角距离"><a class="markdownIt-Anchor" href="#1141-倒角距离"></a> 11.4.1 倒角距离</h3>
+<p>给定预测点集和目标点集，如P和Q，倒角距离(CD)找到每个点到另一个点集中最近的邻居之间的距离，并总结结果。在数学符号中，CD由:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq6.png" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="1142-推土机距离emd"><a class="markdownIt-Anchor" href="#1142-推土机距离emd"></a> 11.4.2 推土机距离(EMD)</h3>
+<p>EMD解决了一个优化问题，将集合q中的每个目标点q分配给集合p中的一个预测点p，其数学形式为:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq7.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>ϕ</mi><mi>q</mi></msub></mrow><annotation encoding="application/x-tex">\phi_{q}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">ϕ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>是一一对应的集合。</p>
+<h2 id="115-基于网格的损失"><a class="markdownIt-Anchor" href="#115-基于网格的损失"></a> 11.5 基于网格的损失</h2>
+<p>在网格表示中生成对象形状的模型与基于点的方法具有相似的损失函数。这些方法同时计算地面真值与预测网格顶点之间的CD和EMD。除了这些损耗外，还适用正常损耗。然而，这些损失函数不足以使模型产生令人满意的结果。更准确地说，模型在训练过程中容易陷入局部最小值。一些研究考虑正则化术语，如拉普拉斯算子和边长度来缓解这个问题。下面将更详细地解释正则化术语。</p>
+<h3 id="1151-正常损耗"><a class="markdownIt-Anchor" href="#1151-正常损耗"></a> 11.5.1 正常损耗</h3>
+<p>该损失函数要求顶点与其相邻点之间的边垂直于相应的地表法线(Wang et al. 2018a)。它可以用数学符号描述如下:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq8.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中p是一个预测的网格顶点，q是在计算倒角损失时发现的最接近p的顶点，k是p的邻近顶点，它属于p的邻近顶点集合<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi mathvariant="script">N</mi><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo separator="true">,</mo><mo>&lt;</mo><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mo>&gt;</mo></mrow><annotation encoding="application/x-tex">(\mathcal{N}(p)),&lt;.,.&gt;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathcal" style="margin-right:0.14736em;">N</span></span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span></span></span></span>是两个向量的内积，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mi>q</mi></msub></mrow><annotation encoding="application/x-tex">n_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>是观察到的表面法线。</p>
+<h3 id="1152-正则化项"><a class="markdownIt-Anchor" href="#1152-正则化项"></a> 11.5.2 正则化项</h3>
+<p>下面解释了保持重建质量的两个常用正则化术语:</p>
+<h4 id="11521拉普拉斯正则化"><a class="markdownIt-Anchor" href="#11521拉普拉斯正则化"></a> 11.5.2.1拉普拉斯正则化</h4>
+<p>包括(Wang et al. 2018a)在内的一些研究在多个阶段对初始网格进行变形，以推断出精细的3D网格模型。为了防止三维形状过度变形，在每个变形阶段后都使用拉普拉斯正则化。定义为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="normal">Σ</mi><mi>p</mi></msub><mi mathvariant="normal">∥</mi><msubsup><mi>δ</mi><mi>p</mi><mo mathvariant="normal">′</mo></msubsup><mo>−</mo><msub><mi>δ</mi><mi>p</mi></msub><msubsup><mi mathvariant="normal">∥</mi><mn>2</mn><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\Sigma_p\|\delta&#x27;_p-\delta_p\|^2_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.135em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord">Σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∥</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4530000000000003em;margin-left:-0.03785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.1002159999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.03785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord">∥</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>δ</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">\delta_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.03785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>δ</mi><mi>p</mi><mo mathvariant="normal">′</mo></msubsup></mrow><annotation encoding="application/x-tex">\delta&#x27;_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.135em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4530000000000003em;margin-left:-0.03785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>分别为变形阶段前后顶点的拉普拉斯坐标。</p>
+<h4 id="11522-边长度正则化"><a class="markdownIt-Anchor" href="#11522-边长度正则化"></a> 11.5.2.2 边长度正则化</h4>
+<p>这个正则化项防止模型产生不规则的长边。可定义为:<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="normal">Σ</mi><mi>p</mi></msub><msub><mi mathvariant="normal">Σ</mi><mrow><mi>k</mi><mo>∈</mo><mi mathvariant="script">N</mi><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></msub><mi mathvariant="normal">∥</mi><mi>p</mi><mo>−</mo><mi>k</mi><msubsup><mi mathvariant="normal">∥</mi><mn>2</mn><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\Sigma_p\Sigma_{k\in\mathcal{N}(p)}\|p-k\|^2_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1052em;vertical-align:-0.3551999999999999em;"></span><span class="mord"><span class="mord">Σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord">Σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.34480000000000005em;"><span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.14736em;">N</span></span><span class="mopen mtight">(</span><span class="mord mathdefault mtight">p</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3551999999999999em;"><span></span></span></span></span></span></span><span class="mord">∥</span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord"><span class="mord">∥</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span></p>
+<h2 id="116-二维监督损失"><a class="markdownIt-Anchor" href="#116-二维监督损失"></a> 11.6 二维监督损失</h2>
+<p>有损失函数允许训练过程在2D而不是3D中进行监督。这将导致更低的内存和资源消耗，因此可以提高输出分辨率。使用投影算子在某个期望的视点渲染2D图像，并将其与地面真实图像进行比较以测量损失。图像可能是一个轮廓，一个深度图，或两者的组合。然而，对于端到端的训练过程，投影算子必须是可微的。</p>
+<h3 id="1161-剪影丢失"><a class="markdownIt-Anchor" href="#1161-剪影丢失"></a> 11.6.1 剪影丢失</h3>
+<p>该损失函数测量物体的地面真实2D轮廓(G)与推断出的3D形状在所需相机姿态和内在特征§下的投影产生的轮廓§之间的距离。距离函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span></span></span></span>可以是L2损失、Jaccard指数或二元交叉熵。定义如下:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq9.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中n为每个3D模型的剪影数量。</p>
+<h3 id="1162-渲染和比较"><a class="markdownIt-Anchor" href="#1162-渲染和比较"></a> 11.6.2 渲染和比较</h3>
+<p>该损失函数首先由Kundu等人(2018)引入。除了提供二维监管外，它还具有资源效率。它是基于计算预测(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">P_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)和地面真实(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>G</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">G_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)轮廓之间的IoU以及渲染(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">P_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)和地面真实(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>G</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">G_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)深度图之间的L2距离。在数学符号中，它可以描述为:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq10.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>这里，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>代表Jaccard索引(分段IoU)， <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>代表二进制忽略掩码。它被用来屏蔽掉对损失函数的计算没有贡献的像素。</p>
+<h2 id="117-评估指标"><a class="markdownIt-Anchor" href="#117-评估指标"></a> 11.7 评估指标</h2>
+<p>评估指标为我们提供了一个定量的评估，来评估重建算法单独和相互之间的执行情况。对于3D重建任务，最常用的评估指标是体素表示的IoU，以及点云和网格表示的CD和EMD。F1-Score也被认为是评估重建质量的可靠指标。定义为查准率和查全率的调和平均值，可以用数学形式表示为:</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/eq11.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中精度和召回率是根据预测或基本事实中可以在一定阈值内找到最近邻的采样点的百分比计算的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.1132em;">τ</span></span></span></span>。</p>
+<h1 id="12-数据集"><a class="markdownIt-Anchor" href="#12-数据集"></a> 12 数据集</h1>
+<p>表3总结了三维重建领域常用数据集的特点。这些数据集发布于2014年初至2020年。ShapeNet (Chang et al. 2015)是该领域使用最多的数据集，Pix3D (Sun et al. 2018)最近引起了人们的关注。</p>
+<img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table3.png" srcset="/img/loading.gif" lazyload style="zoom:25%;transform:rotate(90deg)">
+<h1 id="13-比较与讨论"><a class="markdownIt-Anchor" href="#13-比较与讨论"></a> 13 比较与讨论</h1>
+<p>正如本研究开始时提到的，传统的3D重建算法需要由校准良好的相机捕获多个姿势图像来推断物体的形状。此外，为了达到可接受的精度，所捕获图像之间的角差必须很小。深度学习算法没有这样的限制。这些算法甚至能够从单个图像进行重建。然而，与存在多个物体的姿势图像的情况相比，精度可能会降低。</p>
+<p>输出表示的类型在三维重建算法中具有重要的作用。它对网络结构、算法性能和应用覆盖率有很大的影响。由于表示取决于应用程序，因此很难确定哪种表示最合适。</p>
+<p>占用网格很容易融入深度学习框架，因为人们可以通过对输入的2D图像的特征执行一组3D卷积操作来生成它们。然而，由于使用3D卷积，它需要很高的资源。因此，重建精度和分辨率可能会降低。同样重要的是要注意，这种表示并不容易使用，需要一些后处理步骤来为实际应用程序做准备。例如，通过预测每个体素的TSDF值，可以很容易地将这种表示转换为基于网格的表示。然而，预测连续的TSDF值比预测二进制值更具挑战性。</p>
+<p>3D形状的另一种表示是点云，与基于体素的表示相比，它需要更少的资源。因此，在一定的资源水平下，重建的精度和质量会更好。点云模型更灵活，可以很容易地变形。另一方面，点云中生成的形状不能直接用于许多应用，需要转换为基于表面的表示。在这种情况下，人们可能更喜欢直接生成基于表面的表示，例如网格。</p>
+<p>基于网格的表示比占用网格占用更少的内存，因为它们只模拟对象的表面。然而，这些表示的主要问题是它们不容易适应深度学习框架。另一个问题是，一些生成的网格模型不是流形的。这妨碍了精确的重建，需要考虑特殊的正则化器或额外的处理步骤。</p>
+<p>隐式神经表征是一种强大的范例，它通过神经网络将信号参数化为连续的、可微的函数。这种新出现的表示可以在不需要任何后处理步骤和不存在自相交网格或非封闭网格等问题的情况下以高分辨率重建对象，大大减少了内存使用。根据定性和定量评估，使用隐式表示的方法已经达到了最先进的性能。然而，它们大多具有很高的推理时间。</p>
+<p>其他表示不像前面的那样常见。例如，在Shin等人(2019)中，研究人员使用多层深度结构来表示3D模型。这种表示实现了高分辨率重建，同时消耗的资源比占用网格少。</p>
+<p>如前所述，使用2D监督训练3D重建模型比3D监督有一些优势，比如资源效率和简单性。然而，需要一个可微分的渲染管道。由于3D到2D的投影会产生歧义，使用2D监督训练的模型在性能上往往会落后于3D监督方法。</p>
+<p>Shin等人(2018)研究了输出表示对3D重建方法泛化的影响。研究表明，与体素表示相比，使用多层深度表示或2.5D草图(深度+分割)的模型可以更好地泛化到来自相同类别的新对象或新类别的未见对象。上述研究还倾向于以观看者为中心的坐标预测物体3D结构的训练模型。值得注意的是，以观察者为中心的坐标表示物体在其原始姿态下的形状，而以物体为中心的坐标表示物体在其规范姿态下的形状。因此，在以物体为中心的预测中，输入图像中物体的不同视图被映射到单个预测中，而在以观众为中心的预测中，模型的任务更加复杂，因为它还必须预测物体的姿态。这就是以观众为中心的预测具有更高泛化性的原因(Shin et al. 2018)。Tatarchenko等人(2019)也建议使用以观众为中心的坐标，并证明为单幅图像3D重建训练的神经网络实际上并没有进行重建，而是进行图像分类。通过评估一组基线识别算法(包括聚类、检索和Oracle最近邻)证明了这一事实。它们表明，这些简单的基线比最先进的方法产生更好的定性和定量结果。他们对所有类和所有对方法的IoU直方图进行了Kolmogorov-Smirnov (Massey Jr 1951)检验，零假设两个分布没有统计学上的显著差异，并发现对于基于深度学习的方法和识别基线，零假设不能被拒绝。这意味着前一种方法在统计上与基线方法无法区分。</p>
+<p>经检讨的工程的利弊载于表4。表5总结了本文所回顾的工作。图24和图25分别在ShapeNet上比较了所审查方法在IoU和CD方面的性能。在图26中，我们比较了所回顾的多视图3D重建方法的缩放能力。虽然Wang等人(2021a)最近提出的多视图3D重建方法比以前的方法显示出稍好的缩放能力，但我们认为，当提供物体的8个以上视图时，特别是当物体结构复杂时，未来的工作仍有更多的改进空间。</p>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig24.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>ShapeNet数据集上不同三维重建算法的mIoU (Chang et al. 2015)。对于IMNet (Chen and Zhang 2019)来说，mIoU只报告了五个种类。M.V、O.C和V.C分别表示多视图输入、以对象为中心和以观众为中心的预测</li>
+</ul>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig25.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>不同三维重建算法在ShapeNet数据集上的平均倒角距离(Chang et al. 2015)。对于DeepSDF, mCD只报告了5个班。M.V、O.C和V.C分别表示多视图输入、以对象为中心和以观看者为中心的预测</li>
+</ul>
+<p><img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/fig26.png" srcset="/img/loading.gif" lazyload alt></p>
+<img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table4.png" srcset="/img/loading.gif" lazyload style="zoom:25%;transform:rotate(90deg)">
+<img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table5.png" srcset="/img/loading.gif" lazyload style="zoom:25%;transform:rotate(90deg)">
+<img src="/2024/02/27/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%843D%E9%87%8D%E5%BB%BA%EF%BC%9A%E7%BB%BC%E8%BF%B0/table6.png" srcset="/img/loading.gif" lazyload style="zoom:25%;transform:rotate(90deg)">
+<h1 id="14-结论及未来研究方向"><a class="markdownIt-Anchor" href="#14-结论及未来研究方向"></a> 14 结论及未来研究方向</h1>
+<p>近年来，基于深度学习的方法在三维重建任务中取得了最先进的成果。同时，正在进行广泛和持续的研究，以提高它们的性能。这些方法比传统方法有很多优点，包括简单，不需要手工制作阶段来获得令人印象深刻的结果。</p>
+<p>不同的输出表示已被用于在深度学习算法中体现3D模型，包括二进制和概率占用网格、点云、基于表面的表示，以及最近的隐式表示。如前所述，输出表示的选择是深刻影响网络结构和重构质量的一个因素。因此，每种表示都有自己的优点和缺点，必须根据应用程序仔细选择。</p>
+<p>现有算法的一个局限性是训练出来的模型不能很好地泛化到不可见的对象类别。针对这个问题提供的解决方案有限，包括以观看者为中心的坐标进行预测以及使用2.5D输出表示。然而，这些解决方案并没有完全解决问题。所以我们认为未来的工作应该解决这个问题。</p>
+<p>在可用训练数据有限的情况下，当需要获得相对较高的泛化时，Few-shot学习似乎有所帮助。例如，研究(Wallace and Hariharan 2019)致力于解决这个问题。</p>
+<p>另一个限制是存在于单视图三维重建的病态任务中。正如我们在前面章节中提到的，基于Tatarchenko等人(2019)的研究结果，单视图重建的深度学习方法更倾向于识别和检索，而不是重建。这个问题可能有三个主要原因。第一个原因是指在规范坐标中预测3D形状，可以通过在以观众为中心的坐标中预测来缓解，Shin等人(2018)对此进行了研究。第二个原因与用于评估和推理模型性能的度量类型有关，在选择IoU或Chamfer距离的情况下，这可能会产生误导。在这里，F-Score可以是一个简单而可靠的指标。它直观地表示正确重建的表面积或点在距离地面真值一定距离内的百分比。造成这种偏差的第三个原因与Tatarchenko等人(2019)所述的训练数据集的组成有关。ShapeNet是该领域最常用的数据集。由于类中的每个对象都与规范参考框架对齐，因此类中的许多形状都是相似的。因此，如果从测试集中选择任意一个形状，那么在训练集中总会有一个非常相似的形状。因此，模型只需要从训练集中检索相似的形状，而不需要重建对象的形状。一个可能的未来工作是通过收集一个以观察者为中心的坐标的全新数据集来缓解数据集问题。此外，根据Tatarchenko等人(2019)的研究结果，单视图重建方法、聚类和检索基线的预测方差也很高。这表明存在过拟合问题，这对深度学习模型来说是不满意的。Pan等人(2020)和Cai等人(2022)研究了gan还可以用来减轻单个图像重建的模糊性。</p>
+<p>在现实世界的任务中，如机器人导航和操作以及3D场景理解，我们需要推断多个物体甚至整个场景的3D结构。然而，目前的研究大多集中在单目标重建上。因此，必须考虑和改进许多方面，包括结果的物理合理性、资源效率和准确性。</p>
+<p>最近，深度学习网络被引入使用隐式神经表示来重建对象。随着这些方法的出现，消除了对高内存资源的需求。然而，优化这些方法通常是耗时且具有挑战性的。因此，我们希望看到更多关于这些算法的不同优化方法的研究，比如(Finn et al. 2017)。在这些方法中，模型无关的元学习用于生成网络参数的初始猜测，以便训练过程花费更少的时间并避免过度拟合。未来研究的另一个值得注意的方向是在训练基于学习的3D重建算法时消除昂贵的3D监督。三维监管需要大量的三维数据，而这些数据到目前为止还很难获得。此外，3D监控计算成本高，消耗大量资源。最近的研究考虑通过开发可微分渲染模块来应用2D监督，该模块允许仅使用2D数据对3D重建方法进行端到端训练，以缓解这一问题。GAN反演过程伴随着一个可微渲染器，有助于开发2D监督3D重建方法。根据Pan等人(2020)的研究结果，可以利用预训练的2D gan中的3D知识来降低单幅图像3D重建任务的不确定性。即使在二维领域，训练gan的收敛问题也一直是一个挑战。</p>
+<h1 id="参考文献"><a class="markdownIt-Anchor" href="#参考文献"></a> 参考文献</h1>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BB%BC%E8%BF%B0%E7%BF%BB%E8%AF%91/" class="category-chain-item">综述翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">#学习笔记</a>
+      
+        <a href="/tags/%E7%BB%BC%E8%BF%B0%E7%BF%BB%E8%AF%91/">#综述翻译</a>
+      
+        <a href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">#三维重建</a>
+      
+        <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">#深度学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基于深度学习的3D重建：综述</div>
+      <div>http://example.com/2024/02/27/基于深度学习的3D重建：综述/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月27日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/02/29/GAMES101_%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80/" title="GAMES101_现代计算机图形学基础">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">GAMES101_现代计算机图形学基础</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/31/%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%9B%BE%E5%83%8F%E6%8B%BC%E6%8E%A5%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="基于单应性矩阵进行图像拼接的技术文档">
+                        <span class="hidden-mobile">基于单应性矩阵进行图像拼接的技术文档</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

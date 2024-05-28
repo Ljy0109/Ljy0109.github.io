@@ -1,0 +1,927 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="以下纪录了我使用CMake期间遇到的各种问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于CMake的一些用法">
+<meta property="og:url" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="以下纪录了我使用CMake期间遇到的各种问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E4%B8%8B%E8%BD%BD.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E9%85%8D%E7%BD%AE1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E9%85%8D%E7%BD%AE2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E7%BC%96%E8%AF%911.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/make2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/make.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/eigen2.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/eigen1.jpg">
+<meta property="og:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/%E8%B0%83%E8%AF%95.jpg">
+<meta property="article:published_time" content="2024-03-06T06:59:00.000Z">
+<meta property="article:modified_time" content="2024-03-12T14:15:20.785Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="CMake">
+<meta property="article:tag" content="VScode">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="环境配置">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E4%B8%8B%E8%BD%BD.jpg">
+  
+  
+  
+  <title>关于CMake的一些用法 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="关于CMake的一些用法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-06 14:59" pubdate>
+          2024年3月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          76 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">关于CMake的一些用法</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="关于cmake的一些用法"><a class="markdownIt-Anchor" href="#关于cmake的一些用法"></a> 关于CMake的一些用法</h1>
+<p>以下纪录了我使用CMake期间遇到的各种问题和基本函数用法</p>
+<h1 id="1-在vscode中使用cmake"><a class="markdownIt-Anchor" href="#1-在vscode中使用cmake"></a> 1 在VScode中使用CMake</h1>
+<h2 id="安装cmake"><a class="markdownIt-Anchor" href="#安装cmake"></a> 安装CMake</h2>
+<blockquote>
+<p>下载链接：<a target="_blank" rel="noopener" href="https://cmake.org/download/">Download CMake</a></p>
+</blockquote>
+<p>尽量选择Latest Release版本，比较稳定。<br>
+如图中红框所示，下载后缀为.msi的安装文件，然后直接安装。</p>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E4%B8%8B%E8%BD%BD.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>验证安装成功：<code>cmake --version</code></p>
+<h2 id="安装mingw"><a class="markdownIt-Anchor" href="#安装mingw"></a> 安装MinGW</h2>
+<p><a target="_blank" rel="noopener" href="https://ljy0109.github.io/2024/03/05/VScode%E7%9A%84C++%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">VScode的C++环境配置 - Blog of Mr.Juan (ljy0109.github.io)</a></p>
+<h2 id="vscode中配置cmake"><a class="markdownIt-Anchor" href="#vscode中配置cmake"></a> VSCode中配置CMake</h2>
+<p>选择编译工具链</p>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E9%85%8D%E7%BD%AE1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E9%85%8D%E7%BD%AE2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="使用cmake编译"><a class="markdownIt-Anchor" href="#使用cmake编译"></a> 使用CMake编译</h2>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/CMake%E7%BC%96%E8%AF%911.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="2-make命令无法识别"><a class="markdownIt-Anchor" href="#2-make命令无法识别"></a> 2 make命令无法识别</h1>
+<blockquote>
+<p>make : 无法将“make”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。请检查名称的拼写，如果包   括路径，请确保路径正确，然后再试一次。</p>
+</blockquote>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/make2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>这是因为<code>make</code>命令实际上是调用<code>mingw64/bin</code>文件夹中的<code>mingw32-make.exe</code>文件。无法识别的原因是命令必须与文件名一致。</p>
+<p>解决方法：复制一份<code>mingw32-make.exe</code>文件，并重命名为<code>make.exe</code></p>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/make.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="3-eigen3eigencore-no-such-file-or-directory"><a class="markdownIt-Anchor" href="#3-eigen3eigencore-no-such-file-or-directory"></a> 3 eigen3/Eigen/Core: No such file or directory</h1>
+<blockquote>
+<p>下载链接：<a target="_blank" rel="noopener" href="https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a></p>
+</blockquote>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/eigen2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gradle">fatal error: eigen3<span class="hljs-regexp">/Eigen/</span>Core: <br>No such <span class="hljs-keyword">file</span> or directory<br>    <span class="hljs-number">2</span> | #<span class="hljs-keyword">include</span>&lt;eigen3<span class="hljs-regexp">/Eigen/</span>Core&gt;<br>      |         ^~~~~~~~~~~~~~~~~~~<br></code></pre></td></tr></table></figure>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/eigen1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>这个问题出在项目的<code>CMakeLists.txt</code>文件编写中。具体原因是包含eigen3库的路径有问题。</p>
+<p>eigen3没有库，只有头文件，所以cmake只需要include头文件的路径就好了。</p>
+<p><strong>错误示范</strong>：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.5</span>.<span class="hljs-number">0</span>)<br><span class="hljs-keyword">project</span>(Transformation)<br><br><span class="hljs-comment"># 设置 Eigen3 库的路径</span><br><span class="hljs-keyword">set</span>(EIGEN3_INCLUDE_DIR <span class="hljs-string">&quot;E:/Code/VSCode/library/eigen3&quot;</span>)<br><br><span class="hljs-comment"># 添加 Eigen3 库的头文件目录到项目的头文件搜索路径中</span><br><span class="hljs-keyword">include_directories</span>(EIGEN3_INCLUDE_DIR)<br><span class="hljs-comment"># 添加项目的源文件</span><br><span class="hljs-keyword">add_executable</span>(Transformation main.cpp)<br></code></pre></td></tr></table></figure>
+<p><strong>正确示范</strong>：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.5</span>.<span class="hljs-number">0</span>)<br><span class="hljs-keyword">project</span>(Transformation)<br><br><span class="hljs-comment"># 设置 Eigen3 库的路径</span><br><span class="hljs-keyword">set</span>(EIGEN3_INCLUDE_DIR <span class="hljs-string">&quot;E:/Code/VSCode/library&quot;</span>)<br><br><span class="hljs-comment"># 添加 Eigen3 库的头文件目录到项目的头文件搜索路径中</span><br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;EIGEN3_INCLUDE_DIR&#125;</span>)<br><span class="hljs-comment"># 添加项目的源文件</span><br><span class="hljs-keyword">add_executable</span>(Transformation main.cpp)<br></code></pre></td></tr></table></figure>
+<p>上述错误示范中有两处错误：</p>
+<ul>
+<li>
+<p>路径错误。观测.cpp文件中include头文件的路径：<code>#include&lt;eigen3/Eigen/Core&gt;</code>。所以在<code>CMakeLists.txt</code>文件包含库时，不需要精确到目标库所在的那个文件夹。</p>
+<ul>
+<li>举个例子：eigen3库所在路径<code>E:/Code/VSCode/library/eigen3</code>，文件夹<code>eigen3</code>存放eigen3库，文件夹<code>eigen3</code>在文件夹<code>library</code>内。那么在<code>CMakeLists.txt</code>包含时，只用指定到文件夹<code>library</code>就行了。<code>#include&lt;eigen3/Eigen/Core&gt;</code>命令会接着文件夹<code>library</code>向后搜索</li>
+</ul>
+</li>
+<li>
+<p><code>include_directories()</code>错误。在 CMake 中，<code>include_directories()</code> 函数用于将指定的目录添加到项目的头文件搜索路径中。但是，<code>include_directories()</code> 函数需要传递一个有效的目录路径作为参数。在这种情况下，<code>EIGEN3_INCLUDE_DIR</code> 是一个变量，存储了 Eigen3 库的头文件目录路径。</p>
+<p>现在来看一下这两种用法的区别：</p>
+<ol>
+<li><code>include_directories($&#123;EIGEN3_INCLUDE_DIR&#125;)</code>：这是正确的用法。<code>$&#123;EIGEN3_INCLUDE_DIR&#125;</code> 是一个变量，用于存储 Eigen3 库的头文件目录路径。通过使用 <code>$&#123;EIGEN3_INCLUDE_DIR&#125;</code>，可以将该变量的值（即 Eigen3 库的头文件目录路径）传递给 <code>include_directories()</code> 函数，从而将 Eigen3 库的头文件目录添加到项目的头文件搜索路径中。</li>
+<li><code>include_directories(EIGEN3_INCLUDE_DIR)</code>：这是错误的用法。在这种情况下，<code>EIGEN3_INCLUDE_DIR</code> 并不是一个变量，而是一个字符串。因此，传递给 <code>include_directories()</code> 函数的参数实际上是一个字符串 <code>&quot;EIGEN3_INCLUDE_DIR&quot;</code>，而不是变量 <code>EIGEN3_INCLUDE_DIR</code> 的值。这样做会导致编译器无法正确解析路径，因为它实际上会在搜索路径中添加一个名为 <code>&quot;EIGEN3_INCLUDE_DIR&quot;</code> 的字符串，而不是指定的实际路径。</li>
+</ol>
+<p>因此，正确的做法是使用 <code>$&#123;EIGEN3_INCLUDE_DIR&#125;</code>，而不是直接使用字符串 <code>&quot;EIGEN3_INCLUDE_DIR&quot;</code>。这样可以确保将变量的值传递给 <code>include_directories()</code> 函数，从而正确地将 Eigen3 库的头文件目录添加到项目的头文件搜索路径中。</p>
+</li>
+</ul>
+<h1 id="4-在vscode中调试cmake的程序"><a class="markdownIt-Anchor" href="#4-在vscode中调试cmake的程序"></a> 4 在VScode中调试CMake的程序</h1>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/blank_koko/article/details/123158106">vscode下cmake工程环境配置以及调试配置(c++)_vscode cmake 调试-CSDN博客</a></p>
+<p>在VScode中的运行与调试区域点击链接生成launch.json文件。</p>
+<p><img src="/2024/03/06/%E5%85%B3%E4%BA%8ECMake%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/%E8%B0%83%E8%AF%95.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>将生成的launch.json文件按照下列代码更改即可进行程序调试。需要安装cmake Tool插件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs awk">&#123;<br>    <span class="hljs-string">&quot;version&quot;</span>: <span class="hljs-string">&quot;0.2.0&quot;</span>,<br>    <span class="hljs-string">&quot;configurations&quot;</span>: [<br>        &#123;<br>            <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;g++.exe&quot;</span>,<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;cppdbg&quot;</span>, <br>            <span class="hljs-string">&quot;request&quot;</span>: <span class="hljs-string">&quot;launch&quot;</span>,<br>            <span class="hljs-regexp">//</span><span class="hljs-string">&quot;program&quot;</span>: <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/build/$&#123;fileBasenameNoExtension&#125;.exe&quot;</span>,<span class="hljs-regexp">//</span><span class="hljs-variable">$&#123;fileBasenameNoExtension&#125;</span><br>            <span class="hljs-string">&quot;program&quot;</span>: <span class="hljs-string">&quot;$&#123;command:cmake.launchTargetPath&#125;&quot;</span>, <span class="hljs-regexp">//</span><span class="hljs-variable">$&#123;fileBasenameNoExtension&#125;</span><br>            <span class="hljs-regexp">//</span>如果用上面这条program的设置，可以一键调试，需要注释preLaunchTask同时可以不需要编写tasks.json，需要安装cmake Tool插件<br>            <span class="hljs-string">&quot;args&quot;</span>: [],<br>            <span class="hljs-string">&quot;stopAtEntry&quot;</span>: false,<br>            <span class="hljs-string">&quot;cwd&quot;</span>: <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;&quot;</span>,<br>            <span class="hljs-string">&quot;environment&quot;</span>: [],<br>            <span class="hljs-string">&quot;externalConsole&quot;</span>: true,<span class="hljs-regexp">//</span>是否有黑框框<br>            <span class="hljs-string">&quot;MIMode&quot;</span>: <span class="hljs-string">&quot;gdb&quot;</span>,  <br>            <span class="hljs-string">&quot;miDebuggerPath&quot;</span>: <span class="hljs-string">&quot;F:/MinGW64/bin/gdb.exe&quot;</span>, <span class="hljs-regexp">//</span>调试器地址<br>            <span class="hljs-regexp">//</span><span class="hljs-string">&quot;preLaunchTask&quot;</span>: <span class="hljs-string">&quot;Build&quot;</span> <span class="hljs-regexp">//</span>预编译，调用tasks.json,与tasks.json里面的label一致<br>            <span class="hljs-string">&quot;setupCommands&quot;</span>: [<br>                &#123;<br>                     <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;为 gdb 启用整齐打印&quot;</span>,<br>                    <span class="hljs-string">&quot;text&quot;</span>: <span class="hljs-string">&quot;-enable-pretty-printing&quot;</span>,<br>                    <span class="hljs-string">&quot;ignoreFailures&quot;</span>: true<br>                &#125;,<br>                &#123;<br>                    <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;将反汇编风格设置为 Intel&quot;</span>,<br>                    <span class="hljs-string">&quot;text&quot;</span>: <span class="hljs-string">&quot;-gdb-set disassembly-flavor intel&quot;</span>,<br>                    <span class="hljs-string">&quot;ignoreFailures&quot;</span>: true<br>                &#125;<br>            ]<br><br>        &#125;<br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="5-undefined-reference-to-omp_get_thread_num"><a class="markdownIt-Anchor" href="#5-undefined-reference-to-omp_get_thread_num"></a> 5 <code>undefined reference to 'omp_get_thread_num'</code></h1>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/LimitOut/article/details/103550868">undefined reference to <code>omp_get_thread_num'_undefined reference to</code>omp_set_num_threads-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://wenku.csdn.net/answer/824d92430524477183e5e9e83019ea93">undefined reference to ‘omp_set_num_threads’ - CSDN文库</a></p>
+<p>错误表示：编译器无法找到OpenMP库中的函数 <code>omp_get_thread_num</code></p>
+<p>需要修改CMakeLists.txt 文件，增加：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">FIND_PACKAGE</span>( OpenMP REQUIRED)<br><span class="hljs-keyword">if</span>(OPENMP_FOUND)<br>    <span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;OPENMP FOUND&quot;</span>)<br>    <span class="hljs-keyword">set</span>(CMAKE_C_FLAGS <span class="hljs-string">&quot;$&#123;CMAKE_C_FLAGS&#125; $&#123;OpenMP_C_FLAGS&#125;&quot;</span>)<br>    <span class="hljs-keyword">set</span>(CMAKE_CXX_FLAGS <span class="hljs-string">&quot;$&#123;CMAKE_CXX_FLAGS&#125; $&#123;OpenMP_CXX_FLAGS&#125;&quot;</span>)<br><span class="hljs-keyword">endif</span>()<br></code></pre></td></tr></table></figure>
+<h1 id="基本函数用法"><a class="markdownIt-Anchor" href="#基本函数用法"></a> 基本函数用法</h1>
+<h2 id="cmakeliststxt的基本组成部分"><a class="markdownIt-Anchor" href="#cmakeliststxt的基本组成部分"></a> <code>CMakeLists.txt</code>的基本组成部分</h2>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.10</span>) <span class="hljs-comment"># cmake最低版本要求</span><br><span class="hljs-keyword">project</span>(Rasterizer) <span class="hljs-comment"># 项目名称</span><br><br><span class="hljs-keyword">find_package</span>(OpenCV REQUIRED) <span class="hljs-comment"># 查找并加载特点库</span><br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">17</span>) <span class="hljs-comment"># 变量赋值</span><br><br><span class="hljs-keyword">include_directories</span>(/usr/local/<span class="hljs-keyword">include</span>) <span class="hljs-comment"># 添加包含目录</span><br><br><span class="hljs-keyword">add_executable</span>(Rasterizer main.cpp rasterizer.hpp rasterizer.cpp Triangle.hpp Triangle.cpp) <span class="hljs-comment"># 生成执行文件</span><br><span class="hljs-keyword">target_link_libraries</span>(Rasterizer <span class="hljs-variable">$&#123;OpenCV_LIBRARIES&#125;</span>) <span class="hljs-comment"># 链接库</span><br></code></pre></td></tr></table></figure>
+<h2 id="set"><a class="markdownIt-Anchor" href="#set"></a> <code>set()</code></h2>
+<p><code>set()</code> 是 CMake 中用于设置变量的命令。它可以用于创建新变量、修改已存在变量的值，以及执行其他与变量相关的操作。</p>
+<p>基本语法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(variable value)<br></code></pre></td></tr></table></figure>
+<p>其中 <code>variable</code> 是要设置的变量的名称，<code>value</code> 是要给变量赋予的值。<code>value</code> 可以是一个字符串、一个列表，也可以是其他 CMake 支持的数据类型。</p>
+<p>示例：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(MY_VARIABLE <span class="hljs-string">&quot;Hello, world!&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>这行代码将一个名为 <code>MY_VARIABLE</code> 的变量设置为字符串 <code>&quot;Hello, world!&quot;</code>。</p>
+<p>如果要设置的值包含空格或其他特殊字符，可以将值放在引号中以避免意外解析错误。</p>
+<p>另外，<code>set()</code> 命令还可以用于执行其他操作，例如向列表变量添加元素、从环境变量中获取值等。以下是一些示例：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(SOURCES main.cpp functions.cpp)  <span class="hljs-comment"># 创建列表变量</span><br><span class="hljs-keyword">set</span>(ENV_VAR $ENV&#123;MY_ENVIRONMENT_VARIABLE&#125;)  <span class="hljs-comment"># 从环境变量中获取值</span><br></code></pre></td></tr></table></figure>
+<p>在 CMake 中，变量的作用域是全局的，因此可以在项目的任何位置访问和修改变量。但是，建议将变量的作用域限制在最小范围内，以避免潜在的命名冲突和混乱。</p>
+<h2 id="find_package"><a class="markdownIt-Anchor" href="#find_package"></a> <code>find_package()</code></h2>
+<p><code>find_package()</code> 是 CMake 中用于查找并加载特定软件包的模块的命令。它用于在系统中查找指定软件包的安装位置，并将其包含路径、库文件路径等信息导入到 CMake 构建系统中，以便于后续的项目构建和链接。</p>
+<p>基本语法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">find_package</span>(package_name [version] [EXACT] [QUIET] [REQUIRED]<br>             [[COMPONENTS] [components...]]<br>             [OPTIONAL_COMPONENTS components...]<br>             [NO_POLICY_SCOPE])<br></code></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><code>package_name</code> 是要查找的软件包的名称。</li>
+<li><code>version</code> 是可选的，用于指定软件包的版本。</li>
+<li><code>EXACT</code> 表示要求查找到的软件包版本必须与指定的版本完全匹配。</li>
+<li><code>QUIET</code> 表示即使未找到软件包也不会产生错误。</li>
+<li><code>REQUIRED</code> 表示必须找到指定的软件包，否则将产生错误。</li>
+<li><code>COMPONENTS</code> 用于指定要查找的特定组件或模块。</li>
+<li><code>OPTIONAL_COMPONENTS</code> 用于指定可选的组件。</li>
+<li><code>NO_POLICY_SCOPE</code> 表示在查找软件包时不要修改全局策略。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">find_package</span>(OpenCV REQUIRED)<br></code></pre></td></tr></table></figure>
+<p>这行代码用于查找并加载 OpenCV 软件包，并将其相关信息导入到 CMake 构建系统中。在这个示例中，<code>REQUIRED</code> 表示必须找到 OpenCV 软件包，否则会产生错误。</p>
+<p><code>find_package()</code> 命令通常与 <code>include_directories()</code>、<code>target_link_libraries()</code> 等命令一起使用，以便于在项目中使用找到的软件包。例如：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;OpenCV_INCLUDE_DIRS&#125;</span>)<br><span class="hljs-keyword">target_link_libraries</span>(my_program <span class="hljs-variable">$&#123;OpenCV_LIBS&#125;</span>)<br></code></pre></td></tr></table></figure>
+<p>这样可以将 OpenCV 软件包的包含路径和库文件链接到项目中。</p>
+<h2 id="include_directories"><a class="markdownIt-Anchor" href="#include_directories"></a> <code>include_directories()</code></h2>
+<p><code>include_directories</code> 是 CMake 中用于添加包含目录的命令。它用于将指定目录添加到编译器的包含路径中，以便编译器可以找到并包含这些目录中的头文件。</p>
+<p>基本语法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">include_directories</span>(directory1 directory2 ...)<br></code></pre></td></tr></table></figure>
+<p>其中 <code>directory1 directory2 ...</code> 是您要添加到包含路径的目录列表。</p>
+<p>示例：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">include_directories</span>(<span class="hljs-keyword">include</span>)<br><span class="hljs-keyword">include_directories</span>(src)<br></code></pre></td></tr></table></figure>
+<p>这些命令将 <code>include</code> 和 <code>src</code> 目录添加到编译器的包含路径中。这样，在编译时，编译器就可以在这些目录中找到头文件，并将它们包含到源代码中。</p>
+<p>需要注意的是，<code>include_directories</code> 命令会将指定的目录添加到所有目标的包含路径中，包括通过 <code>add_executable</code> 或 <code>add_library</code> 定义的可执行文件和库文件。如果您只想为特定目标添加包含路径，可以使用 <code>target_include_directories</code> 命令。</p>
+<h2 id="引用变量"><a class="markdownIt-Anchor" href="#引用变量"></a> 引用变量<code>$&#123;&#125;</code></h2>
+<p>在 CMake 中，<code>$&#123;&#125;</code> 是用于引用变量的语法。它允许您在 CMake 脚本中引用变量的值，并将其插入到代码中。</p>
+<p>基本用法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-variable">$&#123;variable_name&#125;</span><br></code></pre></td></tr></table></figure>
+<p>其中 <code>variable_name</code> 是您要引用的变量的名称。<code>$&#123;&#125;</code> 语法将被替换为变量的实际值。</p>
+<p>示例：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(MY_VARIABLE <span class="hljs-string">&quot;Hello, world!&quot;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;$&#123;MY_VARIABLE&#125;&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>在这个示例中，<code>$&#123;MY_VARIABLE&#125;</code> 被替换为变量 <code>MY_VARIABLE</code> 的值，即 <code>&quot;Hello, world!&quot;</code>。<code>message()</code> 函数会将该值打印到 CMake 输出中。</p>
+<p><code>$&#123;&#125;</code> 语法还允许进行一些高级操作，例如字符串连接、数学运算、路径操作等。以下是一些常见的用法：</p>
+<ul>
+<li>
+<p>字符串连接：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(STRING1 <span class="hljs-string">&quot;Hello&quot;</span>)<br><span class="hljs-keyword">set</span>(STRING2 <span class="hljs-string">&quot;world!&quot;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;$&#123;STRING1&#125;, $&#123;STRING2&#125;&quot;</span>)<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>数学运算：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(NUMBER1 <span class="hljs-number">10</span>)<br><span class="hljs-keyword">set</span>(NUMBER2 <span class="hljs-number">20</span>)<br><span class="hljs-keyword">math</span>(EXPR RESULT <span class="hljs-string">&quot;$&#123;NUMBER1&#125; + $&#123;NUMBER2&#125;&quot;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;The result is $&#123;RESULT&#125;&quot;</span>)<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>路径操作：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(PATH <span class="hljs-string">&quot;/usr/local/include&quot;</span>)<br><span class="hljs-keyword">get_filename_component</span>(DIRECTORY_NAME <span class="hljs-string">&quot;$&#123;PATH&#125;&quot;</span> DIRECTORY)<br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;The directory name is $&#123;DIRECTORY_NAME&#125;&quot;</span>)<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="add_executable"><a class="markdownIt-Anchor" href="#add_executable"></a> <code>add_executable()</code></h2>
+<p><code>add_executable</code> 是 CMake 中用于定义可执行文件的命令。它的作用是将源文件编译成一个可执行文件。</p>
+<p>基本语法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_executable</span>(target_name source1.cpp source2.cpp ...)<br></code></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><code>target_name</code> 是要生成的可执行文件的名称。</li>
+<li><code>source1.cpp source2.cpp ...</code> 是要编译的源文件列表。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_executable</span>(my_program main.cpp functions.cpp)<br></code></pre></td></tr></table></figure>
+<p>这行命令会将 <code>main.cpp</code> 和 <code>functions.cpp</code> 这两个源文件编译成一个名为 <code>my_program</code> 的可执行文件。</p>
+<p>还可以使用变量来指定源文件列表，例如：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(SOURCES main.cpp functions.cpp)<br><span class="hljs-keyword">add_executable</span>(my_program <span class="hljs-variable">$&#123;SOURCES&#125;</span>)<br></code></pre></td></tr></table></figure>
+<h2 id="target_link_libraries"><a class="markdownIt-Anchor" href="#target_link_libraries"></a> <code>target_link_libraries()</code></h2>
+<p><code>target_link_libraries</code> 是 CMake 中用于将目标（例如可执行文件或库）与特定的库文件链接起来的命令。它的作用是将指定的库文件与目标进行链接，使得目标可以使用这些库中提供的函数和功能。</p>
+<p>基本语法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">target_link_libraries</span>(target_name library1 library2 ...)<br></code></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><code>target_name</code> 是要链接库的目标的名称，通常是通过 <code>add_executable</code> 或 <code>add_library</code> 命令定义的。</li>
+<li><code>library1 library2 ...</code> 是要链接的库文件的名称，可以是库文件的名称（例如 <code>mylib</code>）或者是完整的路径（例如 <code>/path/to/mylib.lib</code>）。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">target_link_libraries</span>(my_program my_lib)<br></code></pre></td></tr></table></figure>
+<p>这行命令会将名为 <code>my_lib</code> 的库文件链接到 <code>my_program</code> 可执行文件中。</p>
+<p>可以链接多个库文件，例如：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">target_link_libraries</span>(my_program my_lib1 my_lib2)<br></code></pre></td></tr></table></figure>
+<p>这样可以将多个库文件链接到同一个目标中。</p>
+<p>另外，还可以链接系统提供的库，例如：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">target_link_libraries</span>(my_program pthread)<br></code></pre></td></tr></table></figure>
+<p>这行命令会链接 POSIX 线程库（pthread）到 <code>my_program</code> 可执行文件中，使得 <code>my_program</code> 可以使用 POSIX 线程库中提供的函数和功能。</p>
+<h3 id="动态链接与静态链接"><a class="markdownIt-Anchor" href="#动态链接与静态链接"></a> 动态链接与静态链接</h3>
+<p><code>target_link_libraries</code> 可以用于进行静态链接或动态链接，具体取决于所链接的库文件是静态库还是动态库。</p>
+<ul>
+<li><strong>静态链接：</strong> 如果链接的是静态库文件（<code>.a</code> 或 <code>.lib</code>），则会进行静态链接。在静态链接时，库文件的内容会被复制到最终生成的可执行文件中，因此可执行文件独立于外部库文件。</li>
+<li><strong>动态链接：</strong> 如果链接的是动态库文件（<code>.so</code> 或 <code>.dll</code>），则会进行动态链接。在动态链接时，可执行文件会保留对动态库的引用，而实际的库文件会在运行时加载到内存中。因此，动态链接库文件通常不会包含在最终的可执行文件中。</li>
+</ul>
+<p>默认情况下，CMake 会自动根据库文件的后缀来判断是静态链接还是动态链接。例如，<code>.a</code> 或 <code>.lib</code> 后缀的库文件通常被视为静态库，<code>.so</code> 或 <code>.dll</code> 后缀的库文件通常被视为动态库。也可以通过显式指定 <code>STATIC</code> 或 <code>SHARED</code> 参数来指定链接类型，例如：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">target_link_libraries</span>(my_program PRIVATE my_static_lib)  <span class="hljs-comment"># 静态链接</span><br><span class="hljs-keyword">target_link_libraries</span>(my_program PRIVATE my_shared_lib)  <span class="hljs-comment"># 动态链接</span><br></code></pre></td></tr></table></figure>
+<p>在上述示例中，<code>PRIVATE</code> 关键字用于指定链接的范围，<code>my_static_lib</code> 和 <code>my_shared_lib</code> 分别是静态库和动态库的名称。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%99%E7%A8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CMake/">#CMake</a>
+      
+        <a href="/tags/VScode/">#VScode</a>
+      
+        <a href="/tags/C/">#C++</a>
+      
+        <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">#环境配置</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>关于CMake的一些用法</div>
+      <div>http://example.com/2024/03/06/关于CMake的一些用法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月6日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/06/VScode+CMake+Opencv%E9%85%8D%E7%BD%AE/" title="VScode+CMake+Opencv配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">VScode+CMake+Opencv配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/05/VScode%E7%9A%84C++%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" title="VScode的C++环境配置">
+                        <span class="hidden-mobile">VScode的C++环境配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

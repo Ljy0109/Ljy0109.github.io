@@ -1,0 +1,910 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="（2022）使用局部放射变换衡量邻域一致性，根据SIFT检测出的局部仿射帧计算局部放射变化函数，使用置信距离比策略来寻找内点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPLV：一种基于帧的鲁棒对应概率局部验证方法">
+<meta property="og:url" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="（2022）使用局部放射变换衡量邻域一致性，根据SIFT检测出的局部仿射帧计算局部放射变化函数，使用置信距离比策略来寻找内点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/title.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic1.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form1.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form2.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form3.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form4.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form5.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form6.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form7.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form8.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic2.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form9.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form10.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic3.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic4.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form12-13.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form14.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form15.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/alg1.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/table1.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic5.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form16.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form17.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic6.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/table2.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic7.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/table3.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic8.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic9.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic10.png">
+<meta property="og:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic11.png">
+<meta property="article:published_time" content="2022-09-09T14:12:00.000Z">
+<meta property="article:modified_time" content="2024-02-27T07:27:14.966Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="邻域拓扑一致">
+<meta property="article:tag" content="IPLV">
+<meta property="article:tag" content="特征匹配">
+<meta property="article:tag" content="论文翻译">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/title.png">
+  
+  
+  
+  <title>IPLV：一种基于帧的鲁棒对应概率局部验证方法 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="IPLV：一种基于帧的鲁棒对应概率局部验证方法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-09 22:12" pubdate>
+          2022年9月9日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          122 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">IPLV：一种基于帧的鲁棒对应概率局部验证方法</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/title.png" srcset="/img/loading.gif" lazyload alt="title"></p>
+<h1 id="iplv一种基于帧的鲁棒对应概率局部验证方法2022"><a class="markdownIt-Anchor" href="#iplv一种基于帧的鲁棒对应概率局部验证方法2022"></a> IPLV：一种基于帧的鲁棒对应概率局部验证方法（2022）</h1>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要：</h1>
+<p>在两组特征之间建立可靠的特征对应关系是图像处理中的一项基本任务。在本文中，我们提出了一种新的概率局部验证方法来拒绝错误的特征匹配。我们利用<strong>局部仿射框架来计算重投影误差</strong>，并开发一种新的概率模型来根据误差估计对应置信度。通过基于两层混合模型计算后验概率来评估对应置信度。可以通过交替最大化和更新第二个下界函数来自适应地估计所提出方法的关键参数。我们还建议相邻的内部邻居是好邻居，从而提出了一种置信距离比策略来平衡内部置信度和空间距离。我们的方法在无人机定位任务的成功率上比其他最先进的方法大多超过十个百分点，在多个公共测试数据集上的 F-measure 上超过六个百分点。该代码可在 <a target="_blank" rel="noopener" href="https://github.com/shenliang16/Iterative-Probabilistic-local-Verification">https://github.com/shenliang16/Iterative-Probabilistic-local-Verification</a> 获得。</p>
+<p>关键词：位置保持匹配、 鲁棒特征对应、 异常值剔除、 失配去除、 无人机定位、 基于图像的定位、 特征匹配</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1. 引言</h1>
+<p>匹配给定场景的两个或多个视图是图像处理任务中的一个基本问题，例如图像配准和基于图像的定位。该任务的第一个解决方案是使用基于区域的方法 (Ma et al., 2021a, 2015)，例如互相关，来计算相似度以找到最相似的对应关系。该解决方案通常对成像条件和几何变形敏感，并且计算成本高（Ma et al., 2021a）。为了解决这些问题，**基于特征的匹配（FBM）**得到了广泛的研究，旨在建立从图像中检测到的两组局部特征之间的可靠特征对应关系。 FBM 方法通常包括两个连续的步骤——特征检测和特征匹配。1 前者从图像中提取显着特征，后者在两个特征集之间进行匹配以建立对应关系。在特征检测中，最著名的方法可能是 SIFT (Lowe, 2004)。它包括DoG检测器和SIFT描述符，是尺度和旋转不变的。 SIFT 的一个流行替代方案是 SURF (Bay et al., 2006)，它使用 Haar 小波的响应来加速 SIFT 算子。在实时应用中（MurArtal et al., 2015），FAST 和 ORB 被更普遍地使用，它们通常比 SIFT 快几个数量级。</p>
+<p>近年来，基于深度学习的检测器和描述符变得越来越流行。 2017 年，田等人提出了 L2-Net (Tian et al., 2017)，它使用渐进式采样策略优化了基于欧几里德距离的损失函数。 HardNet (Mishchuk et al., 2017) 使用铰链三元组损失优于 L2-Net，这在比较研究中被证明是最先进的 (Jin et al., 2020)。 HesAffNet (Mishkin et al., 2018) 可以学习局部仿射协变区域，以解决视点变化的鲁棒性。其他流行的基于学习的检测器包括 D2-Net (Dusmanu et al., 2019)、R2D2 (Revaud et al., 2019)、SOSNet (Tian et al., 2019) 和 ContextDesc (Luo et al., 2019)。在这些方法中，DeTone 等人（2018）提出了超点自发表以来受到广泛关注，实现了检测器的自监督训练。与著名的强力胶结合使用时，它显示出非常有前途的性能（Sarlin 等人，2020）。此外，最近变压器也被用于这项任务（Jiang et al., 2021; Sun et al., 2021）。</p>
+<p>特征检测之后，问题就变成了如何匹配特征并验证对应关系。有多种方法可以解决这个问题（Wang 等人，2014；Jiang 等人，2019a；Sarlin 等人，2020；Jiang 等人，2021），其中最常见的解决方案可能是使用两个-step 框架（Ma et al., 2018b; Bian et al., 2005; Ma et al., 2014; Lin et al., 2018; Ma et al., 2019, 2015）。在两步框架中，第一步是通过计算特征相似度来建立假定的对应关系。由于图像变换和重复模式，假定的对应集不可避免地包含许多错误匹配，即异常值。要解决此问题，需要进行不匹配消除的后处理。</p>
+<p>错配去除 (Ma et al., 2013)，也称为异常检测 (Cavalli et al., 2020) 和对应选择 (Zhao et al., 2020)，是指去除错误匹配并保留正确匹配，即内点，在假定的对应集中。该任务的一个基本方法是比率测试 (Lowe, 2004)。它认为可靠的对应关系应该比第二近的对应具有明显更近的描述符距离 (Lowe, 2004)。比率测试方法虽然简单高效，但缺乏鲁棒性，仅用作粗略的预处理技术（Lin et al., 2014; Ma et al., 2018a）。为了进一步提高鲁棒性，通常需要检查假定对应的几何一致性。 RANSAC (Fischler, 1981) 是该任务中最具代表性的一种，它假设某个全局变换模型并重复估计模型参数以拒绝高重投影误差的匹配。最近，邻域共识因其简单和高效而受到广泛关注（Bian et al., 2019b, 2005; Ma et al., 2018b）。这些方法在许多任务中都表现出了最先进的性能，例如图像配准（Ma et al., 2018a）、基本矩阵估计（Bian et al., 2019b）和宽基线匹配挑战（Cavalli et al., 2019）。 , 2020)。然而，当存在大规模几何变换或严重异常值时，邻域共识通常难以衡量。同时，当前许多邻域共识方法都非常依赖于经验参数设置，例如 LPM (Ma et al., 2018b)、GLPM (Ma et al., 2018a)、LGSC (Jiang et al., 2022)、mTopKRP (姜等人，2019b)。为了解决这些问题，本文提出了一种自适应且鲁棒的邻域共识方法来消除不匹配。我们利用局部仿射框架、描述符相似性和空间距离来有效地验证假定对应关系的局部一致性。所提出的方法的亮点是：</p>
+<ul>
+<li>
+<p>我们提出了一种概率局部验证方法来衡量邻域共识。该方法具有很强的适应性，因为可以在没有经验设置的情况下估计关键参数。</p>
+</li>
+<li>
+<p>利用自由的局部仿射框架信息来测量邻域一致性，使该方法对几何变换具有鲁棒性。这种开发也提高了适应性，因为由于局部仿射框架的仿射不变性，不需要经验多尺度过程。</p>
+</li>
+<li>
+<p>我们建议相邻的内部邻居是好邻居，并提出了一种置信距离比策略来平衡空间相关性和正确的置信度。</p>
+</li>
+</ul>
+<p>所提出的方法明显优于许多最先进的方法，如 LPM、GMS-SR、OA-net 和 AdaLAM，尤其是在基于图像的无人机定位任务方面。该提议对大规模几何变换和初始参数设置也非常稳健。该代码可在 <a target="_blank" rel="noopener" href="https://github.com/shenl">https://github.com/shenl</a> iang16/Iterative-Probabilistic-local-Verification 获得。</p>
+<h1 id="2-相关工作及准备工作"><a class="markdownIt-Anchor" href="#2-相关工作及准备工作"></a> 2. 相关工作及准备工作</h1>
+<h2 id="21-相关工作"><a class="markdownIt-Anchor" href="#21-相关工作"></a> 2.1 相关工作</h2>
+<p>在本节中，我们将回顾错配消除的相关方法。相关方法可分为参数和非参数两种。参数方法搜索由参数几何模型定义的一致对应关系。代表性的参数化方法包括著名的随机抽样共识 (RANSAC) (Fischler, 1981) 及其变体 — 渐进抽样共识 (PROSAC) (Chum 和 Matas, 2005)、极值抽样共识 (EVSAC) (Fragoso et al., 2013) ，随机样本共识的通用框架 (Raguram et al., 2013)、LO-RANSAC (Chum et al., 2003) 和 MAGSAC (Barath et al., 2019)。 RANSAC 不断选择一些随机样本来计算试验全局变换，并通过计算具有低拟合误差的对应数量来评估试验全局变换。然后根据最佳全局变换下的拟合误差去除不匹配。 PROSAC 采用加权抽样策略而不是随机抽样来确定样本。高有希望的对应关系更有可能被选择，从而提高了效率。 EVSAC 使用极值理论来加速假设的产生。在 MAGSAC 中，作者提出了一种称为 𝜎-consensus 的方法来自动确定 RANSAC 中的距离阈值。此外，一些方法（Ma et al., 2017; Yue et al., 2018）还使用粒子群优化算法等进化算法来寻找最优解，成功率高但效率低。当可以对所研究图像之间的真实变换进行全局建模（例如，投影变换）时，上述参数方法是有效的。但是，当转换过于复杂而无法使用参数模型进行建模时（尤其是在具有局部变形的情况下），参数方法变得无效并且需要非参数方法。</p>
+<p>代表性的非参数方法包括谱技术（Leordenu 和 Hebert，2005）、基于图的匹配（Wang 等人，2014；Rana 等人，2018）、非参数插值方法（Ma 等人，2014； Tao and Sun, 2015; Ma et al., 2015)、邻域共识方法 (Ma et al., 2018b; Bian et al., 2005; Cavalli et al., 2020) 和基于学习的方法 (Yi et al., 2018；赵等人，2019；张等人，2019）。具体来说，Leordenu 和 Hebert (2005) 提出的光谱技术 (Leordenu 和 Hebert, 2005) 采用基于亲和矩阵的几何约束来使用 𝓁2 范数来区分异常值。在基于图的方法中，重加权随机游走算法 (Cho et al., 2010) 是一种众所周知的方法，它使用马尔可夫链来解决问题。在阿尔巴雷利等人。 （2012），不匹配消除问题通过博弈论框架解决，称为博弈论匹配（GTM），其中内点选择是通过强制一些半局部几何约束来引导的。 Ma等人（2014）提出的VFC在两个点集之间插入一个向量场来估计共识。 Ma 等人（2015）开发了一种局部线性变换策略保留局部性并拒绝遥感图像上的不匹配。深度学习也被用于这项任务（Yi et al., 2018; Zhao et al., 2019; Zhang et al., 2019）。 Yi等人（2018）的作者使用多层感知通过分类预测匹配的正确性。赵等人提出了一个分层网络，通过挖掘可靠邻居来消除错误匹配。张等人（2019）提出了一个订单感知网络（OAnet）来推断正确性的概率并回归基本矩阵。</p>
+<p>最近，邻域共识方法变得越来越流行，例如基于网格的运动统计（GMS）（Bian et al., 2005）、局部保持匹配（LPM）（Ma et al., 2018b）及其变体（Ma等人，2018a；Jiang 等人，2019b，2022；Ma 等人，2022）和自适应局部仿射匹配（AdaLAM）（Cavalli 等人，2020）。这些方法验证本地邻域共识以消除不一致的匹配。背后的想法是只有相邻的内点在转换前后是一致的，这样我们就可以通过测量一致性来识别内点。在这些方法中，首先考虑为相邻的内点对应保留局部结构。然后，他们依次验证每个对应关系的共识。具体来说，GMS (Bian et al., 2005) 通过将运动平滑假设建模为统计测量来选择置信对应。它假设内部对应具有比异常值更多的支持邻居。 GMS 的缺点是需要先验的缩放和旋转信息来确定支持区域，导致难以处理复杂的几何变换。与 GMS 不同，LPM 由于物理约束，假设相邻对应的拓扑和结构是一致的，可以处理旋转和缩放。但是，当存在大量异常值时，LPM 可能会退化（Ma et al., 2021b），如果局部区域包含的异常值太少，则可能会出现问题（Zhao et al., 2020）。为了解决严重的异常值，Zhao 等人（2019）建议通过搜索兼容的邻居来提高邻居的质量。然而，这种方法需要为每一个对应关系详尽地搜索兼容的邻居，非常耗时。 AdaLAM (Cavalli et al., 2020) 是一种涉及邻域共识 (Sattler et al., 2009) 和几何验证 (Fischler, 1981) 的集成方法。 AdaLAM 利用尺度和方向信息来选择可靠的邻居。但是，它需要很好地预设参数和阈值，有时会导致准确率和召回率之间的平衡不足。总体而言，当存在大量异常值和重大转变时，当前的邻里共识措施通常会变得无效。此外，许多相关方法需要良好的参数集，缺乏适应性。</p>
+<h2 id="22-准备工作"><a class="markdownIt-Anchor" href="#22-准备工作"></a> 2.2 准备工作</h2>
+<p>局部仿射帧 (LAF) 由仿射协变检测器检测，例如 MSER (Matas et al., 2004)、Hessian-affine (Mikolajczyk and Schmid, 2004)，以及像 HesAffNet (Mishkin et al., 2018) 这样的学习型检测器）。它在宽基线匹配中非常有效，因为它是仿射不变的（Vedaldi 和 Fulkerson，2008；Mishkin 等，2018；Eichhardt 和 Barath，2019）。如图 1 所示，LAF 可以表示为一个定向日食，其中中心是特征位置，半径和线方向分别表示尺度和方向。如果我们有一个 LAF 对应关系，我们可以计算一个局部仿射变换，表示两个匹配特征周围的两个局部图像区域之间的相对变换。局部仿射框架可以看作是相关单应矩阵的一阶局部近似（Baráth and Kukelova，2019）。即使真正的全局变换是投影，它也可以有效地对变换进行局部建模（Barath et al., 2019; József et al., 2014）。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic1.png" srcset="/img/loading.gif" lazyload alt="pic1"></p>
+<blockquote>
+<p>图1. 我们基于 LAF 的局部验证的图示。我们首先从两个匹配的局部仿射帧计算局部仿射变换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">F_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。然后，基于局部仿射变换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">F_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，局部一致性通过重投影误差<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>来衡量。由于局部仿射变换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">F_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是仿射不变的，因此我们不需要经验多尺度过程。</p>
+</blockquote>
+<p>请注意，比例和旋转不变检测器，例如SURF (Bay et al., 2006) 或 SIFT (Lowe, 2004)，只有一部分仿射帧。4 在这种情况下，我们可以将 LAF 近似为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">sR</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span>，其中𝑠 ∈ R+ 是特征尺度，而𝐑 ∈ R2×2 是编码特征方向的旋转矩阵。</p>
+<h1 id="3-提出的不匹配删除"><a class="markdownIt-Anchor" href="#3-提出的不匹配删除"></a> 3. 提出的不匹配删除</h1>
+<p>本节分为三个部分。首先，我们利用局部仿射框架信息通过概率模型测量邻域共识。其次，我们提出了一种置信距离比策略来选择更好的邻居。最后对参数自适应进行了研究。</p>
+<h2 id="31-基于-laf-的局部验证的概率建模"><a class="markdownIt-Anchor" href="#31-基于-laf-的局部验证的概率建模"></a> 3.1 基于 LAF 的局部验证的概率建模</h2>
+<p>给定从图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mi>x</mi></msup></mrow><annotation encoding="application/x-tex">I^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span></span></span></span></span></span></span></span>和图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mi>y</mi></msup></mrow><annotation encoding="application/x-tex">I^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span></span></span></span></span></span></span></span>检测到的两组局部特征，首先使用SIFT等描述符建立假定的对应集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><msup><mo stretchy="false">}</mo><mrow><mi>i</mi><mo>=</mo><mn>1..</mn><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\{x_i,y_i\}^{i=1..n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span><span class="mord mtight">.</span><span class="mord mtight">.</span><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span></span>。相应的 LAF<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>A</mi><mrow><mi>x</mi><mo separator="true">,</mo><mi>i</mi></mrow></msub><mo separator="true">,</mo><msub><mi>A</mi><mrow><mi>y</mi><mo separator="true">,</mo><mi>i</mi></mrow></msub><msup><mo stretchy="false">}</mo><mrow><mi>i</mi><mo>=</mo><mn>1..</mn><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\{A_{x,i},A_{y,i}\}^{i=1..n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1107719999999999em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span><span class="mord mtight">.</span><span class="mord mtight">.</span><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span></span>也可以同时得到。然后，我们可以从两个对应的 LAFs 计算局部仿射变换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">F_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form1.png" srcset="/img/loading.gif" lazyload alt="form1"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mn>2</mn><mo>×</mo><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">F_i\in\R^{2\times2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mbin mtight">×</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>是一个没有平移的线性映射，描述了两个匹配特征周围两个对应的局部图像区域之间的局部几何变换。请注意，LAFs<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>A</mi><mrow><mi>x</mi><mo separator="true">,</mo><mi>i</mi></mrow></msub><mo separator="true">,</mo><msub><mi>A</mi><mrow><mi>y</mi><mo separator="true">,</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">A_{x,i},A_{y,i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>和局部仿射变换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">F_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>不需要翻译项，因为我们将在 (2) 中执行集中化。将对应关系<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{x_i,y_i\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>的 𝑘 选定邻居表示为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>x</mi><mi>j</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>j</mi></msub><msup><mo stretchy="false">}</mo><mrow><mi>j</mi><mo>∈</mo><msub><mi>ψ</mi><mi>i</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\{x_j,y_j\}^{j\in\psi_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>ψ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\psi_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是索引集。然后，我们将通过验证<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{x_i,y_i\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>x</mi><mi>j</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>j</mi></msub><msup><mo stretchy="false">}</mo><mrow><mi>j</mi><mo>∈</mo><msub><mi>ψ</mi><mi>i</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\{x_j,y_j\}^{j\in\psi_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>之间的几何一致性来估计<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{x_i,y_i\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>的正确性。</p>
+<p>由于局部仿射变换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">F_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是已知的，我们可以将邻域点从一幅图像重新投影到另一幅图像。因此，我们计算以下局部仿射重投影误差<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mn>2</mn><mo>×</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">d_{ij}\in\R^{2\times1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mbin mtight">×</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>来衡量邻域共识，其中较小的值表示更好的共识和高概率是内部对应。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form2.png" srcset="/img/loading.gif" lazyload alt="form2"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>j</mi></msub><mo>−</mo><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_j-y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8694379999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>j</mi></msub><mo>−</mo><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_j-x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8694379999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>对相邻特征点进行集中处理。与仅考虑空间位置的 LPM (Ma et al., 2018b) 中的距离测量不同，方程 (2) 基于局部仿射帧信息，本质上是仿射不变量，无需像 (Ma et al., 2021b; Li et al., 2019) 那样构建手工仿射不变量。</p>
+<p>然后，我们提出了一个概率模型来衡量来自<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msup><mo stretchy="false">}</mo><mrow><mi>j</mi><mo>∈</mo><msub><mi>ψ</mi><mi>i</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\{d_{ij}\}^{j\in\psi_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>的一致性，以验证对应关系𝑖。为此，我们将重投影误差视为遵循某个分布的随机变量，并将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msup><mo stretchy="false">}</mo><mrow><mi>j</mi><mo>∈</mo><msub><mi>ψ</mi><mi>i</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\{d_{ij}\}^{j\in\psi_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>视为观察值。然后，在先验分布的可选假设下，可以通过根据观察结果计算后验概率来评估对应关系。在下面的推导中，我们直接用𝑖和𝑗来表示要验证的匹配及其邻居。我们将上标𝑐和上标𝑓分别表示为正确匹配（inliers）和错误匹配（outliers）。</p>
+<p>对于内点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>i</mi><mi>c</mi></msup></mrow><annotation encoding="application/x-tex">i^c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.664392em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span></span></span></span>，我们考虑条件概率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">∣</mi><msup><mi>i</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(d_{ij}|i^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>涉及两个子事件：（1）邻居 𝑗 是异常值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>j</mi><mi>f</mi></msup></mrow><annotation encoding="application/x-tex">j^f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.043548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span></span></span></span></span></span></span>； (2) 邻居 𝑗 是一个内点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>j</mi><mi>c</mi></msup></mrow><annotation encoding="application/x-tex">j^c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.858832em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span></span></span></span>。让我们将它们与一个潜在变量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>∈</mo><mo stretchy="false">{</mo><msup><mi>j</mi><mi>c</mi></msup><mo separator="true">,</mo><msup><mi>j</mi><mi>f</mi></msup><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">z_{ij}\in\{j^c,j^f\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8252079999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.0991079999999998em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>联系起来：</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form3.png" srcset="/img/loading.gif" lazyload alt="form3"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">∣</mi><msup><mi>i</mi><mi>c</mi></msup><mo separator="true">,</mo><msup><mi>j</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(d_{ij}|i^c,j^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">∣</mi><msup><mi>i</mi><mi>c</mi></msup><mo separator="true">,</mo><msup><mi>j</mi><mi>f</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(d_{ij}|i^c,j^f)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>分别表示两个子事件的概率;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>ω</mi><mn>2</mn></msub><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msup><mi>j</mi><mi>c</mi></msup><mi mathvariant="normal">∣</mi><msup><mi>i</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\omega_2=P(z_{ij}=j^c|i^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>是表示选择内部邻居的先验概率的权重。对于异常匹配<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>i</mi><mi>f</mi></msup></mrow><annotation encoding="application/x-tex">i^f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span></span></span></span></span></span></span>，我们忽略了内部邻居和异常邻居之间的差异，并简单地假设概率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">∣</mi><msup><mi>i</mi><mi>f</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(d_{ij}|i^f)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>对邻居的正确性是不变的。然后，总概率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(d_{ij})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>可以通过进一步关联<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">∣</mi><msup><mi>i</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(d_{ij}|i^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">∣</mi><msup><mi>i</mi><mi>f</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(d_{ij}|i^f)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>与另一个潜在变量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false">{</mo><msup><mi>i</mi><mi>c</mi></msup><mo separator="true">,</mo><msup><mi>i</mi><mi>f</mi></msup><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">z_i\in\{i^c,i^f\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6891em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.0991079999999998em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>z</mi><mi>n</mi></msub><mo>=</mo><msup><mi>i</mi><mi>c</mi></msup></mrow><annotation encoding="application/x-tex">z_n=i^c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.664392em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span></span></span></span>表示已验证的对应关系是内点</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form4.png" srcset="/img/loading.gif" lazyload alt="form4"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>ω</mi><mn>1</mn></msub><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><msub><mi>z</mi><mi>i</mi></msub><mo>=</mo><msup><mi>i</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\omega_1=P(z_i=i^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>是表示匹配正确的先验概率的权重。基于 (4) 中的概率，我们现在可以通过使用贝叶斯定理基于观察<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>估计后验概率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msup><mi>i</mi><mi>c</mi></msup><mi mathvariant="normal">∣</mi><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(i^c|d_{ij})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>来验证每个对应关系</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form5.png" srcset="/img/loading.gif" lazyload alt="form5"></p>
+<p>请注意，方程式（4）表示具有单个邻居的分布，因此，等式 (5) 中的估计由于缺乏观察，可能不可靠。为了提高鲁棒性，我们将考虑更多的邻居。考虑到有 𝑘 邻居，我们假设它们是独立的，并将从 𝑘 邻居计算的观察值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msup><mo stretchy="false">}</mo><mrow><mi>j</mi><mo>∈</mo><msub><mi>ψ</mi><mi>i</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\{d_{ij}\}^{j\in\psi_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1352159999999998em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>表示为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mrow><mi>i</mi><msub><mi>ψ</mi><mi>i</mi></msub></mrow></msub></mrow><annotation encoding="application/x-tex">d_{i\psi_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>。那么， <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mrow><mi>i</mi><msub><mi>ψ</mi><mi>i</mi></msub></mrow></msub></mrow><annotation encoding="application/x-tex">d_{i\psi_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>的联合概率可以表示为：</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form6.png" srcset="/img/loading.gif" lazyload alt="form6"></p>
+<p>因此，后验概率变为</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form7.png" srcset="/img/loading.gif" lazyload alt="form7"></p>
+<p>为了使问题易于处理，应该做出先验分布的假设。当验证的对应 𝑖 和邻居 𝑗 都是内点时，我们考虑二维高斯分布，否则考虑均匀分布。表示<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>σ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sigma^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>为高斯分布的方差，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mn>1</mn><mi>u</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{u}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">u</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>为均匀分布。然后，后验由下式计算</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form8.png" srcset="/img/loading.gif" lazyload alt="form8"></p>
+<p>后验概率表示匹配正确的置信度。因此，我们将低置信度的对应视为不匹配，并将它们删除以实现稳健的对应。如算法 1 中所述，这种方法以线性时间和空间复杂度顺序工作（忽略使用 knn 搜索邻居的步骤）。</p>
+<h2 id="32-置信距离比邻居"><a class="markdownIt-Anchor" href="#32-置信距离比邻居"></a> 3.2 置信距离比邻居</h2>
+<p>邻域<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>ψ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\psi_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是基于局部共识的方法的基础。邻居质量差（即内部邻居太少）会显着降低性能。针对这个问题已经提出了许多好的策略（Ma et al., 2018a; Cavalli et al., 2020），我们还提出了一种平衡解决方案。</p>
+<p>要选择更好的邻居，第一个问题是定义什么是好邻居。我们知道，我们想要选择更好的邻居是由于大量的异常值。如果异常值很少，我们可以使用最近的邻居，如 LPM 和 GMS（Ma et al., 2018b; Bian et al., 2005）。为了找到好邻居，我们考虑两个因素——内部置信度和空间距离。</p>
+<ul>
+<li>内在信心。一般来说，邻域共识只对内点有效，而异常点通常不是共识（这就是为什么我们可以通过检查共识来区分内点和异常点）。因此，我们应该考虑如何选择具有更好内点置信度的邻居，这会导致鸡与蛋问题，因为我们的最终目标也是选择内点。</li>
+<li>空间距离。在选择好邻居时还应考虑空间距离，因为通常只有相邻的对应关系是一致的。如果两个对应关系相距很远，则可能没有共识，如图 2 所示。</li>
+</ul>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic2.png" srcset="/img/loading.gif" lazyload alt="pic2"></p>
+<blockquote>
+<p>图2. 一个极端的例子来说明为什么我们应该选择相邻的邻居。图中四个对应都正确，但只有相邻的一致。例如，两个左上对应都是从左到右放大的，所以它们是一致的，因为它们经历了相似的变换。但是将它们与右下的进行比较，我们发现由于距离较大，我们没有达成共识（因为右下的被放大了）。</p>
+</blockquote>
+<p>综上所述，这两个因素要求我们应该选择相邻的内部邻居来衡量邻域共识。为此，我们提出了一种简单的策略，称为 Confidence-Distance-Ratio (CDR)。该策略有点像进化算法中的适应度距离比策略（Peram et al., 2003; Li, 2007; Qu et al., 2014; Liang et al., 2014），它计算适应度和距离以寻找更好的局部邻居以在进化中学习。我们的 CDR 策略计算内部置信度和空间距离之间的比率，以平衡两个因素，如方程式(9) 显示。选择具有最高 CDR 分数的 𝑘 邻居。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form9.png" srcset="/img/loading.gif" lazyload alt="form9"></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msup><mi>j</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(j^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>是邻居 j 的内部置信度，表示邻居正确匹配的概率。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>x</mi><mi>j</mi></msub><mi mathvariant="normal">∣</mi><msub><mi mathvariant="normal">∣</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">||x_i-x_j||_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord">∣</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mi mathvariant="normal">∣</mi><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mi>y</mi><mi>j</mi></msub><mi mathvariant="normal">∣</mi><msub><mi mathvariant="normal">∣</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">||y_i-y_j||_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord">∣</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是两幅图像的空间距离。在实现中，我们评估 50 个空间最近邻居的分数，以找到顶部 𝑘 CDR 邻居。</p>
+<p>在策略中，问题是如何获得邻居的内部置信度<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msup><mi>j</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(j^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>。为了解决这个问题，我们首先利用基于描述符的比率测试值作为第一次迭代中内部置信度的先验指标（Ma et al., 2018a; Cavalli et al., 2020）。(比率越小，是内点的可能性越高)</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form10.png" srcset="/img/loading.gif" lazyload alt="form10"></p>
+<p>其中𝑟𝑗是对应关系𝑗的比率检验值。该策略的效果如图 3 所示。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic3.png" srcset="/img/loading.gif" lazyload alt="pic3"></p>
+<blockquote>
+<p>图3. 使用 CDR 策略找到相邻的内部邻居（在第一次迭代中）。左图找到了具有宽松比率测试阈值的空间最近邻居。它找到空间上近邻，但只有 1 个内点。中间的数字使用严格的阈值，发现更多的内点。但是几个相邻的内部邻居丢失了。右图显示 CDR 策略平衡了空间相关性和内部置信度。</p>
+</blockquote>
+<p>在第一次迭代之后，我们可以通过等式 (8)中估计的后验来定义内部置信度。</p>
+<p>现在，我们可以交替搜索和更新更好的邻居来解决鸡生蛋问题，同时考虑内部置信度和空间距离。该算法通过交替估计内部置信度（后验概率）和搜索置信距离比邻居来运行，如图 4 所示。在实践中，我们发现 2 次迭代就足够了。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic4.png" srcset="/img/loading.gif" lazyload alt="pic4"></p>
+<h2 id="33-参数适配"><a class="markdownIt-Anchor" href="#33-参数适配"></a> 3.3 参数适配</h2>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form12-13.png" srcset="/img/loading.gif" lazyload alt="form12-13"></p>
+<p>基于上述推导和讨论，该提案已经可以使用给定的参数，如 LPM (Ma et al., 2018b) 和 GMS (Bian et al., 2005)。但是为了提高适应性和鲁棒性，我们进一步估计了参数。让我们将𝜔1、𝜔2和𝜎重新参数化为𝜽，并基于i.i.d数据假设在（12）中编写对数似然函数。</p>
+<p>然后可以通过最大化（12）来估计参数。期望最大化 (EM) 是优化的常用解决方案，但它不能像 (Ma et al., 2014; Myronenko and Song, 2009) 那样直接在这里使用，因为存在两层潜在变量。为此，我们将通过两次应用 Jensen 不等式来生成 𝑄 函数来构建“第二个”下界函数 (13)。方程 (12) 和 (13) 在方框 I 中给出。</p>
+<p>（13）中的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是（8）使用先前参数计算的后验概率。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">p_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>是邻居𝑗成为内部邻居的后验概率。在这里，我们简单地分别处理它们，并在第二层通过贝叶斯定理计算<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">p_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>，如（14）所示。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form14.png" srcset="/img/loading.gif" lazyload alt="form14"></p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form15.png" srcset="/img/loading.gif" lazyload alt="form15"></p>
+<p>通过让 𝑄 的相应导数为零来估计参数，如 (15) 中给出的。在实现中，该算法交替使用（8）和（14）（E步）计算后验概率，并通过使用（15）（M步）最大化第二个下界函数来更新参数，直到收敛。显然，迭代逐步更新并最大化下界函数以最大化（12），这是单调和有界的。</p>
+<h1 id="4-实施和实验设置"><a class="markdownIt-Anchor" href="#4-实施和实验设置"></a> 4. 实施和实验设置</h1>
+<h2 id="41-成果"><a class="markdownIt-Anchor" href="#41-成果"></a> 4.1 成果</h2>
+<p>我们将所提出的方法命名为迭代概率局部验证（IPLV）。算法1中给出了实现。由于自适应估计，我们应该只设置参数的初始值，具体为𝑘 = 8，𝜔1 = 𝜔2 = 0.3，和𝜎 = 10−2。请注意，性能对初始参数不敏感，如第 5.3.3 节所示。在运行 IPLV 时，我们在 IPLV 的最大迭代次数为 5 或目标函数的相对变化小于 10−2 时停止迭代。最终的概率决策阈值为 0.5。在运行该方法之前，首先根据 Hartley 和 Zisserman (2003) 对关键点进行归一化。此外，第 5.3.1 节还进行了消融研究，以展示算法中组件的有效性。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/alg1.png" srcset="/img/loading.gif" lazyload alt="alg1"></p>
+<h2 id="42-实验装置"><a class="markdownIt-Anchor" href="#42-实验装置"></a> 4.2 实验装置</h2>
+<p>本节定量评估所提出的方法。三个大型无人机定位数据集和四个额外的公共数据集被选为测试数据。表 1 和图 5 显示了数据集的描述和一些示例图像。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/table1.png" srcset="/img/loading.gif" lazyload alt="table1"></p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic5.png" srcset="/img/loading.gif" lazyload alt="pic5"></p>
+<p>三个大型无人机定位数据集来自 Mughal 等人（2021 年）。数据集分别来自 NUST、伊斯兰堡、DHA、拉瓦尔品第和古杰尔汗区，总面积为 182.6 万平方米。这三个数据集共包含 2252 个图像对。查询图像大小为 336 × 224，而地图大小如表 1 所示。这些数据集中的主要挑战是特征少、光照变化和重复模式。</p>
+<p>四个附加数据集用于对常见图像进行综合评估。四个流行的数据集是 VGG (Mikolajczyk et al., 2005)、Heinly (Heinly et al., 2012)、Symbench (Hauagge and Snavely, 2012) 和 COLMAP (Zhao et al., 2019)。 VGG 数据集包括 8 个不同挑战的场景，涉及模糊、视点变化、光线变化、JPEG 压缩等。**根据给定的单应矩阵生成 ground-truth，误差阈值为 5 个像素。**Heinly 用于测试几何变换的性能。它是根据 Heinly 等人(2012)提出的数据集建立的 ，包括 29 个图像对。有四个场景 - “威尼斯”、“森佩尔”、“罗马”和“天花板”，其中“威尼斯”涉及缩放，其他三个涉及旋转。地面实况也是根据提供的单应变换矩阵生成的，误差阈值为 5 个像素（Zhao et al., 2020）。 Symbench 数据集 Symbench 是一个非常具有挑战性的数据集，具有大量异常值，主要是由于显着的外观变化。有 46 个图像对，提供的单应变换也用于确定准确度，误差阈值为 5 个像素。 COLMAP 数据集是一个著名的 Structure-from-motion 数据集（Zhao et al., 2019）。该数据集也非常具有挑战性，因为有许多重复的模式，例如窗户和砖块，这通常会导致比率测试无效。它由大量连续图像组成，我们从人物子集中选择前 200 个图像对进行实验。在评估中，ground truth 由相应的极线距离确定，阈值为 0.003，使用 Bian 等人的方法（2019b）。</p>
+<p>对于定量评估，主要使用 Precision §、Recall ®、Fmeasure (F)、Localization Success Rate (LSR) 和 Run Time 等指标进行评估。精度定义为最终保留对应集中的真阳性的比率，而召回率是指保留的真阳性与假定对应集中所有潜在真阳性的比例。 F-measure 是准确率和召回率的加权调和平均值，显示了整体性能。它由下式计算</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form16.png" srcset="/img/loading.gif" lazyload alt="form16"></p>
+<p>有效的定位需要良好的精度和最少数量的正确匹配来计算相对变换。因此，如果至少有五个正确匹配且精度高于 50%，我们认为定位是成功的。然后，数据集上的 LSR 由下式计算</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/form17.png" srcset="/img/loading.gif" lazyload alt="form17"></p>
+<p>在提案和五种最先进的方法之间进行比较，包括 LPM (Ma et al., 2018b)、GMS (Bian et al., 2005)、GMS-SR (Bian et al., 2019a)、OA- net（Zhang 等人，2019）和 AdaLAM（Cavalli 等人，2020）。 AdaLAM 和学习方法 OA-net 在宽基线图像匹配挑战中显示出最先进的性能。比较方法的所有代码均来自公共资源，其中 LPM 和 IPLV 在 MATLAB、AdaLAM 中实现用python实现，GMS和GMS-SR用C++实现。 VLfeat 工具箱（Vedaldi 和 Fulkerson，2008）中的 covdet 检测器和 SIFT 描述符用于检测特征。假定的对应集在比率测试中粗略选择，阈值为 0.9，以排除极差的对应集。</p>
+<h1 id="5-实证结果分析"><a class="markdownIt-Anchor" href="#5-实证结果分析"></a> 5. 实证结果分析</h1>
+<h2 id="51-无人机定位数据集的结果"><a class="markdownIt-Anchor" href="#51-无人机定位数据集的结果"></a> 5.1 无人机定位数据集的结果</h2>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic6.png" srcset="/img/loading.gif" lazyload alt="pic6"></p>
+<blockquote>
+<p>图6. 三个无人机定位数据集的定量性能。在前两行中，这些数字显示了准确率和召回率的详细累积分布。例如，左上图中线条上的红点 [0.19, 0.8] 表示对于 IPLV，精度小于 0.8 的结果的比例为 0.19，即𝑃(𝑝𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 &lt; 0.8) = 0.19。曲线向左上方弯曲得越多，其性能就越好。从结果中，我们看到 IPLV 在所有情况下都比其他方法获得了很大的改进。在底行中，绘制了平均 F 测量值。此外，还比较了方法的正确匹配数和运行时间。</p>
+</blockquote>
+<p>首先，我们分析无人机定位数据集的性能。由于很难单独呈现所有 2252 个图像对的结果，我们在图 6 的前两行中绘制了所有精度和召回值的累积分布。图中，纵坐标表示度量阈值，而横坐标表示累计比例。曲线向左上方弯曲得越多，它表示的性能就越好。</p>
+<p>总体而言，我们看到 IPLV 在比较中占主导地位，其累积分布曲线位于前两行所有子图中的最左上角。它不仅显着优于所有比较方法，而且很少得到坏结果（证据是 IPLV 的曲线在所有子图中都显着增长，表明 IPLV 的坏结果比例，例如精度/召回率 &lt; 0.4，非常低）。至于比较方法，发现OA-net在所有三个数据集上都显示出相当的精度，但它的召回值非常低。 AdaLAM 仅在数据集 GKD 上的精度表现相对较好，在所有其他情况下似乎无效。相反，LPM 在这项任务上似乎令人满意，显示出非常平衡的精度和召回率。此外，从图 6 的右下方，我们看到所有这些方法都非常有效。 IPLV 的计算时间接近于 OA-net 和 AdaLAM。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/table2.png" srcset="/img/loading.gif" lazyload alt="table2"></p>
+<p>表 2 报告了 LSR 结果。提出的 IPLV 在所有数据集上均排名第一，分别成功定位了三个数据集中 98.33%、94.79% 和 100% 的图像对。 LPM 在 NUST-I 数据集和 HUA-R 数据集上分别比 IPLV 低 15.58% 和 12.08%，排名第二。从图 6，我们知道 OA-net 和 GMSSR 总是很少得到正确的匹配。结果，它们都显示出不好的结果。 AdaLAM 在 NUST-I 和 DHA-R 数据集上表现不佳，但在 GKD 数据集上相对令人满意。图 7 可视化了一些匹配和定位结果。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic7.png" srcset="/img/loading.gif" lazyload alt="pic7"></p>
+<blockquote>
+<p>图7. 无人机定位数据集上匹配和定位结果的可视化。最上面一行显示了查询图像和地图之间的特征匹配，而最下面一行显示了所提出方法的部分定位结果。图中青色线条和圆圈是根据特征匹配的路线和估计位置。此外，一些相应的查询图像被放置在侧面。红色虚线表示查询图像在地图中的位置。</p>
+</blockquote>
+<h2 id="52-四个附加数据集的结果"><a class="markdownIt-Anchor" href="#52-四个附加数据集的结果"></a> 5.2 四个附加数据集的结果</h2>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/table3.png" srcset="/img/loading.gif" lazyload alt="table3"></p>
+<p>在本节中，将在四个附加的综合数据集上进一步评估所提出的方法。表 3 显示了每个数据集的平均精度、召回率和 F-measure，其中最佳结果以粗体显示。我们首先可以发现，IPLV 在除 Symbench 之外的所有数据集上都优于其他方法，Symbench 表现出最佳的整体性能。 F-measure 值分别增加了 9.58%、7.04% 和 6.94%，在 VGG、Heinly 和 COLMAP 上位居第二。即使在 Symbench 数据集上，IPLV 也只输给了 OA-net，在所有指标上排名第二。 LPM 在 VGG、Heinly 和 COLMAP 数据集上显示了召回率和精度之间的平衡性能。然而，它在数据集 Symbench 上非常无效，准确率和召回率分别只有 12.11% 和 8.77%。就表 3 中的所有指标而言，GMS 在 VGG 和 Heinly 数据集上的性能最差，在 Symbench 和 COLMAP 上的性能倒数第二。与 GMS 相比，GMS-SR 实现了整体增强，但其结果都无法与 IPLV 相提并论。 AdaLAM 在精度方面表现出色，尤其是在 Heinly 数据集 (99.63%) 上。然而，它在所有四个数据集上的召回值都远低于 IPLV，四个数据集上的差异分别高达 26.33%、51.16%、24.63% 和 18.08%。图 8 可视化了一些匹配结果。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic8.png" srcset="/img/loading.gif" lazyload alt="pic8"></p>
+<blockquote>
+<p>图8. 四个数据集上的示例视觉结果。正确匹配用蓝线表示，而错误匹配用红线表示。</p>
+</blockquote>
+<h2 id="53-进一步的分析"><a class="markdownIt-Anchor" href="#53-进一步的分析"></a> 5.3 进一步的分析</h2>
+<p>在本节中，我们进一步分析所提出的方法以验证其有效性。</p>
+<h3 id="531-消融研究"><a class="markdownIt-Anchor" href="#531-消融研究"></a> 5.3.1 消融研究</h3>
+<p>我们的方法包含三个组成部分——基于概率 LAF 的局部验证、CDR 策略和参数自适应。我们将研究这些组件以确认它们的有效性。为此，我们评估了三个版本——概率局部验证 (PLV)、迭代概率局部验证 (IPLV) 和具有置信度-距离-邻居的迭代概率局部验证 (IPLVCDR) 以检查差异。我们在图 9 中显示了所有三个无人机定位数据集的平均精度、召回率和 F-measure。通过将 IPLV 与 PLV 进行比较，发现参数自适应是有效的，因为精度和召回率都得到了提高。这与 CDR 策略相同，因为 IPLV-CDR 的性能也明显优于 IPLV。此外，这两个组件对于提高召回率都特别有用。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic9.png" srcset="/img/loading.gif" lazyload alt="pic9"></p>
+<blockquote>
+<p>图9. 对所提出方法的不同设置进行消融测试。报告了三个无人机定位数据集中所有 2252 个图像对的平均精度、召回率和 F-measure。</p>
+</blockquote>
+<ul>
+<li>PLV：既没有CDR邻居也没有参数自适应的方法。</li>
+<li>IPLV：有参数适配但没有CDR 邻居的方法。</li>
+<li>IPLV-CDR：同时具有CDR 邻居和参数自适应的方法（这是前面部分中所谓的IPLV）。</li>
+</ul>
+<h3 id="532-大规模转换的性能"><a class="markdownIt-Anchor" href="#532-大规模转换的性能"></a> 5.3.2 大规模转换的性能</h3>
+<p>在本小节中，我们使用 Semper 和 Venice 数据集（来自 Heinly 等人（2012））分析了对大规模转换的鲁棒性。我们在图 10 中将 F-measure 结果绘制到不同的旋转度和缩放比。结果表明，IPLV 保持稳定，在所有旋转度和缩放比下获得接近于一的 F-measure 值，显示出出色的鲁棒性。在比较的方法中，LPM、GMS-SR 和 AdaLAM 也获得了良好的性能。 LPM 和 GMS-SR 在旋转方面与 IPLV 相当，但随着缩放比从 2.5 增加到 3.5，它们的 F-measure 值显着下降。 AdaLAM 对缩放非常健壮，在极端情况下甚至略微优于 IPLV。但是，它在处理轮换方面比 IPLV 差得多。 OA-net 没有获得显着的 F-measure 值，但它的性能似乎对旋转和缩放都很稳定。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic10.png" srcset="/img/loading.gif" lazyload alt="pic10"></p>
+<h3 id="533-参数分析"><a class="markdownIt-Anchor" href="#533-参数分析"></a> 5.3.3 参数分析</h3>
+<p>接下来，我们在初始参数设置下测试 IPLV 的性能。参数 𝑘、𝜔1、𝜔2 和𝜎如图 11 所示进行了研究，总共进行了 30 次测试以在各种初始参数设置下测试 IPLV。 VGG 数据集被用作测试数据，因为它涉及全面的挑战和场景。</p>
+<p><img src="/2022/09/09/IPLV%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%B8%A7%E7%9A%84%E9%B2%81%E6%A3%92%E5%AF%B9%E5%BA%94%E6%A6%82%E7%8E%87%E5%B1%80%E9%83%A8%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/pic11.png" srcset="/img/loading.gif" lazyload alt="pic11"></p>
+<p>一般来说，我们看到 IPLV 的性能对于所有指标的所有参数都非常稳定，即使在极端情况下（例如，𝜔1 = 0.1）。在这些参数中，IPLV 对 𝜔1 和 𝜔2 的鲁棒性特别强，因为当这两个参数从 0.1 增加到 0.9 时，性能几乎没有变化。在 F-measure 方面，通过将 𝑘 从 4 增加到 8 可以观察到轻微的改善，而当我们将 𝑘 从 8 增加到 10 时没有看到明显的变化。至于 𝜎，当 𝜎 从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>6</mn></mrow></msup></mrow><annotation encoding="application/x-tex">10^{-6}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">6</span></span></span></span></span></span></span></span></span></span></span></span>到 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">10^{-2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>。</p>
+<h1 id="6-结论"><a class="markdownIt-Anchor" href="#6-结论"></a> 6. 结论</h1>
+<p>在本文中，我们提出了一种用于特征对应的稳健且自适应的不匹配消除。我们提出了一种基于局部仿射帧信息的仿射不变邻域一致性度量，并建立了一个具有相邻内邻点的概率模型来评估对应关系。概率模型涉及两层潜在变量，特征匹配的正确性可以简单地通过具有线性时间和空间复杂度的贝叶斯定理来评估（通过knn搜索邻居，这是线性的）。可以自适应地估计参数以提高适应性和性能。我们还提出了一种置信距离比策略，通过平衡空间相关性和内部置信度来选择相邻的内部邻居。各种实验表明，我们的方法比许多其他最先进的方法表现得更好，尤其是在无人机定位任务中。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%82%BB%E5%9F%9F%E6%8B%93%E6%89%91%E4%B8%80%E8%87%B4/">#邻域拓扑一致</a>
+      
+        <a href="/tags/IPLV/">#IPLV</a>
+      
+        <a href="/tags/%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/">#特征匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>IPLV：一种基于帧的鲁棒对应概率局部验证方法</div>
+      <div>http://example.com/2022/09/09/IPLV：一种基于帧的鲁棒对应概率局部验证方法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月9日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/11/LAP%EF%BC%9A%E5%85%B7%E6%9C%89%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%B1%80%E9%83%A8%E4%BB%BF%E5%B0%84%E4%BF%9D%E7%95%99%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/" title="LAP：具有运动一致性的局部仿射保留遥感图像特征匹配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LAP：具有运动一致性的局部仿射保留遥感图像特征匹配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/05/mTopKRP%EF%BC%9A%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E9%B2%81%E6%A3%92%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D%E7%9A%84%E5%A4%9A%E5%B0%BA%E5%BA%A6%E5%B1%80%E9%83%A8%E6%80%A7%E5%92%8C%E7%A7%A9%E4%BF%9D%E6%8C%81/" title="mTopKRP：遥感图像鲁棒特征匹配的多尺度局部性和秩保持">
+                        <span class="hidden-mobile">mTopKRP：遥感图像鲁棒特征匹配的多尺度局部性和秩保持</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

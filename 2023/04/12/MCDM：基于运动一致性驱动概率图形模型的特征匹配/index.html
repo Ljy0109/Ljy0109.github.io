@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="（2022）概率图模型计算运动一致性，未看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MCDM：基于运动一致性驱动概率图形模型的特征匹配">
+<meta property="og:url" content="http://example.com/2023/04/12/MCDM%EF%BC%9A%E5%9F%BA%E4%BA%8E%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E9%A9%B1%E5%8A%A8%E6%A6%82%E7%8E%87%E5%9B%BE%E5%BD%A2%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="（2022）概率图模型计算运动一致性，未看">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/04/12/MCDM%EF%BC%9A%E5%9F%BA%E4%BA%8E%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E9%A9%B1%E5%8A%A8%E6%A6%82%E7%8E%87%E5%9B%BE%E5%BD%A2%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/title.png">
+<meta property="article:published_time" content="2023-04-12T07:44:00.000Z">
+<meta property="article:modified_time" content="2024-02-27T07:45:19.426Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="特征匹配">
+<meta property="article:tag" content="论文翻译">
+<meta property="article:tag" content="IJCV">
+<meta property="article:tag" content="MCDM">
+<meta property="article:tag" content="概率图模型">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/04/12/MCDM%EF%BC%9A%E5%9F%BA%E4%BA%8E%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E9%A9%B1%E5%8A%A8%E6%A6%82%E7%8E%87%E5%9B%BE%E5%BD%A2%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/title.png">
+  
+  
+  
+  <title>MCDM：基于运动一致性驱动概率图形模型的特征匹配 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MCDM：基于运动一致性驱动概率图形模型的特征匹配"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-12 15:44" pubdate>
+          2023年4月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MCDM：基于运动一致性驱动概率图形模型的特征匹配</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2023/04/12/MCDM%EF%BC%9A%E5%9F%BA%E4%BA%8E%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E6%80%A7%E9%A9%B1%E5%8A%A8%E6%A6%82%E7%8E%87%E5%9B%BE%E5%BD%A2%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/title.png" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="feature-matching-via-motion-consistency-driven-probabilistic-graphical-model"><a class="markdownIt-Anchor" href="#feature-matching-via-motion-consistency-driven-probabilistic-graphical-model"></a> Feature Matching via Motion-Consistency Driven Probabilistic Graphical Model</h1>
+<h1 id="mcdm基于运动一致性驱动概率图形模型的特征匹配"><a class="markdownIt-Anchor" href="#mcdm基于运动一致性驱动概率图形模型的特征匹配"></a> MCDM：基于运动一致性驱动概率图形模型的特征匹配</h1>
+<h2 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h2>
+<p>本文提出了一种有效的运动一致性驱动匹配(MCDM)方法，用于从给定的两个特征集之间的暂定对应中去除失配。特别地，我们将每一个通信视为一个假设节点，并将匹配问题表述为一个概率图形模型，以推断每个节点的状态(例如，真或假通信)。通过研究真对应的运动一致性，我们在公式中加入一个一般先验来区分真对应和假对应。最终的推理转化为一个整数二次规划问题，并利用基于FrankWolfe算法的高效优化技术得到其解。在一般特征匹配、基本矩阵估计、相对位姿估计和闭环检测等方面的大量实验表明，该算法具有较强的泛化能力和较高的精度，优于目前最先进的算法。同时，由于计算复杂度低，该方法对于实际的特征匹配任务是有效的。</p>
+<p><strong>关键词</strong>：特征匹配·概率图形模型·运动一致性·鲁棒估计·离群值</p>
+<h2 id="1引言"><a class="markdownIt-Anchor" href="#1引言"></a> 1.引言</h2>
+<p>​		特征匹配是指在两个特征集之间建立可靠的对应关系的过程，是计算机视觉的基本问题之一，是许多重要任务的基础，包括三维重建、结构从运动(SfM)、图像配准和融合(Bustos &amp; Chin, 2018;Deng等人，2018;Maet al.， 2021;special et al.， 2018;Vongkulbhisal等人，2018;周等，2017)。一般来说，匹配问题是病态的，具有组合性质(Wang et al.， 2014)，例如，将N个点匹配到另M个点(假设M &gt; N)，将产生多达MN种不同匹配结果的可能性。幸运的是，匹配问题可以通过两种类型的约束进行正则化(Lin et al.， 2018;Ma et al.， 2014)。首先，根据相似度约束，通过选择描述符(如SIFT, 2004, ORB, 2011)足够相似的特征点对，构建一个试探性对应集。由于局部描述符的模糊性，这种试验性集合通常包含大量的错误对应(或离群值)，特别是当图像质量较低、存在遮挡或重复模式时。因此，需要一个几何约束作为区分离群值和真实对应(或内层)的重要手段，它限制了匹配与底层的几何模型一致。</p>
+<p>​		特征匹配的一个核心问题是利用几何约束去除失配，为此已经开发了许多方法。大多数方法通过拟合一个预定义的变换模型来利用几何信息，该模型可以是参数(例如，相似性，仿射，单应性和极几何Fischler &amp; Bolles, 1981)或非参数(例如，非线性回归求解的非刚体模型)2019a)。然而，这些方法在变换模型未知的情况下通常效果不佳，在场景涉及独立运动时不适用(如图2中的第二行)。或者，不依赖于特定变换模型的图匹配是解决这些问题的一种自然方式(Liu &amp;Yan, 2010;Leordeanu和Hebert, 2005;Leordeanu等人，2009年;周，德·拉·托雷，2016)。然而，图匹配方法主要是为等大小特征集的匹配而设计的，通常在去除失配的准确性和计算成本方面表现出较差的性能。</p>
+<p>​		为了解决上述问题，本文提出了一种通用的、高效的特征匹配方法——运动一致性驱动匹配(MCDM)。我们的MCDM不是假设一个转换模型，而是仅根据先前的运动一致性来确定真正的匹配。这种先验在特征匹配中是普遍存在的，因为物体总是存在物理约束，强制运动的局部一致性。为了利用这一先验，采用了一种基于图形的表示。具体来说，我们采用了概率图形模型(PGM) (Koller et al.， 2009)来表述问题，其中每个试探性对应都被视为一个假设节点。从概率论的观点来看，可以精确地捕捉节点之间的关系(如通信)，并据此推断节点的状态(如内部或离群)。提出了一种考虑运动一致性和匹配空间分布的交互模型来描述匹配关系。</p>
+<p>​		为了进行推理，我们进一步将MCDM转化为一个整数二次规划(IQP)问题。由于它的NP-hard性质，求精确解几乎是不可能的，所以我们转而求一个近似解。高效的Frank-Wolfe (FW) (Frank &amp; Wolfe, 1956;Jaggi, 2013)基于算法的优化技术被开发出来，每个迭代都有一个封闭的形式的解决方案。虽然FW只是优化的一个启发式方法，但我们证明在大多数情况下，它实际上可以产生令人满意的结果。定性和定量的结果表明，我们的MCDM优于目前最先进的技术。特别是，无论底层转换模型是什么，我们的MCDM都能够在几十毫秒内准确地消除不匹配。</p>
+<p>​		我们的贡献包括以下四个方面。首先，我们提出了一种利用概率图形模型来解决特征匹配问题的新方法，与现有方法相比，该方法具有直观的解释，并允许引入更普遍的先验。其次，从运动场的角度研究了特征匹配问题，提出了一种基于运动一致性度量的有效节点配对交互模型。我们已经证明，这种交互模型对于去除与运动一致性先验的错误对应是必不可少的。第三，将多目标优化问题的推理转化为IQP问题，开发了一种基于FW算法的高效优化技术，在更新过程中得到了一个封闭的优化解。最后，将该方法应用于基本矩阵估计、相对位姿估计和闭环检测任务中，结果表明，由于具有较强的泛化能力，该算法在精度和效率方面都优于目前的算法</p>
+<h2 id="2相关工作"><a class="markdownIt-Anchor" href="#2相关工作"></a> 2.相关工作</h2>
+<p>​		在文献中，特征匹配问题已经被各种方法所解决，包括经典的特征检测器和描述符，如SIFT (Lowe, 2004)， SURF (Bay et al.， 2006)和ORB (Rublee et al.， 2011)，以及众多的失配去除方法。在本文中，我们假设特征点和描述符已经给出，并以此构造了一个暂定的对应集，然后我们的方法将重点放在失配去除问题上。现有的失配去除方法大致可以分为五类，即重采样法、非参数拟合法、基于投票法、图匹配法和基于学习法。</p>
+<p>​		重采样方法遵循假设-验证策略，通过重采样迭代寻找无离群值的子集来拟合预定义的参数模型。随机样本一致性(RANSAC) (Fischler &amp; Bolles, 1981)及其变体，如MLESAC (Torr &amp; Zisserman, 2000)， PROSAC (Chum &amp; Matas, 2005)， LORANSAC (Chum et al.， 2003;Lebeda et al.， 2012)和DegenSAC (Chum et al.， 2005)是这一类别的代表。最近，一些改进性能的先进方法被提出，并被确立为最先进的技术。USAC (Raguram et al.， 2013)将文献中的一些重要改进整合到一个统一的框架中。GC-RANSAC (Barath &amp; Matas, 2018)引入了一种基于图切优化的更好策略，用于模型的局部细化。MAGSAC (Barath et al.， 2019)和MAGSAC++ (Barath et al.， 2020)可以在不需要内部离群值阈值的情况下实现更好的模型估计。VSAC (Ivashechkin et al.， 2021)方法最近被提出，它在随机抽样框架的多个方面都具有创新性，在不牺牲精度的情况下显示出更好的效率。当固有变换符合参数化模型时，这些方法执行得相当好。然而，它们对很大比例的异常值很敏感，这通常会使重新采样的有效性降低。</p>
+<p>​		非参数拟合方法可以解决更一般的匹配问题，如变形图像匹配。代表包括识别对应函数(ICF) (Li &amp; Hu, 2010)和向量场共识(VFC) (Ma et al.， 2014)。ICF利用SVM回归技术寻找对应函数对，将一幅图像中的点映射到另一幅图像中的对应点，从而剔除离群值。VFC采用混合模型处理异常值，并在重现核希尔伯特空间内进行鲁棒向量场拟合。因此，与恢复的向量场一致的对应被识别为内层。这些方法假设运动场是全局平滑的，但由于场景中存在深度不连续或独立运动，这种假设并不总是正确的。</p>
+<p>​		基于投票的方法，如基于一致性的决策边界(Lin et al.， 2018)、基于网格的运动统计(GMS) (Bian et al.， 2020)和保持局部匹配(LPM) (Ma et al.， 2019b)，通常使用邻域支持来有效地过滤不良通信。这些方法通常可以达到较高的精度或较快的速度。然而，投票策略的有效性依赖于大量的内层或较低的离群值百分比，这在现实世界的匹配任务中并不总是如此。</p>
+<p>​		图匹配是解决特征匹配问题的另一种方法。大多数图匹配方法都试图直接构建两个特征点集之间的对应，而不是通过相似约束建立试运行对应集来消除错误的对应(Cho et al.， 2010;Leordeanu等人，2009年;Yan等，2016,2018;Zass&amp; Shashua, 2008;周，德·拉·托雷，2016)。请注意，在Zass和Shashua(2008)中，作者也采用了概率解释，但与我们的目标不同，我们的目的也是直接匹配两组特征。这些方法通常计算复杂度高，可扩展性差。由于约束的松弛，也有一组图匹配方法也适用于失配消除任务(Leordeanu &amp; Hebert, 2005;Liu &amp; yan, 2010)。但这些方法通常对尺度变化或严重变形高度敏感，只给出每个对应的相对置信度值。</p>
+<p>​		近年来，深度学习方法在计算机视觉领域的许多任务中取得了显著的进展。对于失配去除，learning to find good correspondence (LFGC) (Yi et al.， 2018)被提出作为该任务的首次尝试。在给定一组试探性通信和摄像机固有特性后，LFGC训练了一个基于多层感知器的深度网络。训练后的网络被授权将通信标记为内层或异常值，并恢复相对相机的姿态。然而，就像其他数据驱动的方法一样，它不能保证在训练数据中没有表示的更广泛的场景类别上的性能，并且本质上是无法解释的。这严重限制了它的实际应用价值。这种方法也鼓励了一些后续工作(Choy等人，2020年;Sun等人，2020年;Zhang et al.， 2019;赵等，2019)。</p>
+<p>​		另外，SuperGlue (Sarlin et al.， 2020)是最近提出的另一个有趣的想法，它利用图神经网络从局部特征生成更精确的对应。然而，它的输出中仍然存在一些异常值。</p>
+<h2 id="3-方法"><a class="markdownIt-Anchor" href="#3-方法"></a> 3. 方法</h2>
+<p>本节描述了我们提出的方法MCDM。我们将问题描述为PGM框架，该框架与局部运动一致性先验相结合。</p>
+<h3 id="31-问题形式化"><a class="markdownIt-Anchor" href="#31-问题形式化"></a> 3.1 问题形式化</h3>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/">#特征匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
+      
+        <a href="/tags/IJCV/">#IJCV</a>
+      
+        <a href="/tags/MCDM/">#MCDM</a>
+      
+        <a href="/tags/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/">#概率图模型</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MCDM：基于运动一致性驱动概率图形模型的特征匹配</div>
+      <div>http://example.com/2023/04/12/MCDM：基于运动一致性驱动概率图形模型的特征匹配/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月12日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/13/LMC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BA%94%E6%80%A7%E7%9F%A9%E9%98%B5%E7%9A%84%E5%B1%80%E9%83%A8%E8%BF%90%E5%8A%A8%E4%B8%80%E8%87%B4%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/" title="LMC：基于单应性矩阵的局部运动一致遥感图像匹配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LMC：基于单应性矩阵的局部运动一致遥感图像匹配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/12/GANet%EF%BC%9A%E9%80%9A%E8%BF%87%E5%9B%BE%E6%B3%A8%E6%84%8F%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E5%A4%B1%E9%85%8D%E5%8E%BB%E9%99%A4/" title="GANet：通过图注意网络学习失配去除">
+                        <span class="hidden-mobile">GANet：通过图注意网络学习失配去除</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
