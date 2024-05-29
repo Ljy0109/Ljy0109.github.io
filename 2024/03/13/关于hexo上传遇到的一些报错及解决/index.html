@@ -24,7 +24,7 @@
 <meta property="og:description" content="以下纪录了我使用hexo期间遇到的各种问题">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-13T13:35:00.000Z">
-<meta property="article:modified_time" content="2024-04-03T06:50:36.087Z">
+<meta property="article:modified_time" content="2024-05-29T01:55:07.422Z">
 <meta property="article:author" content="Mr.Yuan">
 <meta property="article:tag" content="hexo">
 <meta property="article:tag" content="blog">
@@ -229,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          1.7k 字
         
       </span>
     
@@ -240,7 +240,7 @@
         
         
         
-          9 分钟
+          15 分钟
         
       </span>
     
@@ -313,6 +313,33 @@
 </li>
 <li>
 <p>[使用git分支保存hexo博客源码到github - 知乎 (<a target="_blank" rel="noopener" href="http://zhihu.com">zhihu.com</a>)](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/71544809#:~:text=%E8%80%8C%E6%88%91%E4%BB%AC%E7%94%A8hexo%E5%86%99%E5%8D%9A%E5%AE%A2%E6%97%B6%EF%BC%8C%E9%80%9A%E5%B8%B8%E6%98%AF%E4%B8%8Emd%E6%BA%90%E6%96%87%E4%BB%B6%E6%89%93%E4%BA%A4%E9%81%93%EF%BC%8C%E5%AF%B9%E4%BA%8Edeploy%E7%94%9F%E6%88%90%E7%9A%84master%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E5%B9%B6%E4%B8%8D%E9%9C%80%E8%A6%81%E6%88%91%E4%BB%AC%E5%85%B3%E6%B3%A8%EF%BC%8C%E5%9B%A0%E6%AD%A4%E5%8F%AF%E5%B0%86%E4%BB%93%E5%BA%93%E7%9A%84%E9%BB%98%E8%AE%A4%E5%88%86%E6%94%AF%E6%94%B9%E4%B8%BA%E4%BF%9D%E5%AD%98%E6%BA%90%E7%A0%81%E7%9A%84source%E5%88%86%E6%94%AF%EF%BC%8C%E8%BF%99%E6%A0%B7%E9%80%9A%E8%BF%87">https://zhuanlan.zhihu.com/p/71544809#:~:text=而我们用hexo写博客时，通常是与md源文件打交道，对于deploy生成的master分支代码并不需要我们关注，因此可将仓库的默认分支改为保存源码的source分支，这样通过</a> git clone 拉取的就是source分支代码了。 在仓库的主页面，通过Settings,-&gt; Branchs，可以看到 Default branch 的Tab，显示的默认分支是master，可以勾选source，然后update即可将默认分支设置为source，如下图：)</p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yourstars/p/15533706.html">error: RPC failed; HTTP 400 curl 22 The requested URL returned error: 400 Fa… - Boom__Clap - 博客园 (cnblogs.com)</a></p>
+</li>
+</ul>
+<p>真实的错误原因：fatal: The remote end hung up unexpectedly</p>
+<p>方案一：</p>
+<p>修改提交缓存区大小为5GB，或者更大的数字，该方式全局生效，一劳永逸</p>
+<p><code>git config --global http.postBuffer 5242880000</code></p>
+<ul>
+<li>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40296909/article/details/134285451">解决使用git时遇到Failed to connect to github.com port 443 after 21090 ms: Couldn‘t connect to server_git couldn’t connect to server-CSDN博客</a></p>
+<p>如果能网页访问github，但是push失败，说明本机系统端口号和git端口号不一致。</p>
+<p>解决方法：</p>
+<p>如果挂着vpn：</p>
+<ol>
+<li>
+<p>查看本机系统端口号：<code>设置-&gt;网络和Internet-&gt;代理</code></p>
+</li>
+<li>
+<p>设置git端口号和上面的端口号保持一致（我的是10809）:</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lua">git <span class="hljs-built_in">config</span> <span class="hljs-comment">--global http.proxy 127.0.0.1:10809</span><br>git <span class="hljs-built_in">config</span> <span class="hljs-comment">--global https.proxy 127.0.0.1:10809</span><br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果没挂vpn：</p>
+<p>还是一样的原因，两边端口不一致导致的，那么直接去掉git代理即可：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">git config <span class="hljs-attr">--global</span> <span class="hljs-attr">--unset</span> http<span class="hljs-selector-class">.proxy</span><br>git config <span class="hljs-attr">--global</span> <span class="hljs-attr">--unset</span> https.proxy<br></code></pre></td></tr></table></figure>
 </li>
 </ul>
 
