@@ -67,7 +67,7 @@
 <meta property="og:image" content="http://example.com/2024/05/31/WSSF%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8A%A0%E6%9D%83%E7%BB%93%E6%9E%84%E6%98%BE%E7%9D%80%E6%80%A7%E7%89%B9%E5%BE%81%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/fig17.jpg">
 <meta property="og:image" content="http://example.com/2024/05/31/WSSF%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8A%A0%E6%9D%83%E7%BB%93%E6%9E%84%E6%98%BE%E7%9D%80%E6%80%A7%E7%89%B9%E5%BE%81%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/fig18.jpg">
 <meta property="article:published_time" content="2024-05-31T11:19:00.000Z">
-<meta property="article:modified_time" content="2024-06-04T14:12:51.300Z">
+<meta property="article:modified_time" content="2024-06-11T06:47:08.425Z">
 <meta property="article:author" content="Mr.Yuan">
 <meta property="article:tag" content="多模态">
 <meta property="article:tag" content="图像匹配">
@@ -341,7 +341,7 @@
 <h1 id="wssf基于加权结构显着性特征的多模态遥感图像匹配"><a class="markdownIt-Anchor" href="#wssf基于加权结构显着性特征的多模态遥感图像匹配"></a> WSSF：基于加权结构显着性特征的多模态遥感图像匹配</h1>
 <p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=10374089">IEEE Xplore Full-Text PDF:</a></p>
 <h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要：</h1>
-<p>匹配多模态遥感图像（MRSI）是一项具有挑战性的任务。 由于显着的非线性辐射差异（NRD），传统的图像匹配方法无法获得满意的结果。 本文表明，与图像中的纹理信息（即梯度特征）相比，结构信息可以获得更鲁棒的匹配结果。 为了更好地挖掘图像的结构信息，本文提出了一种利用结构显着性特征的MRSI匹配方法，称为加权结构显着性特征（WSSF）。 研究了两种策略并将其集成到 WSSF 中以提高匹配性能。 基于逐点形状自适应纹理尺度滤波构建尺度空间，能够更好地保留结构特征，并结合二阶高斯可转向滤波、边缘置信图和相位特征，建立结构显着图 二阶高斯可操纵滤波，比传统梯度图对 NRD 具有更强的鲁棒性。 该方法的性能在来自两个 MRSI 数据集的总共 120 个图像对上进行了评估，并与最先进的匹配方法进行了比较，包括加权相位方向直方图 (HOWP)、局部归一化图像特征 变换（LNIFT），共生滤波器空间匹配（CoFSM），辐射变化不敏感特征变换（RIFT），局部相位锐度方向（LPSO）和位置尺度方向尺度不变特征变换（SIFT）（PSO- 筛）。 实验结果表明，WSSF在成功率（SR）和匹配精度方面获得了令人满意且可靠的结果。 与上述6种方法相比，WSSF的匹配精度提高了20.275%以上，SR提高了5.833%以上。 源代码将在 <a target="_blank" rel="noopener" href="https://github.com/WGY-RS/WSSF">https://github.com/WGY-RS/WSSF</a> 上公开提供。</p>
+<p>匹配多模态遥感图像（MRSI）是一项具有挑战性的任务。 由于显着的非线性辐射差异（NRD），传统的图像匹配方法无法获得满意的结果。 本文表明，与图像中的纹理信息（即梯度特征）相比，结构信息可以获得更鲁棒的匹配结果。 为了更好地挖掘图像的结构信息，本文提出了一种利用结构显着性特征的MRSI匹配方法，称为加权结构显着性特征（WSSF）。 研究了两种策略并将其集成到 WSSF 中以提高匹配性能。 基于逐点形状自适应纹理尺度滤波构建尺度空间，能够更好地保留结构特征，并结合二阶高斯可转向滤波、边缘置信图和相位特征，建立结构显着图 二阶高斯可操纵滤波，比传统梯度图对 NRD 具有更强的鲁棒性。 该方法的性能在来自两个 MRSI 数据集的总共 120 个图像对上进行了评估，并与最先进的匹配方法进行了比较，包括加权相位方向直方图 (HOWP)、局部归一化图像特征 变换（LNIFT），共生滤波器空间匹配（CoFSM），辐射变化不敏感特征变换（RIFT），局部相位锐度方向（LPSO）和位置尺度方向尺度不变特征变换（SIFT）（PSO- SIFT）。 实验结果表明，WSSF在成功率（SR）和匹配精度方面获得了令人满意且可靠的结果。 与上述6种方法相比，WSSF的匹配精度提高了20.275%以上，SR提高了5.833%以上。 源代码将在 <a target="_blank" rel="noopener" href="https://github.com/WGY-RS/WSSF">https://github.com/WGY-RS/WSSF</a> 上公开提供。</p>
 <p><strong>索引术语</strong>——对数极坐标描述符、多模态图像匹配、逐点形状自适应纹理过滤（PSATF）、结构显着特征。</p>
 <h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1 引言</h1>
 <p>图像匹配是指从不同情况下捕获的同一场景图像中检测可靠的对应特征关系的过程，包括传感器、时间和视角[1]。 图像匹配技术广泛应用于各个领域，例如3D重建[2]、[3]、图像融合[4]、[5]、变化检测[6]、[7]、[8]、[9]  ]，以及医学图像分析[10]。 随着多传感器技术的快速发展，图像类型更加丰富，多模态图像匹配问题逐渐成为热点问题[11]。 与单个传感器捕获的图像不同，多模态图像由于成像机制不同，例如可见光图像和热红外图像，具有明显的时间、空间和非线性辐射差异（NRD）。 可见光图像捕获可见光波段的反射信号[12]，而热红外图像捕获来自不同物体的热辐射信息[13]。 成像模式的差异导致可见光图像和热红外图像之间存在显着的NRD。</p>
