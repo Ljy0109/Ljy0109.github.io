@@ -33,8 +33,9 @@
 <meta property="og:image" content="http://example.com/2024/06/07/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/MSFT3.jpg">
 <meta property="og:image" content="http://example.com/2024/06/07/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/POS-GIFT1.jpg">
 <meta property="og:image" content="http://example.com/2024/06/07/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/GLS-MIFT1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/07/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/MIMF2.jpg">
 <meta property="article:published_time" content="2024-06-07T09:01:00.000Z">
-<meta property="article:modified_time" content="2024-06-12T07:26:41.241Z">
+<meta property="article:modified_time" content="2024-06-13T13:27:03.102Z">
 <meta property="article:author" content="Mr.Yuan">
 <meta property="article:tag" content="多模态">
 <meta property="article:tag" content="遥感">
@@ -243,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.3k 字
+          3.9k 字
         
       </span>
     
@@ -254,7 +255,7 @@
         
         
         
-          28 分钟
+          33 分钟
         
       </span>
     
@@ -418,6 +419,16 @@
 <li>MIFT的匹配策略：同样是粗匹配加细匹配，现在所有尺度中进行全局搜索，获得变换矩阵。然后根据变换矩阵确定匹配点的局部区域，根据尺度和旋转信息，重新计算描述符。</li>
 </ul>
 <p><img src="/2024/06/07/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/GLS-MIFT1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="mimf-2024-ijcv"><a class="markdownIt-Anchor" href="#mimf-2024-ijcv"></a> MIMF 2024 IJCV</h1>
+<p><a target="_blank" rel="noopener" href="https://ljy0109.github.io/2024/06/06/MIMF%EF%BC%9A%E5%A4%9A%E6%BA%90%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%9A%84%E7%A8%B3%E5%81%A5%E9%9D%9E%E5%9D%87%E5%8C%80%E6%A8%A1%E5%9E%8B%E6%8B%9F%E5%90%88/#robust-heterogeneous-model-fitting-for-multi-source-image-correspondences">MIMF：多源图像匹配的稳健非均匀模型拟合 - Blog of Mr.Yuan (ljy0109.github.io)</a></p>
+<ul>
+<li>使用二维log-Gabor滤波器计算相位一致性。相位一致性可以代替梯度，但是对噪声敏感。于是使用PC图的最大力矩和最小力矩来将多模态图像变为相同的模态。具体来说，最大力矩表示边缘概率，最小力矩表示角点概率，使用这两者的线性加权将多模态变为相同的模态。</li>
+<li>使用Shi-Tomasi算子（Shi，1994）（一种抗噪能力强的改进Harris算子）在但模态图像中提取关键点。</li>
+<li>描述符的窗口是多个同心圆叠加的。半径越大，窗口的方向patch划分的越细，但是patch中统计的方向bin越粗（划分的越粗糙）。这有点类似SIFT的高斯模糊，边缘的贡献远小于中心的贡献。但是patch划分的越细，它在描述符中的占比不就越大吗？</li>
+<li>匹配策略修改了RANSAC。部分变量没有解释清楚。大致理解是，不同于RANSAC只保留符合某一个变换矩阵的匹配，该策略主张匹配可能具有不同的变换矩阵，需要根据代价函数将部分属于不同变换模型的匹配都保留下来。代价函数涉及到反余弦相似度和重投影误差（貌似），具体的变量含义没有看懂，特别是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>λ</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>M</mi></mrow><mrow><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo></mrow></msubsup></mrow><annotation encoding="application/x-tex">\lambda_{i,M}^{(v)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.4744389999999998em;vertical-align:-0.4296389999999999em;"></span><span class="mord"><span class="mord mathdefault">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.4064690000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span></span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">v</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4296389999999999em;"><span></span></span></span></span></span></span></span></span></span></li>
+<li>尺度不变性和旋转不变性怎么体现？都是在描述符部分实现吗？感觉差点意思</li>
+</ul>
+<p><img src="/2024/06/07/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/MIMF2.jpg" srcset="/img/loading.gif" lazyload alt></p>
 
               
             </div>
