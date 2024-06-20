@@ -1,0 +1,1018 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="多模态图像匹配算法RI-ALGH（JPRS 2020)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RI-ALGH：基于非线性扩散和极坐标空间频率描述子的SIFT框架实现SAR和光学图像的通用配准">
+<meta property="og:url" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="多模态图像匹配算法RI-ALGH（JPRS 2020)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/title.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq2.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq4.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq5.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq6.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq8.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq9.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig2.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig3.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig4.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq10.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq11.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq12.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq14.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig5.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq15.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq16.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig6.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig7.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq17.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq18.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig8.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq19.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq20.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq21.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq22.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq23.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig9.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig10.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq24.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq25.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq26.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/table1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig11.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq27.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq28.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq29.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig12.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig13.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/table2.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig14.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig15.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig16.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig17.jpg">
+<meta property="og:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig18.jpg">
+<meta property="article:published_time" content="2024-06-20T02:26:00.000Z">
+<meta property="article:modified_time" content="2024-06-20T08:01:11.192Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="图像匹配">
+<meta property="article:tag" content="2020">
+<meta property="article:tag" content="JPRS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/title.jpg">
+  
+  
+  
+  <title>RI-ALGH：基于非线性扩散和极坐标空间频率描述子的SIFT框架实现SAR和光学图像的通用配准 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="RI-ALGH：基于非线性扩散和极坐标空间频率描述子的SIFT框架实现SAR和光学图像的通用配准"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-20 10:26" pubdate>
+          2024年6月20日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          21k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          173 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">RI-ALGH：基于非线性扩散和极坐标空间频率描述子的SIFT框架实现SAR和光学图像的通用配准</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/title.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="universal-sar-and-optical-image-registration-via-a-novel-sift-framework-based-on-nonlinear-diffusion-and-a-polar-spatial-frequency-descriptor"><a class="markdownIt-Anchor" href="#universal-sar-and-optical-image-registration-via-a-novel-sift-framework-based-on-nonlinear-diffusion-and-a-polar-spatial-frequency-descriptor"></a> Universal SAR and optical image registration via a novel SIFT framework based on nonlinear diffusion and a polar spatial-frequency descriptor</h1>
+<h1 id="ri-algh基于非线性扩散和极坐标空间频率描述子的sift框架实现sar和光学图像的通用配准"><a class="markdownIt-Anchor" href="#ri-algh基于非线性扩散和极坐标空间频率描述子的sift框架实现sar和光学图像的通用配准"></a> RI-ALGH：基于非线性扩散和极坐标空间频率描述子的SIFT框架实现SAR和光学图像的通用配准</h1>
+<p><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S0924271620302999?via%3Dihub">Universal SAR and optical image registration via a novel SIFT framework based on nonlinear diffusion and a polar spatial-frequency descriptor - ScienceDirect</a></p>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要：</h1>
+<p>由于合成孔径雷达(SAR)图像中存在严重的散斑噪声，且SAR与光学图像之间存在较大的非线性强度差异，因此SAR与光学图像的配准是一个具有挑战性的问题。本文提出了一种基于非线性尺度不变特征变换(SIFT)框架的改进算法，该算法将空间特征检测与局部频域描述相结合，用于SAR与光学图像的配准。首先，基于非线性扩散构造SAR图像和光学图像的多尺度表示，以更好地保留边缘并获得一致的边缘信息;在尺度空间构建过程中，利用指数加权平均比率算子(ROEWA)和Sobel算子计算一致的梯度信息。然后，提出了一种基于Harris-Laplace ROEWA和Harris-Laplace Sobel技术的特征检测策略，以检测尺度空间中稳定且可重复的关键点。最后，提出了一个新的描述符，称为log-Gabor方向直方图的旋转不变振幅(RI-ALGH)，以及一个简化版本，ALGH。该描述符基于多尺度和多方向log-Gabor响应的振幅，并利用改进的梯度位置和方向直方图(GLOH)描述符的空间结构，该描述符对局部扭曲具有鲁棒性。在模拟和真实图像上的实验结果表明，该方法在配准精度方面优于现有的方法。</p>
+<p><strong>关键词</strong>:合成孔径雷达图像、非线性扩散、一致梯度、Log-Gabor响应、图像配准</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1 引言</h1>
+<p>合成孔径雷达(SAR)和光学传感是遥感领域两种重要的对地观测方法。SAR传感器是有源微波传感器，由于其强大的穿透性，它们可以在白天或晚上的任何时间获得其他难以察觉的地面物体的信息，而不受天气条件的影响(Kulkarni和Rege, 2020)。光学传感器是无源传感器，在良好的成像条件下可以获得丰富的灰度和纹理信息，具有良好的地物识别和分类能力。为了充分利用两种传感器的优势，实现SAR与光学图像的融合，SAR与光学图像的高精度、低复杂度和自动配准技术是必不可少的。尽管应用于多传感器图像融合，但sar -光学图像配准也是其他各种遥感应用的先决条件，例如地物分类(Robson等人，2015)、语义分割(Wurm等人，2019)、变化检测(Jia等人，2015)、导航(Markiewicz等人，2015)。2019)和3D重建(Hartmann et al.， 2016)。以导航为例，在全球导航卫星系统(Global navigation Satellite System, GNSS)抑制条件下，利用机载SAR传感器成像与星载地理参考光学图像进行配准进行导航校正是近年来发展起来的一项技术，该技术也依赖于高精度的SAR -光学图像配准。</p>
+<p>SAR -光学图像配准是将SAR和光学传感器在不同时间、从不同视点获得的同一场景的两幅图像对准的过程(Zitova和Flusser, 2003)。它的核心是一个多源图像配准问题，出现了三个主要困难:(a)成像机制非常不同。SAR传感器采用主动微波成像模式，而光学传感器采用被动光学波段成像模式。(b)两类图像的强度值差异较大，统计性质完全不同(SAR图像服从瑞利分布)。©强烈的散斑噪声和复杂的局部失真在合成孔径雷达图象中很常见，而在光学图象中则不存在。</p>
+<p>鉴于上述困难，人们对sar -光学图像配准问题进行了大量的研究。相应的方法一般分为两类:基于强度的方法和基于特征的方法。基于强度的方法以感测图像为模板，采用合适的搜索策略遍历参考图像，使相似度度量最大化。这一类中最著名的方法是互信息(MI)方法(Suri和Reinartz, 2010;庄等，2016;Siddique et al.， 2012)，其核心原理是通过计算两个未配准图像之间的MI来克服不同传感器之间的强度差异。基于mi的方法对局部几何差异具有鲁棒性，非常适合多源图像配准，但这些方法的计算成本较高(Li and Leung, 2004)，并且对旋转和尺度变化高度敏感。为了克服这些缺点，Ye等人(2017)扩展了相位一致性的概念，提出了一种结构描述符，称为定向相位一致性直方图(histogram of orientated phase congruency, HOPC)描述符。然后，他们采用一种基于HOPC描述符归一化相关系数的相似性度量来匹配具有非线性强度差异的多模态遥感图像。Xie et al.(2019)扩展了基于logGabor滤波的相位相关算法，解决了显著的非线性差异和尺度变化问题。</p>
+<p>与基于强度的方法相比，基于特征的方法更适合于sar -光学图像配准。在基于特征的方法中，不使用强度信息，而是首先提取一致的特征;然后，根据一定的匹配准则计算不同特征之间的相似度，最后建立特征对应关系。最常用的基于特征的方法大致可以分为两类:基于全局结构特征的方法和基于局部不变特征的方法。基于全局结构特征的方法利用线条(Sui et al.， 2015)、轮廓(Yang and Gao, 2009)和形状(Dai and Khorram, 1999)等特征。虽然利用这些特征可以有效地克服强度差异的影响，但这些特征不容易提取，甚至在许多遥感应用场景中都不存在;因此，这种方法的普遍性是有限的。</p>
+<p>近年来，基于局部不变特征的遥感图像配准方法被广泛提出。通过利用局部不变特征，可以有效克服SAR图像与光学图像之间较大的强度差异;此外，这些特征对局部扭曲具有鲁棒性，并且比全局结构特征更容易提取。基于局部不变特征的方法通常包括三个步骤:特征检测、特征描述和特征匹配。首先，在感测图像和参考图像中检测重要特征，如点(Wu et al.， 2015)、角(Wu et al.， 2016)、斑点(Sedaghat and Ebadi, 2015)、边缘(Baselice et al.， 2014)和局部区域(Liao and Chung, 2012)。其次，对检测到的特征构造不同的描述符。第三，根据一定的匹配准则确定特征对应关系。</p>
+<p>在依赖局部不变特征的方法中，基于点特征的配准方法较为常见，其中应用最广泛的算法是尺度不变特征变换(SIFT) (Lowe, 2004)，该算法在光学图像配准中应用较为广泛。然而，由于SAR图像与光学图像之间的辐射差异较大，并且SAR图像中存在较强的散斑噪声，使用传统SIFT算法检测到的点特征会非常不稳定，在SAR图像与光学图像中相同的局部特征会表现出相当大的差异;因此，该算法不能直接应用于SAR图像和光学图像的配准。因此，提出了一些基于sift的改进算法。Fan et al.(2013)对原始SIFT算法进行了改进，从第二个八度音阶开始检测特征点，跳过主导方向分配过程，提高了特征描述子的显著性。Dellinger等人(2015)针对SAR成像提出了一种新的梯度定义，并引入了一种新的类似sift的算法SAR- sift。Ma等人(2017)采用了一种基于强度差异的新的梯度定义，通过增强的特征匹配算法提高了匹配性能。Xu et al.(2015)提出了一种基于统一水平集分割模型和SIFT的配准算法，采用迭代策略避免匹配失败。Xiang等人(2018)改进了SAR- sift算法，利用两种不同的算子根据光学和SAR图像的固有属性计算一致的梯度，并使用关键点细化策略来提高可重复性。Ma等人(2018)提出利用SAR-SIFT算子从相位一致性强度图中提取特征点，并根据其空间约束进行匹配。除了单独基于SIFT的方法之外，结合SIFT和基于强度的方法也可以获得良好的结果(Gong et al.， 2014)。</p>
+<p>尽管基于sift的方法提供了更好的性能，但这些方法都需要基于空间信息(梯度)构建特征描述子;这极大地抑制了SAR和光学图像特征描述的独特性，它们表现出明显的非线性强度差异。与空间信息相比，频域信息更适合于sar光学环境下的特征描述。例如，log-Gabor滤波器响应对于非线性强度差是不变的，并且可以使用多尺度和多方向滤波器组获得有用的信息。Aguilera等人(2015)提出了一种新的描述符，使用多尺度和多方位log-Gabor滤波器，在匹配多传感器图像时优于基于梯度的描述符。Liu等人(2018)提出了一种仿射不变描述子，称为最大稳定相一致性(maximum stable phase congruency, MSPC)描述子。该描述符由log-Gabor滤波器结合最大稳定极值区域(MSER)特征构造而成，以保证仿射不变性。Li et al.(2020)提出了一种新的方法，称为辐射不变特征变换(RIFT)，该方法利用相位一致性的最大和最小矩来检测特征点，并提出了一种用于特征描述的最大索引图(MIM)。以上方法均取得了满意的结果，但由于SAR图像中存在较强的散斑噪声，因此应用于SAR -光学图像配准时仍然不够稳健。尽管基于log- gabor的描述子对于非线性强度差是不变的，但由于对噪声敏感，仍然不能有效地描述相关的局部特征。为了克服基于sift的方法和基于log- gabor描述符的缺点，本文提出了一种结合空域和频域信息的类sift方法。</p>
+<p>首先，针对SAR图像中存在的强散斑噪声，设计了一种基于指数加权平均比算子的非线性扩散SAR图像尺度空间构建策略;为了保持SAR图像边缘结构与光学图像边缘结构的一致性，对光学图像使用Sobel算子;其次，由ROEWA算子(Harris-Laplace ROEWA)驱动的Harris-Laplace探测器(Mikolajczyk and Schmid, 2004) (Yu et al.;基于先前的梯度计算策略，提出了由Sobel算子(Harris-Laplace Sobel)驱动的Harris-Laplace探测器，分别在SAR尺度空间和光学尺度空间中检测均匀和高度可重复的关键点。最后，设计了一种基于log-Gabor滤波器的旋转不变特征描述符，即log-Gabor方向直方图的旋转不变振幅(RI-ALGH)，以提高对非线性差异的鲁棒性。为了降低计算成本，我们还提出了一种简化的描述符ALGH，它不包括主导方向分配，在有限的相对旋转情况下可以获得更好的性能(如3.2节所示)。本文的贡献如下:</p>
+<ol>
+<li>提出了一种基于非线性扩散的SAR和光学尺度空间构建新策略。</li>
+<li>采用基于Harris-Laplace ROEWA和Harris-Laplace Sobel技术的特征检测方法，分别对SAR图像和光学图像进行关键点检测。</li>
+<li>基于多尺度和多方位对数gabor滤波器组，提出了两种新的基于频域的特征描述符RI-ALGH和ALGH。</li>
+</ol>
+<p>本文的其余部分组织如下:第2节介绍了所提出算法的方法。第3节报告了模拟图像和真实图像的实验结果。第4节给出结论。</p>
+<h1 id="2-方法"><a class="markdownIt-Anchor" href="#2-方法"></a> 2 方法</h1>
+<p>在本节中，我们首先介绍了利用ROEWA和Sobel算子构造基于非线性扩散的尺度空间。接下来，使用Harris-拉普拉斯ROEWA和Harris-Laplace索贝尔技术检测稳定和高度可重复的关键点。然后，我们采用多尺度和多方向log-Gabor响应，根据改进的梯度位置和方向直方图(GLOH)描述符的空间结构构建特征向量(Mikolajczyk和Schmid, 2005)，并基于扩展相一致性模型进行优势方向分配(Ye等人，2005)。2017)。最后，介绍了应用最近邻匹配(NN)和快速样本一致性(FSC)进行特征匹配的过程(Wu et al.， 2015)。所提出的类sift算法流程图如图1所示。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="21-基于roewa和sobel算子的非线性扩散尺度空间构造"><a class="markdownIt-Anchor" href="#21-基于roewa和sobel算子的非线性扩散尺度空间构造"></a> 2.1 基于ROEWA和Sobel算子的非线性扩散尺度空间构造</h2>
+<p>噪声抑制和边缘保持是尺度空间构建的两个重要指标。许多学者在SAR尺度空间构建方面做出了贡献(Wang et al.， 2012, 2015;Fan等人，2015)。由于SAR图像与光学图像的差异，如第1节所述，传统的尺度空间生成策略无法产生一致的边缘结构信息，这会影响特征检测的准确性。因此，在SAR图像和光学图像的非线性扩散阶段分别采用ROEWA算子和Sobel算子，以获得一致的边缘结构。</p>
+<p>Perona和Malik(1990)将各向异性(梯度振幅作为扩散因子)引入尺度空间构建。基于计算梯度的连续迭代过程来识别图像中的边缘，可以准确定位边缘区域，降低边缘区域的模糊程度。非线性扩散表达式为:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑡</mi></mrow><annotation encoding="application/x-tex">𝑡</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span></span></span></span>为演化时间，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span></span></span></span>对应于高斯尺度空间中的尺度参数;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>i</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">div</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span></span></span></span>是散度算子;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∇</mi></mrow><annotation encoding="application/x-tex">\nabla</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">∇</span></span></span></span>为梯度算子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∇</mi><mi>J</mi></mrow><annotation encoding="application/x-tex">\nabla J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">∇</span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span></span></span></span>表示高斯平滑后的图像，标准差为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span></span></span></span>;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi mathvariant="normal">∇</mi><msub><mi>J</mi><mi>σ</mi></msub><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(|\nabla J_\sigma|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord">∣</span><span class="mord">∇</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.09618em;">J</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.09618em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">σ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mclose">)</span></span></span></span>是扩散系数方程，它以各向异性的方式控制扩散的程度，从而在平滑其他区域的同时保留边缘和纹理信息。扩散系数方程有三种典型的表达式:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>是一个对比因子，它对应于梯度直方图的第70百分位数的值，用于确定应该保留哪些边缘。由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">g_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">g_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>可以看出，扩散系数方程是梯度振幅的单调递减函数，这意味着梯度较大的区域将被保留。本文选择<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">g_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>作为扩散系数函数(Alcantarilla et al.， 2012)。</p>
+<p>非线性扩散方程(1)没有解析解。对于KAZE特征，采用加性算子分裂(AOS)技术将扩散方程离散为半隐式格式，离散迭代方程如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>J</mi><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">J^{(n+1)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8879999999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.09618em;">J</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8879999999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">n</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">t^{(n+1)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8879999999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8879999999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">n</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span>分别表示滤波后的图像和尺度空间第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(n+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>层的演化时间，其中，变量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">A_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为编码后图像的第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>维扩散系数矩阵。</p>
+<p>在非线性扩散过程中，计算图像梯度。由于SAR图像中存在散斑噪声的干扰，传统的GD算子无法有效捕获高反射率区域所包含的边缘结构。因此，利用GR算子来计算SAR图像的梯度，以抑制散斑噪声的影响。平均比率(ROA)算子(Touzi et al.， 1988)是第一个针对SAR图像提出的具有恒定虚警率的边缘检测算子。然而，由于对弱边缘的检测率较低，改进的ROEWA算子(Fjortoft et al.， 1998)后来被设计为对散斑噪声具有更强的鲁棒性和更准确的边缘检测。本文利用ROEWA算子计算基于非线性扩散的SAR图像尺度空间构建过程中的梯度信息。梯度计算公式为:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>G</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">G_x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>G</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">G_y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>分别代表水平和垂直梯度;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span></span></span></span>为无限对称指数滤波器(ISEF);<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>f</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">f_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>f</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">f_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>分别为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span></span></span></span>的因果部分和反因果部分;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>∗</mo></mrow><annotation encoding="application/x-tex">*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.46528em;vertical-align:0em;"></span><span class="mord">∗</span></span></span></span>是水平卷积算子;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>⊙</mo></mrow><annotation encoding="application/x-tex">⊙</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">⊙</span></span></span></span>是垂直卷积算子。关于ROEWA操作器的更多细节可以在Fjortoft等人(1998)中找到。</p>
+<p>对于光学图像，采用传统的GD方法构建尺度空间。事实上，当直接应用于光学图像时，GD算子比GR算子提供了更好的边缘保存(如图4所示)。我们使用Sobel算子计算光学图像的梯度;相应的，水平和垂直梯度分别为:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>∗</mo></mrow><annotation encoding="application/x-tex">*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.46528em;vertical-align:0em;"></span><span class="mord">∗</span></span></span></span>是卷积算子。</p>
+<p>与原始SIFT算法中执行的高斯尺度空间构建过程不同，我们仅采用第一组图像，并且在提出的策略中不进行下采样操作；即，尺度空间中所有层的图像都在同一组且大小相同。原因如下。首先，这种简化减少了计算复杂度。其次，大多数在更高组中的信息是冗余的，在更高组中检测到的关键点往往是稀疏且不准确的，并且由于提出的特征检测策略会过滤掉大多数错误定位的关键点，更高组的关键点可能会匹配不上。第三，下采样图像会丢失在特征描述阶段必需的纹理信息。相应的尺度参数计算如下：</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\sigma_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为第一层的尺度参数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span>为尺度层数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>为尺度比常数。本文设<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mn>0</mn></msub><mo>=</mo><mn>2</mn><mo separator="true">,</mo><mi>S</mi><mo>=</mo><mn>8</mn><mo separator="true">,</mo><mi>k</mi><mo>=</mo><msup><mn>2</mn><mfrac><mn>1</mn><mn>3</mn></mfrac></msup></mrow><annotation encoding="application/x-tex">\sigma_0=2,S=8,k=2^{\frac{1}{3}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">8</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9540200000000001em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9540200000000001em;"><span style="top:-3.363em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443142857142858em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.2255000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span></span></span></span></span></span></span></span></span></span></span></span>。建议的尺度空间构建流程如下:</p>
+<ol>
+<li>将输入图像(SAR或光学)与标准差为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\sigma_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的高斯滤波器进行卷积，作为尺度空间的初始层。</li>
+<li>基于最新生成的尺度层，对SAR图像使用ROEWA算子，对光学图像使用Sobel算子计算梯度;然后计算对比系数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>和扩散系数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">g_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</li>
+<li>使用Eq.(5)作为尺度空间的下(第i)层生成滤波后的图像。</li>
+<li>重复步骤(2)-(3)，直到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>=</mo><mi>S</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i=S-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>为止。</li>
+</ol>
+<p>分析了基于roewa的非线性扩散(ND)、基于sobelnd、导向滤波(GF)和双边滤波(BF)等不同滤波算法的尺度空间构建性能。为了保证公平的比较，每个算法的尺度空间的初始层都使用经过高斯滤波的图像，其标准差为2。BF算法的参数设置参考Wang et al.(2012)。迭代生成GF尺度空间，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi><mo>=</mo><mn>2</mn><mo separator="true">,</mo><mi>ϵ</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">\gamma=2,\epsilon=0.1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">ϵ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">1</span></span></span></span>，将尺度空间前一层得到的滤波图像作为当前尺度下的引导图像。用于尺度空间评估的真实SAR和光学图像如图2所示，其中图2(a)为TerraSAR-X (x波段)图像，图2(b)为谷歌地球图像。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图2。(a)原始SAR图像。(b)原始光学图像。</p>
+</blockquote>
+<p>图3给出了不同滤波算法的定性比较。为了更好地进行视觉比较，只显示图2所示选定区域(用红色矩形标记的区域)过滤结果的放大视图。由于前几个尺度的差异不明显，所以只显示最后三个尺度的滤波结果。对于SAR尺度空间，本文提出的基于roewa的ND算法具有更好的去噪性能，并且很好地保留了结构特征;特别是其他三种算法的边缘保持性能较差，建筑物中包含的几何信息完全模糊。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图3。所选区域的SAR和光学尺度空间对比如图2所示。</p>
+</blockquote>
+<p>对于光学尺度空间，两种ND算法的滤波性能差异不大(如图4(b)所示，对于光学图像，基于sobel的ND仍然优于基于roewa的ND);然而，由于我们的目标是捕获一致的梯度信息，这里我们选择基于sobel的ND算法进行光学尺度空间构建。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图4。尺度空间构建中不同滤波算法的评价。(a)比例尺层的EPI/ENL (SAR图像)。(b)相对于比例尺层的扩大指数(光学图像)。红色矩形表示用于计算EPI或ENL的子区域。</p>
+</blockquote>
+<p>为了提供更彻底的比较，我们考虑了两个定量标准:等效外观数(ENL) (Lee et al.， 2005)和边缘保存指数(EPI) (Sattar et al.， 1997)。ENL是测量均匀区域内散斑抑制的指标;ENL值越大，去噪性能越好。EPI测量图像中保持垂直和水平边缘的能力;EPI值越大，维护的细节越多。</p>
+<p>图4(a)为SAR尺度空间构建的定量评价结果。EPI和ENL曲线均显示了基于roewa的ND在去噪和边缘保持方面的优势;因此，它更适合于SAR尺度空间的构建。由于使用ENL来评估对光学图像中不存在的散斑噪声的抑制，因此仅使用EPI来评估光学尺度空间的不同滤波算法。从图4(b)的EPI曲线可以看出，基于sobel的ND算法的边缘保持效果最好。综上所述，本文提出的针对SAR和光学图像独特成像条件的尺度空间构建策略在结构保持一致的情况下具有很大的潜力。</p>
+<h2 id="22-基于harris-laplace技术的roewa和sobel算子特征检测"><a class="markdownIt-Anchor" href="#22-基于harris-laplace技术的roewa和sobel算子特征检测"></a> 2.2 基于Harris-Laplace技术的ROEWA和Sobel算子特征检测</h2>
+<p>传统的SIFT算法利用差分高斯尺度空间(DoG)来寻找关键点。当该检测器直接应用于SAR图像时，由于高斯平滑去斑效果较差，会检测出大量误检关键点。此外，SAR图像的纹理信息较差，但角点信息丰富;因此，角点检测器比SIFT检测器更适合用于此类图像的特征检测。SAR-SIFT算法(Dellinger et al.， 2015)首次将多尺度Harris角点检测器引入SIFT算法，并结合ROEWA梯度算子检测SAR图像中的关键点。但是，这种角点检测器只针对SAR图像设计，当直接应用于SAR和光学图像时，误检率会很高，找到相应关键点的能力会相对较低。为了解决这一问题，通过将ROEWA和Sobel梯度算子引入多尺度Harris角探测器，开发了光学sar SIFT (OS-SIFT)算法(Xiang et al.， 2018)，取得了令人满意的结果。然而，这些算法虽然可以检测尺度空间中的关键点，但无法准确识别每个角的特征尺度，从而大大增加了误检率。因此，本文利用ROEWA和Sobel算子结合Harris-Laplace算法进行多尺度角点检测，提取出准确且高度可重复的关键点。</p>
+<p>在Harris-Laplace算法中，关键点检测过程包括两个步骤:利用多尺度Harris函数进行角点检测和利用Laplace高斯(LoG)算子确定特征尺度。</p>
+<p>与构建高斯尺度空间不同，我们使用ND过程来表示前一节中描述的每个尺度。然后使用多尺度Harris函数检测每个尺度上的关键点，其定义如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sigma_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为尺度参数;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msqrt><mn>2</mn></msqrt><msub><mi>σ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sqrt{2}\sigma_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.05722em;vertical-align:-0.15em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.90722em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">2</span></span></span><span style="top:-2.86722em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg width="400em" height="1.08em" viewbox="0 0 400000 1080" preserveaspectratio="xMinYMin slice"><path d="M95,702c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,
+-10,-9.5,-14c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54c44.2,-33.3,65.8,
+-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10s173,378,173,378c0.7,0,
+35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429c69,-144,104.5,-217.7,106.5,
+-221c5.3,-9.3,12,-14,20,-14H400000v40H845.2724s-225.272,467,-225.272,467
+s-235,486,-235,486c-2.7,4.7,-9,7,-19,7c-6,0,-10,-1,-12,-3s-194,-422,-194,-422
+s-65,47,-65,47z M834 80H400000v40H845z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.13278em;"><span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为与尺度参数相适应的积分尺度;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span></span></span></span>为高斯核;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>∗</mo></mrow><annotation encoding="application/x-tex">*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.46528em;vertical-align:0em;"></span><span class="mord">∗</span></span></span></span>是卷积算子;其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>μ</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">\mu_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>μ</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">\mu_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>分别为SAR和光学图像的尺度适应Harris矩阵;利用式(7)计算SAR图像在SAR尺度空间每一级的局部梯度，利用式(8)计算光学图像在光学尺度空间每一级的局部梯度。计算多尺度Harris函数后，确定Harris响应如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq12.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>为常数，本文将其设为0.04。最后，基于计算得到的Harris响应，检测每一层尺度空间的局部最大值，然后根据SAR图像和光学图像不同设置的阈值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑑</mi></mrow><annotation encoding="application/x-tex">𝑑</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span></span></span></span>对边缘点和低对比度点进行滤波。</p>
+<p>在尺度空间中检测到的一些关键点将无法准确定位;因此，利用LoG算子来细化它们的特征尺度和位置。LoG函数给出如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq14.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mrow><mi>x</mi><mi>x</mi></mrow></msub></mrow><annotation encoding="application/x-tex">L_{xx}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="mord mathdefault mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mrow><mi>y</mi><mi>y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">L_{yy}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>分别是用拉普拉斯算子计算的水平和垂直二阶导数。如果LoG响应未达到最大值或低于给定阈值，则关键点将被拒绝。</p>
+<p>为了评估所提出的探测器的性能，使用尺寸为550 × 470的两幅合成图像(“五角星”和“几何”)来生成模拟的SAR和光学图像，如图5所示。在合成图像上加入乘性噪声生成模拟SAR图像。采用Rayleigh分布的乘法噪声模型，该模型的方差范围为0.01 ~ 0.1。同样，我们在相同的合成图像中加入方差在0.01 ~ 0.1之间的高斯白噪声，生成模拟光学图像</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图5。模拟SAR和光学图像的检测结果。(a1)(a2) Harris-Laplace ROEWA探测器在模拟SAR图像上的结果。(b1)(b2) Harris - Laplace Sobel探测器对模拟光学图像的处理结果。(c1)(c2) Harris ROEWA多尺度探测器在模拟SAR图像上的结果。(d1)(d2)多尺度Harris Sobel探测器对模拟光学图像的处理结果。(e1)(e2) DoG方法在模拟SAR图像上的结果。(f1)(f2) DoG方法对模拟光学图像的处理结果。</p>
+</blockquote>
+<p>作为评估所提出检测器性能的标准，我们使用可重复性，其定义如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq15.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mrow><mi>c</mi><mi>o</mi><mi>r</mi></mrow></msub></mrow><annotation encoding="application/x-tex">N_{cor}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为对应的关键点的个数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">n_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为在被检测图像中检测到的关键点的个数，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">n_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为在参考图像中检测到的关键点的个数。根据欧氏距离确定相应的关键点，其计算公式如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq16.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>m</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">m_i(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>为感测图像中的关键点，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n_i(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>为参考图像中的关键点，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi><mi>h</mi><mi>r</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">Thre</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault">h</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span></span></span></span>为给定阈值，设为1.5像素。</p>
+<p>图5为噪声级为4(即噪声方差为0.04)的模拟SAR和光学图像的检测结果。图5 (a1)(a2)和(b1)(b2)为所提检测器的结果，图5 (c1)(c2)和(d1)(d2)分别为Xiang等人(2018)提出的多尺度Harris ROEWA和多尺度Harris Sobel检测器的结果，图5 (e1)(e2)和(f1)(f2)为DoG方法的结果。所提出的检测器准确地定位了各个角落的关键点，并显示出最高的重复性。虽然多尺度Harris检测器也可以在每个角落定位关键点，但也存在一些误检，导致重复性低得多。DoG方法表现出最差的性能;识别出的关键点大都位于边缘附近，在高反射率区域存在较多的误检。</p>
+<p>不同噪声水平下光学图像和SAR图像的总处理时间的平均值和可重复性如图6所示。所提出的检测方法具有最高的重复性，无论噪声水平如何，都能获得满意的检测结果。多尺度Harris检测方法在低噪声条件下具有相似的检测性能，但在高噪声条件下重复性较差。由于DoG方法存在较多的误检，因此在各种噪声水平下其可重复性较低。所建议的方法的运行时间是最高的，但可比较，这并不奇怪，因为规模细化需要大量的迭代。因此，所提出的检测方法具有良好的检测效果和对噪声的鲁棒性。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图6。在不同噪音声级下的可重复性，其中噪音声级1至10对应于噪音方差从0.01至0.1。</p>
+</blockquote>
+<p>图7为图2所示同一位置的真实SAR图像和光学图像的特征检测结果。对于真实SAR图像，由于散斑噪声的影响，多尺度Harris ROEWA探测器在高反射率区域会产生很多误检，定位精度较低。相比之下，提出的哈里斯-拉普拉斯ROEWA检测器滤除了大多数假检测，并且在高反射率区域更准确。对于真实光学图像，由于没有散斑噪声，使用多尺度Harris Sobel检测器检测到的假关键点较少。因此，使用所提出的检测器检测到的关键点数量的减少不太明显，但所提出的哈里斯-拉普拉斯索贝尔检测器仍然比多尺度哈里斯索贝尔检测器更准确。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图7。真实SAR和光学图像的特征检测。(a) Harris ROEWA多尺度探测器在真实SAR图像上的结果。(b)多尺度Harris Sobel探测器对真实光学图像的处理结果。©哈里斯-拉普拉斯ROEWA探测器在真实SAR图像上的结果。(d)哈里斯-拉普拉斯索贝尔探测器在真实光学图像上的结果。</p>
+</blockquote>
+<h2 id="23-基于log-gabor滤波器的描述子构造及改进的gloh空间结构"><a class="markdownIt-Anchor" href="#23-基于log-gabor滤波器的描述子构造及改进的gloh空间结构"></a> 2.3 基于log-Gabor滤波器的描述子构造及改进的GLOH空间结构</h2>
+<p>一旦检测到可重复的关键点，下一步就是特征描述。由于光学图像和SAR图像的非线性强度差异，两幅图像在同一位置的局部区域计算的梯度信息会产生显著差异;因此，在这种情况下，基于梯度的描述符往往是不可靠的，并导致较差的匹配性能。近年来，研究人员将频域信息应用于特征描述，并取得了满意的结果。本文利用多尺度和多方位对数- gabor响应的振幅来构建描述子，因为它们对对比度、光照、尺度和方向的变化不变性。此外，我们还考虑了SAR图像的局部几何畸变，改进了GLOH描述符的公式，使其比GLOH描述符更具鲁棒性和独特性。优势取向分配是通过Ye等人(2017)提出的扩展相一致性模型实现的;然而，这个过程非常耗时。因此，我们提出了两种新的描述符，RI-ALGH和ALGH。ALGH是RI-ALGH的快速实现，不包括方向分配。在相对旋转有限的情况下，这种快速算法效率更高，可以获得更多的对应关系。RI-ALGH确实包括方向分配，使其相对于旋转变化不变;然而，这是比较耗时的。当未配准图像之间只有轻微旋转时，所提ALGH描述符比RI-ALGH具有更好的性能和更高的效率。ALGH和RI-ALGH的区别在于是否为每个关键点分配优势取向。</p>
+<h3 id="231-log-gabor反应的振幅"><a class="markdownIt-Anchor" href="#231-log-gabor反应的振幅"></a> 2.3.1 log-Gabor反应的振幅</h3>
+<p>Log-Gabor小波在空间域和频域都具有良好的局部化性能。它们可以用于从多个方向和多个尺度的输入图像中提取直观的边缘特征信息，使它们非常适合描述二维图像的局部结构。二维log-Gabor滤波器的频域表达式为:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq17.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>分别表示滤波器的尺度和方向;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>f</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">f_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为滤波器的中心频率;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><mrow><mi>s</mi><mo separator="true">,</mo><mi>o</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\theta_{s,o}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">o</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>为滤波器的方向;在给定的一组滤波器中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mi>f</mi></msub></mrow><annotation encoding="application/x-tex">\sigma_f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>定义滤波器带宽，并且应随<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>f</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">f_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>而变化，使得<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mi>f</mi></msub><mi mathvariant="normal">/</mi><msub><mi>f</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\sigma_f/f_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>保持不变;并定义了角带宽<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mi>θ</mi></msub></mrow><annotation encoding="application/x-tex">\sigma_\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</p>
+<p>空间域中的log-Gabor滤波器可以分解为两个不同的组件:偶数对称滤波器和奇对称滤波器。两种分解后的滤波器具有良好的方向性和局部性。因此，在空间域中定义二维log-Gabor滤波器，定义如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq18.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><msubsup><mi>G</mi><mrow><mi>s</mi><mo separator="true">,</mo><mi>o</mi></mrow><mrow><mi>e</mi><mi>v</mi><mi>e</mi><mi>n</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">LG^{even}_{s,o}(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.133108em;vertical-align:-0.383108em;"></span><span class="mord mathdefault">L</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">o</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">v</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><msubsup><mi>G</mi><mrow><mi>s</mi><mo separator="true">,</mo><mi>o</mi></mrow><mrow><mi>o</mi><mi>d</mi><mi>d</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">LG^{odd}_{s,o}(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.232216em;vertical-align:-0.383108em;"></span><span class="mord mathdefault">L</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">o</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">d</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>分别是过滤器在尺度<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑠</mi></mrow><annotation encoding="application/x-tex">𝑠</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和方向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑜</mi></mrow><annotation encoding="application/x-tex">𝑜</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>上的实部和虚部。图8显示了4个尺度和6个方向的奇偶对称滤波器。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图8。4个尺度和6个方向的奇偶对称滤波器。</p>
+</blockquote>
+<p>通过将输入图像与两个空域滤波器进行卷积，可以得到给定尺度和方向的log-Gabor响应:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq19.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>log-Gabor响应的幅值计算如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq20.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="232-优势取向分配"><a class="markdownIt-Anchor" href="#232-优势取向分配"></a> 2.3.2 优势取向分配</h3>
+<p>传统的基于梯度的定向分配对非线性强度差敏感;因此，我们采用扩展相同余模型来实现旋转不变性。传统的相位同余模型仅利用特征幅值。Ye等人(2017)通过计算相位一致性的方向扩展了该模型。相同幅(Kovesi, 2000)计算如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq21.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">W_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是一个加权函数，是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Δ</mi><msub><mi mathvariant="normal">Φ</mi><mrow><mi>s</mi><mo separator="true">,</mo><mi>o</mi></mrow></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Delta\Phi_{s,o}(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord">Φ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight">o</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>在尺度<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑠</mi></mrow><annotation encoding="application/x-tex">𝑠</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和方向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑜</mi></mrow><annotation encoding="application/x-tex">𝑜</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>上测量的相位偏差，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>𝑇</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">𝑇_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是估计的噪声阈值，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">ϵ</span></span></span></span>是一个小常数以防止被零除，而<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">⌊</mo><mo>⋅</mo><mo stretchy="false">⌋</mo></mrow><annotation encoding="application/x-tex">⌊⋅⌋</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌊</span><span class="mord">⋅</span><span class="mclose">⌋</span></span></span></span>是一个函数，当值为正或为零时产生的输出等于参数。</p>
+<p>利用log- Gabor响应的奇对称小波计算相位一致性，可用于获得图像在单一方向上的导数。利用多尺度奇对称小波计算垂直和水平响应，表示如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq22.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>然后计算相位一致性的方向如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq23.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>一旦获得相位一致性的幅度和方向，就可以根据方向直方图(Ye et al.， 2018)以与SIFT算法相同的方式分配优势方向。我们没有使用梯度振幅和方向，而是使用相位一致性振幅和方向来形成方向直方图，该直方图包含36个bin，每个bin的宽度为10◦。然后，通过高斯窗口对直方图进行加权。最后，选择直方图中最高的峰作为主导方向，选择至少为最高峰高度80%的其他峰作为辅助方向。</p>
+<p>值得注意的是，当指定方向时，图像补丁和局部log-Gabor响应映射都旋转到主导方向;然而，与梯度映射相比，log-Gabor响应映射不是旋转不变量，这意味着旋转局部log-Gabor响应映射将无法获得旋转后图像补丁对应的log-Gabor响应映射。为了获得旋转后的图像贴片的响应图，引入了圆形效应(Li et al.， 2020)，即将图像贴片顺时针旋转<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><msup><mn>0</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">30^\circ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.674115em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.674115em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span></span></span></span>，对应的响应图也顺时针旋转30◦，响应图的索引圆周移动1个位置。具体来说，移位位置由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>=</mo><mi>r</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">/</mi><mn>3</mn><msup><mn>0</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">k=rotation/30^\circ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">o</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord">/</span><span class="mord">3</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.674115em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span></span></span></span>决定。由于旋转角度并不总是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><msup><mn>0</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">30^\circ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.674115em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.674115em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span></span></span></span>的整数倍，因此我们取最接近𝑘的整数作为参考图像，取k两边的整数作为感测图像，也就是说，对于参考图像中的每个关键点，我们只构建一个特征向量，对于感测图像中的每个关键点，我们构建两个特征向量。通过这种方法得到的响应图只是一个近似，但根据我们的实验，所提出的描述符在各种旋转角度下仍然可以获得令人满意的结果(见3.2节)。当旋转角度大于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>18</mn><msup><mn>0</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">180^\circ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.674115em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">8</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.674115em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span></span></span></span>时，仍然满足上述假设，如图9所示。如图所示，移位位置为1，旋转后的响应映射与旋转后的图像响应映射之间的差异是微不足道的。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图9。log-Gabor响应图的循环移位效应。首先，我们旋转原始图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>21</mn><msup><mn>0</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">210^\circ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.674115em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.674115em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span></span></span></span>顺时针，然后我们应用log-Gabor滤波对原始和旋转的图像，只有第二个尺度的log-Gabor响应图显示更好的可视化。最后，顺时针旋转原始图像的响应映射<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>21</mn><msup><mn>0</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">210^\circ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.674115em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.674115em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span></span></span></span>，并将其与相应旋转图像的响应映射进行比较。</p>
+</blockquote>
+<h3 id="233-描述符构造"><a class="markdownIt-Anchor" href="#233-描述符构造"></a> 2.3.3 描述符构造</h3>
+<p>描述符是基于logGabor响应的幅度构建的，如前所述，log-Gabor滤波器的尺度数量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和方向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>分别设置为4和6，这意味着图像与log-Gabor滤波器组的卷积将产生总共24个响应映射。log-Gabor响应的振幅使用Eq.(20)计算，并且基于改进的GLOH描述符的空间结构确定每个关键点周围相对于其主导方向的局部区域。对于没有明显几何差异的光学图像，通常采用与SIFT描述符类似的方形区域。因此，为了实现对几何扭曲的鲁棒性，引入了类似gloh的结构来构造所提出的描述符。在该结构中，将一个圆形区域划分为具有3个径向仓和8个角度仓的对数极网格，得到17个位置仓，如图10(a)所示。然而，内部圆形料仓没有被划分为径向扇形，从而降低了GLOH结构的独特性(Sedaghat和Ebadi, 2015)。为了解决这个问题，我们将内圆形区域也划分为8个bin，这样总共有24个位置bin，如图10(b)所示。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图10。每个位置bin的描述符构造。(a) GLOH描述符结构。(b)提议的描述符结构。对于log-Gabor响应图中的每个尺度，我们计算像素的最大方向响应<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>w</mi><mi>s</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">w_s(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>及其相应的方向索引<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>s</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">k_s(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>。</p>
+</blockquote>
+<p>在每个位置bin中，与log-Gabor滤波器组进行卷积得到log-Gabor响应图，然后构建一个包含6个bin的log-Gabor方向直方图;每个定位仓的工艺流程如图10所示。对于log-Gabor响应图中的尺度𝑆，选取6个取向图<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><mi>A</mi><mi>m</mi><msub><mi>p</mi><mrow><mi>S</mi><mo separator="true">,</mo><mn>1</mn></mrow></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>A</mi><mi>m</mi><msub><mi>p</mi><mrow><mi>S</mi><mo separator="true">,</mo><mn>6</mn></mrow></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{Amp_{S,1}(x,y),..,Amp_{S,6}(x,y) \}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mopen">{</span><span class="mord mathdefault">A</span><span class="mord mathdefault">m</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.328331em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05764em;">S</span><span class="mpunct mtight">,</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">A</span><span class="mord mathdefault">m</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.328331em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05764em;">S</span><span class="mpunct mtight">,</span><span class="mord mtight">6</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mclose">}</span></span></span></span>中像素<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>的最大振幅作为权重因子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>w</mi><mi>s</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">w_s(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>，得到其对应取向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>s</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">k_s(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>的指数:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq24.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>对位置库中的每个像素计算出<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>w</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">w_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">k_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>后，可以根据式(25)计算出一个6维特征向量:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq25.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">V_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是位置bin的特征向量，通过遍历bin中的所有像素计算得到。最后，将各尺度的特征向量叠加得到方向直方图:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq26.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>通过连接24个位置箱的方向直方图，我们可以得到一个144维的特征描述符。为了实现尺度不变量，圆区域的半径相对于每个关键点的尺度设为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>15</mn><msub><mi>σ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">15\sigma_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.79444em;vertical-align:-0.15em;"></span><span class="mord">1</span><span class="mord">5</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sigma_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为公式(9)中描述的尺度参数。</p>
+<p>我们在11对真实SAR和光学图像上进行了实验，验证了三种描述子结构之间的匹配性能。表1给出了使用不同描述符结构的RI-ALGH描述符的平均NCM和CMR(这些术语的定义见第3.1节)。如上所述，所建议的结构产生了最好的结果。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/table1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表1不同描述符结构下RI-ALGH的平均匹配性能。</p>
+</blockquote>
+<p>为了更直观地比较所提出的描述符和基于梯度的描述符，图11显示了基于圆形邻域对一对SAR和光学图像中的两对关键点构建的RI-ALGH和GLOH描述符。半径设置为30像素，光学和SAR图像的GLOH描述符的构建与OSSIFT相同(Xiang et al.， 2018)。可以看出，本文提出的特征描述子对同一区域具有较高的相似性，对非线性强度差具有更强的鲁棒性，而GLOH描述子不能达到令人满意的结果</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图11。GLOH和RI-ALGH描述符的比较。(a) SAR图像。(b)光学图像。© RI-ALGH描述符。(d) GLOH描述符。SAR和光学图像中的红色圆圈表示用于构建特征描述子的两个关键点的圆形邻域。</p>
+</blockquote>
+<h2 id="24-基于神经网络和fsc的特征匹配"><a class="markdownIt-Anchor" href="#24-基于神经网络和fsc的特征匹配"></a> 2.4 基于神经网络和FSC的特征匹配</h2>
+<p>本文利用常用的神经网络匹配技术，在每个SAR和光学图像对之间建立尽可能多的初始对应关系。此外，我们使用FSC (Wu et al.， 2015)算法来去除异常值。最后，利用最小二乘法在正确匹配的基础上得到被测图像与参考图像之间的仿射变换。</p>
+<h1 id="3-实验结果及讨论"><a class="markdownIt-Anchor" href="#3-实验结果及讨论"></a> 3 实验结果及讨论</h1>
+<p>在本节中，对所提出方法的性能进行了评估。我们首先讨论参数设置并指定评估标准。接下来，我们比较了ALGH和RI-ALGH描述符在涉及尺度和旋转变化的测试中取得的配准性能。然后，利用不同噪声水平的模拟SAR图像对该方法的鲁棒性进行了评价;在比较中也考虑了其他最先进的方法。随后，在真实SAR图像和光学图像上对所提方法和其他最新方法进行了测试，结果证明了所提方法的优越性。最后，对计算复杂度进行了分析。实验采用MATLAB R2018a软件，在2.8 GHz Intel Core i7 CPU和8gb RAM的PC上进行。</p>
+<h2 id="31-参数设置和评价标准"><a class="markdownIt-Anchor" href="#31-参数设置和评价标准"></a> 3.1 参数设置和评价标准</h2>
+<p>对于基于ND的尺度空间构建，将尺度个数设置为8，将第一级(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>σ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\sigma_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)的尺度参数设置为2，将尺度比例常数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>设置为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mfrac><mn>1</mn><mn>3</mn></mfrac></msup></mrow><annotation encoding="application/x-tex">2^{\frac{1}{3}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9540200000000001em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9540200000000001em;"><span style="top:-3.363em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443142857142858em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.2255000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span></span></span></span></span></span></span></span></span></span></span></span>。请注意，所有比例的图像具有相同的分辨率。在特征检测阶段，Harris响应(方程)中的常数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>。公式(12) -(13))按推荐值设置为0.04，并将SAR图像和光学图像的非极大抑制阈值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span></span></span></span>设置为不同值，以保证检测到相似数量的关键点。对于描述符的构建，每个关键点的圆形区域半径设置为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>15</mn><msub><mi>σ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">15\sigma_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.79444em;vertical-align:-0.15em;"></span><span class="mord">1</span><span class="mord">5</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>,log-Gabor滤波器的尺度数和方向数分别设置为4和6。</p>
+<p>我们考虑了四个定量评价标准来评价所提出方法的性能。</p>
+<ol>
+<li>
+<p>正确匹配次数(NCM):由于本文的地面真值转换模型是未知的，我们使用地理空间图像分析工具ENVI手动选择和提炼30对均匀分布的地面控制点(gcp)，这些gcp在x-和𝑦-directions中残差最小(通常小于0.05像素)，以估计转换模型<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">H_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">H_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>计算的定位误差小于2像素的匹配定义为正确匹配。</p>
+</li>
+<li>
+<p>CMR (Correct Matching Ratio): CMR是NCM与总对应数的比值。CMR值越大，说明建立的匹配越准确。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq27.jpg" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+<li>
+<p>均方根误差(RMSE):根据转换模型<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">H_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>评估正确匹配的配准精度:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq28.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>式中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msubsup><mi>x</mi><mn>1</mn><mi>i</mi></msubsup><mo separator="true">,</mo><msubsup><mi>y</mi><mn>1</mn><mi>i</mi></msubsup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_1^i,y_1^i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-2.4518920000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>表示感测图像中第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>个匹配的剔除剔除的坐标，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msubsup><mi>x</mi><mn>2</mn><mi>i</mi></msubsup><mo separator="true">,</mo><msubsup><mi>y</mi><mn>2</mn><mi>i</mi></msubsup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_2^i,y_2^i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-2.4518920000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>表示参考图像中第i个匹配剔除的剔除剔除的坐标，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msubsup><mi>x</mi><mn>1</mn><msup><mi>i</mi><mo mathvariant="normal">′</mo></msup></msubsup><mo separator="true">,</mo><msubsup><mi>y</mi><mn>1</mn><msup><mi>i</mi><mo mathvariant="normal">′</mo></msup></msubsup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_1^{i&#x27;},y_1^{i&#x27;})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.19248em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.94248em;"><span style="top:-2.4518920000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8278285714285715em;"><span style="top:-2.931em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.94248em;"><span style="top:-2.4518920000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8278285714285715em;"><span style="top:-2.931em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>表示通过<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">H_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>计算得到的变换后的坐标。RMSE越小，配准精度越高。</p>
+</li>
+<li>
+<p>匹配Inliers的误差统计(Error Statistics of the Matched Inliers, ESMI) (Yu et al.， 2019): ESMI是匹配Inliers的匹配误差方差，其定义如下:</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/eq29.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mi>a</mi><msub><mi>r</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">Var_x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mi>a</mi><msub><mi>r</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">Var_y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>分别为x方向和y方向匹配误差的方差。较小的ESMI意味着匹配的内层稳定、准确。</p>
+</li>
+</ol>
+<h2 id="32-algh和ri-algh的尺度和旋转不变性检验"><a class="markdownIt-Anchor" href="#32-algh和ri-algh的尺度和旋转不变性检验"></a> 3.2 ALGH和RI-ALGH的尺度和旋转不变性检验</h2>
+<p>在本节中，评估了ALGH和RI-ALGH描述符对不同相对尺度和旋转角度的图像对的匹配性能。值得注意的是，这两个描述符都是在第2节中提出的相同匹配框架下进行测试的。原始测试图像对，分辨率为512 × 512，如图12(左列)所示。我们以SAR图像作为参考图像，模拟光学图像作为感知图像。考虑不同尺度、不同旋转角度的12幅模拟光学图像，如图12所示。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig12.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图12。模拟不同尺度和旋转角度的光学图像。上面一行模拟光学图像的比例尺均为0.7，下面一行模拟光学图像的比例尺均为0.5。从第一列到最后一列，旋转角度分别为0、5、10、15、30、45。</p>
+</blockquote>
+<p>ALGH与RI-ALGH的匹配结果如图13所示。从图(a)、(d)和(e)可以看出，在轻微旋转的情况下，ALGH和RI-ALGH描述符都可能获得大量的正确匹配。然而，当旋转角度超过15◦时，ALGH进行的配准过程失败，而RI-ALGH仍然可以在SAR和光学图像中获得均匀分布的匹配。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig13.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图13。使用ALGH和RI-ALGH描述符获得的匹配结果。每个面板上的图像对为ALGH结果，下图为RI-ALGH结果。刻度/旋转角度:(a) 0.7/5◦，(b) 0.7/15◦，© 0.7/45◦，(d) 0.5/0◦，(e) 0.5/10◦，(d) 0.5/30◦。</p>
+</blockquote>
+<p>为了对两种描述符进行更详细的比较，我们使用上一节介绍的定量标准来评估性能，实验结果如表2所示。当旋转角度小于15◦时，ALGH比RI-ALGH产生更正确的匹配。然而，由于对大旋转变化的敏感性，ALGH无法配准旋转角度大于15◦的两幅图像。此外，在轻微旋转的情况下，ALGH的CMR似乎总是大于RI-ALGH的CMR，这表明在没有优势取向分配的情况下获得的关键点更容易匹配。可以看出，在尺度和旋转变化有限的情况下，ALGH具有较好的匹配性能，而RI-ALGH在所有情况下都能获得满意的匹配结果。采用RI-ALGH方法的运行时间是采用ALGH方法的近3倍。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/table2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表2两种描述符在不同尺度和不同旋转角度下的定量比较。</p>
+</blockquote>
+<p>综上所述，RI-ALGH由于采用了优势取向分配程序，对旋转变化具有更强的鲁棒性，适用范围更广，但时间复杂度较高。然而，在旋转变化较小的情况下，ALGH可以获得更好的匹配性能和更高的时间效率。由于SAR图像中存在严重的散斑噪声，每个关键点的方向直方图计算可能不准确，导致一些关键点不匹配，影响最终的匹配性能。因此，当未配准图像相对旋转较小时，跳过主导方向分配程序不仅可以提高计算效率，还可以提高匹配精度。</p>
+<h2 id="33-不同噪声水平下sar和光学图像的实验结果"><a class="markdownIt-Anchor" href="#33-不同噪声水平下sar和光学图像的实验结果"></a> 3.3 不同噪声水平下SAR和光学图像的实验结果</h2>
+<p>在本节中，利用具有不同散斑噪声水平的模拟SAR图像和真实光学图像来评估所提出方法的鲁棒性。图12为SAR和光学图像。我们在原始SAR图像中加入2.2节中描述的不同噪声级的瑞利分布乘性噪声，得到模拟SAR图像。为了证明我们的方法的优势，我们比较了其他四种最先进的方法:GLOH (Mikolajczyk和Schmid, 2005)、OS-SIFT (Xiang等人，2018)、log-Gabor直方图描述符(LGHD) (Aguilera等人，2015)和RIFT (Li等人，2020)。值得注意的是，GLOH和LGHD只是特性描述符。因此，为了获得GLOH和LGHD结果，我们首先使用所提出的尺度空间构建方法和特征检测器提取关键点，然后在特征描述阶段使用GLOH或LGHD描述符。对于所有方法，我们选择最优参数以获得精细结果，并使用相同的匹配策略(NN)和异常值去除方法(FSC)。</p>
+<p>匹配结果如图14所示。可以看出，所提出的ALGH描述符具有最佳的匹配性能，所有匹配都是均匀分布的。RI-ALGH描述符表现出比ALGH更差的性能，因为匹配的准确性严重依赖于优势方向分配。还可以看出，基于log- gabor的描述符(图14© - (f))的性能优于基于梯度的描述符(图14(a) - (b))。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig14.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图14。噪声级为5的模拟SAR图像与原始光学图像的匹配结果。(a)GLOH。(b) OS-SIFT。© LGHD。(d)RIFT。(e) ALGH。(f) RI-ALGH。</p>
+</blockquote>
+<p>不同噪声水平下的NCM、CMR、RMSE和ESMI标准的定量比较如图15所示。在基于梯度的方法中，GLOH描述符的应用采用了尺度空间构建策略，使得GLOH的检测和描述过程对散斑噪声具有更强的鲁棒性。此外，尽管OS-SIFT缺乏获得大量匹配的能力，但在低噪声水平下，其配准精度远高于GLOH。这是因为OS-SIFT采用了定位细化和一定的优化过程，使得匹配的定位更加准确。然而，当噪声水平较高时，这两种方法都不能达到令人满意的效果。对于基于log- gabor的描述符，它们更能处理大的非线性强度差和严重的散斑噪声。RIFT使用MIM方法和与SIFT相似的方形区域来构建特征描述子，这使得它更适合配准具有辐射差的图像，但由于没有噪声抑制策略，其获得大量匹配的能力受到限制。结合所提出的框架，LGHD产生的性能比我们的方法差得多，因为它具有不同的形成描述符的方式和更高的描述符维度，使得描述阶段不稳定且不准确。所提出的RIALGH描述子不受旋转变化的影响，但与所提出的ALGH描述子相比，其匹配效果较差。随着噪声水平的增加，NCM显著降低，表明散斑噪声对优势取向分配结果的影响较大。本文提出的ALGH描述符在所有四个评价标准上都优于其他四种方法，这表明ALGH描述符对散斑噪声的鲁棒性优于其他方法。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig15.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图15。不同噪音水平下的定量比较。(a) NCM。(b) CMR。© RMSE。(d)𝑥-direction中匹配误差方差。(e)𝑦-direction中匹配误差方差。</p>
+</blockquote>
+<h2 id="34-真实sar和光学图像的实验结果"><a class="markdownIt-Anchor" href="#34-真实sar和光学图像的实验结果"></a> 3.4 真实SAR和光学图像的实验结果</h2>
+<p>在本节中，利用11对真实的SAR和光学图像来评估我们框架中提出的ALGH和RIALGH描述符的匹配性能。如前一节所述，还将它们与其他最先进的方法进行比较。考虑两种类型的真实SAR图像:TerraSAR-X (x波段，VV偏振)和Radarsat - 2 (c波段，HH偏振)。这两个传感器工作在不同的波段和不同的偏振模式。真正的光学图像都是谷歌地球图像。所有的图像对都是在上海附近获得的，包括城市和郊区。</p>
+<p>四对配准结果如图16所示。图16(a)和(b)(对4)显示了同一场景的Radarsat−2图像(513 × 497)和谷歌地球图像(497 × 483)的配准结果。可见，从这类图像中很难提取全局结构信息。尽管如此，我们提出的描述符仍然可以获得合理数量的正确匹配，从而证明了我们的方法相对于那些基于全局结构特征的方法的优势。图16©和(d)(对9)显示了一个郊区的TerraSAR-X图像(520 × 506)和谷歌地球图像(520 × 506)的配准结果，相对旋转轻微。与RI-ALGH描述符相比，ALGH描述符得到的匹配结果更加均匀，配准结果更加准确。图16(e)和(f)(对10)为同一类型图像对位于城市区域的配准结果，其中尺度和平移差异明显。在这种情况下，RIALGH比ALGH产生更正确的匹配，尽管两组匹配结果都是准确的。图16(g)和(h)(对11)为市区Radarsat−2图像(592 × 557)和谷歌地球图像(473 × 473)的配准结果，其中旋转和尺度差异明显。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig16.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图16。使用提议的ALGH和RI-ALGH描述符获得的匹配结果。(a)、©、(e)和(g)为ALGH的结果。(b)、(d)、(f)和(h)为RI-ALGH的结果。</p>
+</blockquote>
+<p>我们总共使用了11对真实的SAR和光学图像来评估这六种方法的性能，进行比较，定量结果如图17所示。六种方法的NCM和CMR值如(a)和(b)所示，均方根误差如©所示，匹配误差方差如(d)和(e)所示。从这些比较中可以看出，GLOH在大多数图像对中表现出最差的配准性能。虽然GLOH对散斑噪声的鲁棒性优于OS-SIFT，但由于其对非线性强度差的敏感性，对于真实SAR和光学图像仍然不能产生令人满意的结果。但是，OS-SIFT也是一种基于梯度的方法，其效果略好于GLOH。从图17(a)可以看出，基于梯度描述符(GLOH和OS-SIFT)的方法找到的正确匹配数量相对较少，导致配准性能较差。此外，由于城市地区存在严重的局部失真，进一步制约了匹配效果。与基于梯度的描述符相比，基于log- gabor的描述符似乎产生了良好的效果。然而，与其他三种方法(RIFT, ALGH, RI-ALGH)相比，LGHD仍然产生最差的性能，而RIFT的性能比前一节报道的要好得多。此外，如图17(d)和(e)所示，匹配误差的方差更为稳定，说明RIFT对噪声比较敏感。本文提出的两种描述符在四项评价指标上均取得了满意的结果，表明它们更适合于sar -光学图像配准。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig17.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图17不同方法在11对图像上的定量比较。(a) NCM。(b) CMR。© RMSE。(d)𝑥-direction中匹配误差方差。(e)𝑦-direction中匹配误差方差。</p>
+</blockquote>
+<h2 id="35-计算复杂度分析"><a class="markdownIt-Anchor" href="#35-计算复杂度分析"></a> 3.5 计算复杂度分析</h2>
+<p>在本节中，将简要分析尺度空间构建、特征检测和描述的计算复杂度，并给出六种方法的运行时间。</p>
+<p>假设输入图像的高度和宽度分别为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>。对于基于非线性扩散的尺度空间构建，其计算复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>S</mi><mi>M</mi><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(SMN)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span>为尺度的总数。Harris-Laplace特征检测的时间复杂度分为两个部分:在尺度空间中寻找初始关键点和自动尺度细化。对于第一部分，我们只需要遍历尺度空间中的所有像素，复杂度是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>S</mi><mi>M</mi><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(SMN)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>。获得<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">P_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>关键点后，根据LoG运算符对尺度位置进行细化，复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msub><mi>P</mi><mn>1</mn></msub><mi>N</mi><mi>I</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(P_1NI)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>是调查的尺度，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>是尺度细化的迭代次数。对于描述符的构造，它具有最高的复杂性。经过尺度细化后，剩余关键点的个数表示为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">P_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，对于每个关键点，研究<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑠</mi><mi>𝑜</mi></mrow><annotation encoding="application/x-tex">𝑠𝑜</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">o</span></span></span></span> log-Gabor响应图中对应的圆区域，因此描述符构建的复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>s</mi><mi>o</mi><msub><mi>P</mi><mn>2</mn></msub><msup><mi>R</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(soP_2R^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mord mathdefault">o</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑠</mi></mrow><annotation encoding="application/x-tex">𝑠</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑜</mi></mrow><annotation encoding="application/x-tex">𝑜</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>分别为logGabor滤波器组的尺度和方向。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>𝑅</mi></mrow><annotation encoding="application/x-tex">𝑅</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span>为关键点圆区域的半径。</p>
+<p>六种方法的运行时间如图18所示。正如预期的那样，由于方向分配过程耗时且需要构建大量特征向量，所提出的RI-ALGH描述符具有最高的计算成本。ALGH的运行时间仅比RIFT长，略短于OS-SIFT。ALGH计算的主要耗时过程是特征尺度的确定和描述子的构建。</p>
+<p><img src="/2024/06/20/RI-ALGH%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%89%A9%E6%95%A3%E5%92%8C%E6%9E%81%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84SIFT%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0SAR%E5%92%8C%E5%85%89%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%9A%E7%94%A8%E9%85%8D%E5%87%86/fig18.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图18。不同方法在11对图像上的运行时间。</p>
+</blockquote>
+<p>根据上述实验结果，在所有考虑的最先进的方法中，使用ALGH描述符或RI-ALGH描述符的所提出的配准框架表现出最好的性能。由于计算成本高，RI-ALGH描述符更适合于配准旋转变化较大的图像。所提出的ALGH描述符可以在轻微旋转下产生更好的结果，并且具有更低的计算成本。</p>
+<h1 id="4-结论"><a class="markdownIt-Anchor" href="#4-结论"></a> 4 结论</h1>
+<p>本文提出了一种结合空间域和频域信息的SAR图像配准算法。在该算法中，设计了一种新的基于非线性扩散的尺度空间构建策略，该策略由两个梯度算子驱动，可以更好地保持边缘并实现边缘一致性。在此基础上，提出了一种基于Harris-Laplace ROEWA和Harris-Laplace Sobel技术的特征检测方法，以检测精确且高度可重复的关键点。最后，利用GLOH的空间结构，基于多尺度和多方位log-Gabor响应的幅值，构建了RI-ALGH和ALGH两个新的描述符，提高了对SAR和光学图像非线性强度差异的鲁棒性。在模拟图像和各种真实SAR和光学图像上的实验结果表明，该方法在配准精度和抗噪声鲁棒性方面都优于现有的配准方法。在未来的研究中，我们将致力于提高该方法的计算效率。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/">#多模态</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/">#图像匹配</a>
+      
+        <a href="/tags/2020/">#2020</a>
+      
+        <a href="/tags/JPRS/">#JPRS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>RI-ALGH：基于非线性扩散和极坐标空间频率描述子的SIFT框架实现SAR和光学图像的通用配准</div>
+      <div>http://example.com/2024/06/20/RI-ALGH：基于非线性扩散和极坐标空间频率描述子的SIFT框架实现SAR和光学图像的通用配准/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/06/20/NCFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D/" title="NCFT：基于非线性一致特征变换的多模态图像自动匹配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">NCFT：基于非线性一致特征变换的多模态图像自动匹配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/19/CoFSM%EF%BC%9A%E8%80%83%E8%99%91%E5%85%B1%E7%94%9F%E6%BB%A4%E6%B3%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E9%81%A5%E6%84%9F%E5%BD%B1%E5%83%8F%E5%8C%B9%E9%85%8D/" title="CoFSM：考虑共生滤波的多模遥感影像匹配">
+                        <span class="hidden-mobile">CoFSM：考虑共生滤波的多模遥感影像匹配</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
