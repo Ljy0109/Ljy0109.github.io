@@ -16,12 +16,12 @@
   <meta name="author" content="Mr.Yuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="多模态图像匹配算法ASTC (GRS Letter 2024)">
+    <meta name="description" content="多模态图像匹配算法ASTC (GRS Letter 2024)基本的自相似和三维卷积对结构噪声进行滤波">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ASTC：基于邻域自相似三维卷积的多模式图像配准">
 <meta property="og:url" content="http://example.com/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/index.html">
 <meta property="og:site_name" content="Blog of Mr.Yuan">
-<meta property="og:description" content="多模态图像匹配算法ASTC (GRS Letter 2024)">
+<meta property="og:description" content="多模态图像匹配算法ASTC (GRS Letter 2024)基本的自相似和三维卷积对结构噪声进行滤波">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/title.jpg">
 <meta property="og:image" content="http://example.com/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/fig1.jpg">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://example.com/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/eq5.jpg">
 <meta property="og:image" content="http://example.com/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/eq6.jpg">
 <meta property="article:published_time" content="2024-06-20T11:02:00.000Z">
-<meta property="article:modified_time" content="2024-06-20T12:47:09.874Z">
+<meta property="article:modified_time" content="2024-06-20T13:21:11.511Z">
 <meta property="article:author" content="Mr.Yuan">
 <meta property="article:tag" content="多模态">
 <meta property="article:tag" content="图像匹配">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.1k 字
+          4.3k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          35 分钟
+          36 分钟
         
       </span>
     
@@ -304,6 +304,7 @@
               <p><img src="/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/title.jpg" srcset="/img/loading.gif" lazyload alt></p>
 <h1 id="adjacent-self-similarity-3-d-convolution-for-multimodal-image-registration"><a class="markdownIt-Anchor" href="#adjacent-self-similarity-3-d-convolution-for-multimodal-image-registration"></a> Adjacent Self-Similarity 3-D Convolution for Multimodal Image Registration</h1>
 <h1 id="astc基于邻域自相似三维卷积的多模式图像配准"><a class="markdownIt-Anchor" href="#astc基于邻域自相似三维卷积的多模式图像配准"></a> ASTC：基于邻域自相似三维卷积的多模式图像配准</h1>
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/10384385">Adjacent Self-Similarity 3-D Convolution for Multimodal Image Registration | IEEE Journals &amp; Magazine | IEEE Xplore</a></p>
 <h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h1>
 <p>由于非线性辐射差异、光照变化以及图像噪声的干扰，多模式图像的配准面临着巨大的挑战。这些问题经常导致在多模式配准过程中不可靠的相似性度量和低精度的点匹配。为了应对这些挑战，本文提出了一种基于邻域自相似三维卷积(ASTC)的MMI配准方法。该方法包括三个主要步骤：特征点提取，其中关键点通过块快速方法统一提取；ASTC显著特征构建，其中使用局部相邻自相似(ASS)模型来创建多维特征；特征结构增强，其中使用三维卷积进行特征增强，完成图像特征描述过程。本文对ASTC方法进行了评估，并将其与其他六种算法进行了比较。结果表明：1)ASTC算法有效地克服了MMIS中的辐射失真、亮度差异和光照差异，提高了点匹配的精度；2)ASTC算法实现了更高的匹配效率，减少了时间消耗，是各种数据类型的实用选择。总之，所提出的ASTC算法为可靠的MMIS配准提供了一个健壮的解决方案，解决了与图像差异相关的常见挑战，并提高了过程的整体精度。这封信中使用的实验数据和代码链接可在https://github.com/yangwill81/ASTC.上找到</p>
 <p><strong>索引项</strong>-三维卷积、相邻自相似(ASS)特征、多模式图像(MMI)、相似性度量、模板匹配。</p>
@@ -320,9 +321,9 @@
 <h1 id="2-astc方法"><a class="markdownIt-Anchor" href="#2-astc方法"></a> 2 ASTC方法</h1>
 <p>提出的ASTC算法由三部分组成：1)特征点提取；2)ASTC特征描述符构造；3)特征相似度量和粗差分剔除。在步骤3)中，相似性度量是快速傅立叶变换算法[12]。粗差剔除方法使用快速样本一致性方法[13]。算法流程图如图1所示。本文重点介绍了特征点的提取和重要的ASTC特征构造。</p>
 <p><img src="/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/fig1.jpg" srcset="/img/loading.gif" lazyload alt></p>
-<h2 id="21-模块快速特征提取"><a class="markdownIt-Anchor" href="#21-模块快速特征提取"></a> 2.1 模块快速特征提取</h2>
+<h2 id="21-模块fast特征提取"><a class="markdownIt-Anchor" href="#21-模块fast特征提取"></a> 2.1 模块Fast特征提取</h2>
 <p>医学图像管理信息系统的结构特征相似度高，抗辐射差异能力强，从图像结构特征图中提取特征点可以保证足够的特征量。为此，首先构造了一种非线性相位一致性特征。在完成MMI的非线性计算后，进行了相位一致性计算，得到了相位图[3]。</p>
-<p>此外，为了进一步保证特征点的均匀分布，本文设计了一种块快速特征检测器，从平均扭矩特征图中提取出分布均匀的特征点。将当前图像层划分为HSub×WSUB小块，并对每个小块执行快速特征检测[14]。在每个子块内，在完成特征点提取后，根据扭矩响应值从高到低对特征点进行排序，选择特征点目标阈值内的点作为关键点，丢弃剩余的特征点。</p>
+<p>此外，为了进一步保证特征点的均匀分布，本文设计了一种块Fast特征检测器，从平均扭矩特征图中提取出分布均匀的特征点。将当前图像层划分为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mrow><mi>s</mi><mi>u</mi><mi>b</mi></mrow></msub><mo>×</mo><msub><mi>W</mi><mrow><mi>s</mi><mi>u</mi><mi>b</mi></mrow></msub></mrow><annotation encoding="application/x-tex">H_{sub}×W_{sub}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">u</span><span class="mord mathdefault mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">u</span><span class="mord mathdefault mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>小块，并对每个小块执行Fast特征检测[14]。在每个子块内，在完成特征点提取后，根据扭矩响应值从高到低对特征点进行排序，选择特征点目标阈值内的点作为关键点，丢弃剩余的特征点。</p>
 <h2 id="22-astc描述符构造"><a class="markdownIt-Anchor" href="#22-astc描述符构造"></a> 2.2 ASTC描述符构造</h2>
 <p>模板匹配的关键是描述符的构造。这封信旨在克服MMI之间的非线性辐射差异、对比度差异和噪声效应。具有ASS模型[15]的算法可以将特征邻域缩减到单位像素，通过偏移均值滤波快速提取图像的自相似特征，然后进行内插得到多通道相邻的自相似图像。该算法涉及一组具有连续方向变化的自相似图像，这些图像精细地表达了图像的结构特征。然而，当ASS算法的特征邻域过小时，自相似图像信息不足。此外，提取的细微特征容易受到噪声的干扰。</p>
 <p>为了克服上述问题，本文在ASS算法的启发下，以图像的结构特征为切入点，提出了一种邻域自相似三维卷积特征描述子模型。该模型包括三个主要步骤：自执行直方图均衡化、局部ASS特征计算和三维卷积函数优化。</p>
@@ -443,6 +444,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/" title="R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

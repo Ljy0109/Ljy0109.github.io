@@ -1,0 +1,864 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="非开源，多模态图像匹配算法R2FD2，2024 TGRS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配">
+<meta property="og:url" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="非开源，多模态图像匹配算法R2FD2，2024 TGRS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/title.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig2.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq2.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq3.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq4.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq5.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq6.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq7.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq8.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq9.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq10.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig3.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq11.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq12.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq14.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig4.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq15.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq16.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig5.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig6.jpg">
+<meta property="og:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/table1.jpg">
+<meta property="article:published_time" content="2024-06-21T06:32:00.000Z">
+<meta property="article:modified_time" content="2024-06-21T08:09:20.089Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="遥感">
+<meta property="article:tag" content="图像匹配">
+<meta property="article:tag" content="论文翻译">
+<meta property="article:tag" content="TGRS">
+<meta property="article:tag" content="2024">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/title.jpg">
+  
+  
+  
+  <title>R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-21 14:32" pubdate>
+          2024年6月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          99 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/title.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="r2fd2-fast-and-robust-matching-of-multimodal-remote-sensing-images-via-repeatable-feature-detector-and-rotation-invariant-feature-descriptor"><a class="markdownIt-Anchor" href="#r2fd2-fast-and-robust-matching-of-multimodal-remote-sensing-images-via-repeatable-feature-detector-and-rotation-invariant-feature-descriptor"></a> R2FD2: Fast and Robust Matching of Multimodal Remote Sensing Images via Repeatable Feature Detector and Rotation-Invariant Feature Descriptor</h1>
+<h1 id="r2fd2基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配"><a class="markdownIt-Anchor" href="#r2fd2基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配"></a> R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配</h1>
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/10092838">R₂FD₂: Fast and Robust Matching of Multimodal Remote Sensing Images via Repeatable Feature Detector and Rotation-Invariant Feature Descriptor | IEEE Journals &amp; Magazine | IEEE Xplore</a></p>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h1>
+<p>由于辐射和几何上的显著差异，多通道图像之间的特征对应关系识别面临着巨大的挑战。针对这些问题，我们提出了一种新的特征匹配方法(R2FD2)，它由一个可重复的特征检测器和一个旋转不变的特征描述子组成，该方法对辐射和旋转差异具有很强的鲁棒性。在第一阶段，提出了一种用于特征检测的可重复特征检测器，称为LOG的多通道自相关(MALG)，它将多通道自相关策略与LOG-Gabor小波相结合，检测出重复性高、分布均匀的兴趣点。在第二阶段，构造了旋转不变的特征描述子，称为旋转不变的LOG最大索引图(RMLG)，它包括优势方向的快速分配和特征表示的构造。在主方向的快速分配过程中，建立了旋转不变的最大折射率映射(RMIM)来处理旋转变形。然后，RMLG将旋转不变的RMIM与DAISY的空间构型相结合，以提高RMLG对辐射和旋转变化的抵抗能力。最后，利用不同类型的多模图像数据集对R2FD2算法的匹配性能进行了实验验证。实验结果表明，R2FD2比现有的五种特征匹配方法具有更好的性能。此外，我们的R2FD2实现了两个像素以内的匹配精度，并且在匹配效率上比对比方法有很大的优势。</p>
+<p><strong>索引项</strong>-LOG的多通道自相关(MALG)、多模式图像匹配、R2FD2、旋转不变的最大索引映射(RMIM)、旋转不变的LOG最大索引映射(RMLG)。</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1 引言</h1>
+<p>随着众多多传感器集成立体观测设施从空间、机载和地面平台上发射，不同的传感器可以在不同的时间获得大量的多模式遥感图像[1]，如红外、多光谱、高光谱和合成孔径雷达(SAR)图像[2]、[3]、[4]、[5]、[6]。此外，MRSI的集成可以为束块调整[7]、图像融合[8]和变化检测[9]领域中的不同应用提供补充信息。MRSI的集成有一个前提条件，即稳健的MRSI匹配(MRSIM)过程是不可或缺的。</p>
+<p>通常，MRSIM的目标是自动识别两个或多个多模式图像之间的准确对应或控制点(CP)[10]、[11]。然而，不同的磁共振成像设备在尺度、旋转和辐射等方面存在着很大的差异，不同传感器的图像质量容易受到噪声、云层和模糊的干扰，这些都是不可避免的问题，给磁共振成像设备的可靠匹配带来了巨大的挑战。图1示例性地示出了上述多模式图像匹配的这些挑战。</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>鉴于上述挑战，在过去的二十年里，已经提出了许多多模式匹配的方法。这些多模式匹配方法通常可以分为三类：基于区域的方法、基于特征的方法和基于学习的方法[12]、[13]。随着深度学习技术的发展，基于学习的匹配方法表现出优异的匹配性能，已经发展成为MRSIM领域中一条不可忽视的管道[14]。Wang等人。[15]提出了一种有效的深度神经网络，通过信息反馈来优化整个处理过程(学习映射函数)，并利用转移学习来提高其框架的性能和效率。为了对比特征匹配的不同阶段，Hughes等人。[16]提出了一种全自动化的SAR-光学匹配框架，该框架由Good ness网络、对应网络和孤立点减少网络组成，每个子网络都被证明能够单独提高匹配性能。此外，周等人还提出了一些新的结论。[17]采用深度学习技术提取结构特征，利用浅层伪暹罗网络设计多尺度卷积梯度特征(MCGFs)。同样，Quan et al.[18]利用自精馏特征学习网络(SDNet)对深度网络进行优化增强，利用更多相似特征，实现了光学-SAR图像的稳健匹配。叶等人[19]设计了一种不需要昂贵的地面真值标签的多尺度框架和一种新的基于结构相似性的损失函数范式，该范式可以直接学习从多峰图像对到其变换参数的端到端映射。此外，它们的匹配框架具有稳定的性能，对多模式图像对之间的非线性辐射差异(NRD)具有鲁棒性。</p>
+<p>虽然基于学习的匹配方法可以通过提取比传统手工特征更精细的共同特征来显著提高它们对几何和辐射失真的抵抗能力，但这种管道的主要局限性也被发现是显著的。一方面，基于监督学习的方法往往依赖于大量的训练数据[15]、[16]、[17]、[18]，训练模型的可移植性较差，导致它们在不同测试数据集上的匹配性能普遍下降。另一方面，尽管无监督学习方法可以克服对训练数据的依赖，但各种参数的转换过程非常复杂[19]，其效率取决于计算机基础设施的基本配置。这些不足限制了基于学习的流水线在多模式匹配领域的广泛应用。</p>
+<p>通常，传统的基于区域的方法通过选择一些经典的相似性度量来识别对应关系，以评估模板窗口内的强度信息的相似性。空间域中有三种常用的相似性度量：差平方和(SSD)、归一化互相关(NCC)和互信息(MI)。此外，相位相关是频域中最常用的相似性度量，因为它具有光照不变性[20]。最近，人们提出了一种基于结构特征的流水线，用于多模式图像之间的非归一化。该管道的这些方法通过使用上述相似性度量(即，SSD、NCC和相位相关性)来评估所生成特征的相似性，而不是强度信息。其中最具代表性的有定向相位一致性直方图(HOPC)[21]、相位一致性结构描述符(PCSD)[22]、定向梯度通道特征(CFOG)[23]和光学-合成孔径雷达相位相关(PC)[24]。然而，基于区域的匹配方法对图像之间的几何失真(即，缩放和旋转变形)非常敏感，并且通常需要实施地理参考来消除显著的全局几何失真[25]。</p>
+<p>相比之下，基于特征的匹配方法依赖于图像之间的显著和明显的特征(即，点、线和区域)，并且与基于区域的方法相比，对几何失真和NRD更稳健[26]。在这些方法中，点特征是遥感领域中最常见的局部不变特征。该匹配流水线通常由两个关键组件组成：特征检测和特征描述。在过去的几十年里，人们对单峰图像的特征匹配方法进行了深入的研究，并开发出了许多经典的特征检测器和特征描述子。这些传统的特征检测器基于图像的梯度信息来检测图像之间的显著特征，例如Moravec[27]、Harris[28]、GaussDifference(DOG)[29]和来自加速分段测试(FAST)[30]的特征。然而，这些基于梯度的检测器很难在多模式图像之间检测重复性高的兴趣点。根据光学图像和合成孔径雷达图像的固有特性，向等人提出了一种新的方法。[31]利用指数加权平均的多尺度Sobel算子和多尺度比算子，分别为光学图像和合成孔径雷达图像设计一致的梯度，构造了两个Harris尺度空间来提取IP地址。此外，一些研究发现，使用相位一致性(PC)模型可以有效地抵抗显著的NRD，并比仅使用梯度信息提取更稳定和可重复的IP。叶等人[32]将最小PC矩与高斯拉普拉斯矩相结合(MMPC-LAP)，在图像尺度空间检测稳定的IP。随后，Li等人提出了自己的观点。[33]分别在PC的最小矩图和最大矩图上检测到角点特征点和边缘特征点。虽然这些基于PC的特征检测器对多模式图像之间的NRD有一定的抵抗力，但它们的代价是计算复杂性高。</p>
+<p>一旦MRSI的特征检测完成，就必须寻找相应的局部不变特征描述子。类似地，许多众所周知的特征描述子的构造也利用了图像的梯度信息，因此它们不能实现具有几何失真和辐射差异的MRSI的稳健匹配。尺度不变特征变换(SIFT)[29]、梯度位置和方向直方图(GLOH)[34]、DAISY[35]及其改进的变体[31]、[36]、[37]是最具代表性的特征描述符。特别是，如图1所示，多模式图像中如此显著的强度差异和严重的斑点噪声将进一步降低这些基于梯度的描述符的匹配性能，并伴随着识别准确对应的困难。</p>
+<p>最近流行的用于辐射稳健描述的管道是结构特征，因为它比上述文献中已经描述的基于梯度的描述更能抵抗形态变化。由于已经为多模式图像匹配开发了从结构特征导出的多个描述符，最常用的特征描述符可以分为两类。前者基于局部自相似(LSS)描述子，利用对数极坐标空间结构作为特征描述子，能够有效地捕捉局部图像块内部自相似的几何组成，并且在一定程度上对显著的NRD不敏感[38]，[39]，[40]，[41]。叶和单[40]引入了最小二乘描述子作为一种新的相似性度量来检测多光谱遥感图像匹配中的对应关系。在最小二乘支持向量机的基础上，进一步设计了一种用于光学和SAR图像匹配的密集局部自相似(DLSS)形状描述符[41]。Sedaghat和Mohammadi[38]通过向计算自相似值的图像块添加方向属性来改进有向自相似直方图(HOSS)描述符的区分性。对于最小二乘算法的计算复杂性问题，熊某等人提出了解决方案。[39]基于自相似的对称性，提出了一种基于偏置均值滤波的特征描述符–定向自相似(OSS)。然而，这些描述符仍然存在局限性，因为LSS描述符的区分能力相对较低，可能导致在某些多模式匹配情况下无法保持稳健的匹配性能[22]。</p>
+<p>辐射稳健描述的另一个结构特征是利用基于最大傅立叶分量的位置感知特征的PC模型[42]。由于与梯度信息相比，PC模型对光照和对比度的变化更稳健，因此，已经开发了许多基于PC的描述符[32]、[33]、[43]、[44]。叶等人[32]结合扩展的PC模型和DAISY的排列方式，提出了一种局部HOPC(LHOPC)描述子。Li等人。[33]提出了一种对辐射变化不敏感的特征变换(RIFT)方法，并在PC模型的基础上引入了最大指数图(MIM)进行特征描述。香等人。[44]改进了不同的PC模型，以构造用于光学和SAR图像匹配的特征。在一项类似的工作中，Fan等人。[43]设计了一种多尺度PC描述符，称为多尺度自适应入库相位一致性(MABPC)，它使用自适应入库空间结构对多尺度相位一致性特征进行编码，同时提高了其对几何和辐射差异的鲁棒性。然而，在特征描述的过程中，上述方法要么缺乏旋转不变性[44]，要么依赖基于LOG-Gabor卷积序列的耗时的循环遍历来实现旋转不变性[33]，或者通过将方向直方图与局部PC特征相结合来估计主导方向，这些特征也很耗时且容易产生离群点[32]、[43]、[45]，这极大地影响了最终的匹配性能。</p>
+<p>虽然人们已经做了许多努力来增强MRSIM的稳健性，但现有的特征检测器在IP重复性方面仍然不是很有效，特征描述子在旋转不变性方面仍然具有挑战性。针对上述关键成分在特征匹配中的局限性，本文提出了一种稳健有效的基于特征的多模式匹配方法(R2FD2)。首先，为了提高特征检测的可重复性，我们构造了一种可重复的对数Gabor多通道自相关(MALG)特征检测器。MALG检测器将多通道自相关策略与LOG-Gabor小波相结合，能够提取分布均匀、重复性高的IP地址。随后，我们构造了一种旋转不变的特征描述子，称为LogGabor的旋转不变最大索引映射(RMLG)。MALG描述符由主导方向的快速分配策略和高级描述符配置组成。在主方向的快速分配过程中，我们提出了一种新的旋转不变MIM(RMIM)来实现可靠的旋转不变性。然后，RMLG描述符将旋转不变的RMIM与DAISY的空间构型相结合来刻画多模式图像的区分性特征，目的是构建对辐射和旋转差异尽可能稳健的特征表示。</p>
+<p>以下是主要贡献的摘要。</p>
+<ol>
+<li>定义了一种可重复特征检测器MALG，用于检测分布均匀、重复性高的IP。</li>
+<li>基于具有旋转不变性的RMIM和DAISY的空间构型，构造了旋转不变特征描述子RMLG。</li>
+<li>本文提出的由MALG检测器和RMLG描述符组成的R2FD2匹配方法，利用现有的各种磁共振成像方法，进行了定量和定性的评估。</li>
+</ol>
+<p>本文的其余部分组织如下。第二节介绍了所提出的多模式特征匹配方法，重点介绍了MALG检测器和RMLG描述子的构造。第三节通过对不同的多模式图像对进行实验，检验和评估了所提出的R2FD2算法的匹配性能。最后，在第四节对结论进行了总结。</p>
+<h1 id="2-方法"><a class="markdownIt-Anchor" href="#2-方法"></a> 2 方法</h1>
+<p>为了提高多模式图像的匹配性能，提出了一种基于MALG检测器和RMLG描述子的快速、稳健的匹配方法(R2FD2)。具体地说，MALG检测器首先被用来检测多模式图像对之间具有高重复性的IP。然后，使用RMLG描述子来稳健地刻画被检测IP的局部不变特征。建议的R2FD2的流程图如图2所示，然后详细阐述。</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="21-malg探测器的构建"><a class="markdownIt-Anchor" href="#21-malg探测器的构建"></a> 2.1 MALG探测器的构建</h2>
+<p>如上所述，与梯度信息相比，PC模型更能抵抗多模式图像之间的显著NRD，已有相关研究[32]、[33]使用PC模型来提取稳定的IP。然而，这些使用PC的最小矩或最大矩的检测器可能会导致多方向特征的损失，并且计算代价很高，因为它们是PC在不同方向上的加权响应，并且代表了随着方向的变化的矩[46]。利用LOG-Gabor小波良好的抗噪和边缘提取性能，计算了PC在不同方向上的响应[47]。为了在保证激电信号高重复性的同时提高特征检测器的可靠性，本文将多通道自相关策略与LOG-Gabor小波相结合，提出了一种基于MALG的激电信号检测方法。</p>
+<p>考虑到良好的噪声抑制和边缘保持是优秀特征检测器的两个重要特征[48]，因此在构造MALG检测器时使用了二维log-Gabor小波。它们可以从多模式图像对中提供多方向、多尺度的边缘特征信息的有用描述，适合于描述多模式图像的局部结构。通常，二维LOG-Gabor滤波器表示如下：</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>分别表示对数Gabor过滤器的方向和比例；<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">β</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span></span></span>确定过滤器的带宽；<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">F_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>分别定义过滤器的频率和中心频率；<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>δ</mi><mi>θ</mi></msub></mrow><annotation encoding="application/x-tex">δ_θ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是角带宽；<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>θ</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">θ_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>表示过滤器的方向。</p>
+<p>由于二维LOG-Gabor是一种频域滤波器，因此其在空间域中的表达式可以通过基于极坐标下对应的LOG-Gabor滤波器的频率响应的傅里叶逆变换来获得[49]。因此，空间域中的二维LOG-Gabor函数通常可以分解为偶对称滤波器和奇对称滤波器，其定义如下：</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中实部<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><msup><mi>G</mi><mrow><mi>e</mi><mi>v</mi><mi>e</mi><mi>n</mi></mrow></msup><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>s</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">LG^{even}(x,y,s,o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">L</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">v</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span></span></span></span>和虚部<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><msup><mi>G</mi><mrow><mi>o</mi><mi>d</mi><mi>d</mi></mrow></msup><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>s</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">LG^{odd}(x,y,s,o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.099108em;vertical-align:-0.25em;"></span><span class="mord mathdefault">L</span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">d</span><span class="mord mathdefault mtight">d</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span></span></span></span>分别表示<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>尺度上取向为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>的对数-Gabor小波的偶对称和奇对称滤波器。</p>
+<p>因此，通过将图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">I(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>与两个偶对称和奇对称滤波器卷积，可以得到LOG-GABOR滤波器的空间响应分量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>s</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo><mi mathvariant="normal">和</mi><mi>O</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>s</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(x,y,s,o)和O(x,y,s,o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span><span class="mord cjk_fallback">和</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span></span></span></span></p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>然后，将所有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">N_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>尺度的LOG-Gabor幅值在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>方向上求和，得到多通道LOG-Gabor特征；形式上，多通道LOG-Gabor特征定义如下：</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>s</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(x,y,s,o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span></span></span></span>是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">I(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>在尺度<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和方位<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>处的幅度分量，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">N_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>表示LOG-GABOR滤波器组的尺度数目，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">N_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>表示LOG-GABOR滤波器组的取向数目，并且<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Σ</mi></mrow><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">Σ</span></span></span></span>在对数-GABOR滤波器组上对于方位<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>在不同尺度上求和。此外，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">A_i(x,y,o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span></span></span></span>等于对数-GABOR滤波器组在方位<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>的位置<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>处的幅度响应，并且<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>N</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">i=1,2,...,N_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。在本文中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>s</mi></msub><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">N_s=4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>o</mi></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">N_o=6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span></span></span></span>是固定值。</p>
+<p>对于多通道LOG-Gabor特征<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">A_i(x,y,o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span></span></span></span>，其在位置<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>处移位<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">Δ</mi><mi>x</mi><mo separator="true">,</mo><mi mathvariant="normal">Δ</mi><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\Delta x,\Delta y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">Δ</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">Δ</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>之后的每个方向的LOG-Gabor特征的自相似性可以通过以下自相关函数来获得：</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>W</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">W(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>是以位置<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>为中心的窗口。此外，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>w</mi><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">w(u,v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mopen">(</span><span class="mord mathdefault">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span>是权函数，其或者是常量，或者是高斯权函数。根据泰勒展开，在对每个通道的LOG-Gabor特征移位<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">Δ</mi><mi>x</mi><mo separator="true">,</mo><mi mathvariant="normal">Δ</mi><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\Delta x,\Delta y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">Δ</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">Δ</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>之后执行一阶近似</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>A</mi><mi>x</mi><mi>o</mi></msubsup></mrow><annotation encoding="application/x-tex">A^o_x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93033em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>A</mi><mi>y</mi><mi>o</mi></msubsup></mrow><annotation encoding="application/x-tex">A^o_y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.066438em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>是对数-Gabor特征在相应方向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>上的偏导数。因此，每个方向的上述自相关函数可以简化为</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">M(x,y,o)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span></span></span></span>表示方位<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi></mrow><annotation encoding="application/x-tex">o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">o</span></span></span></span>的自相关矩阵，定义为</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>然后，组合所有方向的自相关特征以获得具有多方向特征的综合自相关矩阵(表示为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>M</mi><mrow><mi>c</mi><mi>o</mi><mi>m</mi></mrow></msub></mrow><annotation encoding="application/x-tex">M_{com}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)，如(9)所示，如下一页底部所示。</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>利用综合自相关矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>M</mi><mrow><mi>c</mi><mi>o</mi><mi>m</mi></mrow></msub></mrow><annotation encoding="application/x-tex">M_{com}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>计算每个像素的多通道LOG-Gabor特征的自相关响应值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span></p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>e</mi><mi>t</mi><mo stretchy="false">[</mo><msub><mi>M</mi><mrow><mi>c</mi><mi>o</mi><mi>m</mi></mrow></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">det[M_{com}(x,y)]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mopen">[</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mclose">]</span></span></span></span>是矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>的行列式，迹<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>M</mi><mrow><mi>c</mi><mi>o</mi><mi>m</mi></mrow></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">M_{com}(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>表示矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>M</mi><mrow><mi>c</mi><mi>o</mi><mi>m</mi></mrow></msub></mrow><annotation encoding="application/x-tex">M_{com}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的直迹。此外，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">α</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span></span></span></span>是一个常量，范围从0.04到0.06。最后，将局部极大值作为提取的IP，同时对相邻IP进行非极大值抑制，即由MALG检测器选取响应值最大的前<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>个局部极值作为最终IP。</p>
+<p>此外，图3给出了由所提出的MALG检测器提取的IP的三个插图；具体地，图3(A)-©分别示出了从光学-红外、光学-深度和光学-SAR图像对提取的IP。由此可见，我们的MALG检测器能够提取重复性高、分布均匀的多模式图像对。第三节-B节介绍了可重复性的定义，第三-B节对MALG的性能进行了更多的评估。</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图3.所提出的MALG探测器提取IP的示意图。(A)光学-红外图像对(重复性=55.87%)。(B)光学深度图像对(重复性=44.10%)。©光学-合成孔径雷达图像对(重复性=36.79%)。</p>
+</blockquote>
+<h2 id="22-rmlg描述符的建立"><a class="markdownIt-Anchor" href="#22-rmlg描述符的建立"></a> 2.2 RMLG描述符的建立</h2>
+<p>一旦提取了可重复的IP，下一个关键步骤是设计一个健壮的特征描述符，目的是增加特征的区分性。特征描述符通常由两部分组成：优势方向的分配和特征表示的构造。然而，如前所述，基于梯度的描述符对NRD非常敏感，现有的基于结构特征的描述符要么依赖于基于LOG-Gabor卷积序列的耗时的循环遍历来实现旋转不变性[33]，要么通过将方向直方图与局部PC特征相结合来复杂地分配主导方向[32]、[43]、[45]。因此，这些描述子很难实现快速、稳健的多模式图像匹配。为了克服这些问题，我们首先提出了一种快速分配优势方向的策略，然后利用DAISY的空间构型进行特征表示，并将这两个部分结合起来生成最终的RMLG描述符。下面提供了关于建议的RMLG描述符的更多细节。</p>
+<ol>
+<li>优势方向的快速分配：从前面的方程(4)，我们可以得到多通道的logGabor特征<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>A</mi><mi>o</mi></msup></mrow><annotation encoding="application/x-tex">A^o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span></span></span></span></span></span></span></span>，即对数-Gabor响应序列<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><msub><mi>A</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo><msubsup><mo stretchy="false">]</mo><mn>1</mn><msub><mi>N</mi><mi>o</mi></msub></msubsup></mrow><annotation encoding="application/x-tex">[A_i(x,y,o)]_1^{N_o}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.189539em;vertical-align:-0.266308em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span><span class="mclose"><span class="mclose">]</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9232309999999999em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.1449000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.266308em;"><span></span></span></span></span></span></span></span></span></span>。然而，与梯度图相比，LOG-Gabor响应序列不具有旋转不变性。这意味着旋转LOG-Gabor响应序列将不会为旋转的图像块产生相应的LOG-Gabor响应序列。为了获得旋转不变性，通过循环遍历提出了MIM和圆形效应[33]。MIM的计算如下：</li>
+</ol>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>arg</mi><mo>⁡</mo><msub><mo><mi>max</mi><mo>⁡</mo></mo><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">\arg\max_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mop">ar<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>表示对应于log-Gabor响应序列<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><msub><mi>A</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>o</mi><mo stretchy="false">)</mo><msubsup><mo stretchy="false">]</mo><mn>1</mn><msub><mi>N</mi><mi>o</mi></msub></msubsup></mrow><annotation encoding="application/x-tex">[A_i(x,y,o)]_1^{N_o}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.189539em;vertical-align:-0.266308em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathdefault">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">o</span><span class="mclose">)</span><span class="mclose"><span class="mclose">]</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9232309999999999em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.1449000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.266308em;"><span></span></span></span></span></span></span></span></span></span>中的最大值的取向指数。</p>
+<p>此外，Yu et al.[45]通过将方向直方图与PC的幅度和方向相结合来指定主要方向，并以与SIFT相同的方式估计辅助方向。然后，通过主方向或辅助方向旋转对应的MIM块；随后，将旋转后的MIM块的索引分别循环移位KREF和KSEN位置</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq12.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，round表示舍入运算，ceil和floor分别表示向上舍入和向下舍入运算。</p>
+<p>具体地，为参考图像中的IP的每个方向构造一个特征向量，并为传感图像中的IP的每个方向构造两个特征向量。前述实现旋转不变性的循环遍历策略非常耗时[33]。而Yu等人。[45]主导方向的估计需要计算PC的复振幅和方向，增加特征点的辅助方向，并为感测图像中的IP的每个方向设计两个特征向量，这进一步导致了其描述符的耗时性质。</p>
+<p>我们注意到，SIFT描述子中的方向直方图的本质是统计邻域中像素的梯度幅度和方向，直方图峰值对应的方向代表了IP的主导方向。梯度方向的范围是[0,360]并且是连续的，而基于LOG-Gabor响应序列的MIM的取值范围是[1，否]，并且是非常离散的。因此，在MIM重建中，由于旋转后的MIM块的索引需要循环移位<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">k_{ref}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mrow><mi>s</mi><mi>e</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">k_{sen}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>位置，因此存在许多基于方向直方图的冗余方向估计。</p>
+<p>受SIFT方向直方图的启发，结合上述分析，我们设计了一种快速的主方向分配策略，并在此基础上通过统计度量实现了一种新的具有旋转不变性的MIM。该策略避免了通过三线性插值法对直方图计算加权的过程，通过计算空间和方向箱中每个像素的权重。具体地说，优势方向的快速分配策略计算如下。</p>
+<p>方向直方图的本质是统计邻域内像素的梯度幅度和方向，而MIM本身具有LOG-Gabor卷积序列的方向性。因此，我们直接统计MIM中出现次数最多的值(记为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mrow><mi>M</mi><mi>I</mi><mi>M</mi></mrow></msub></mrow><annotation encoding="application/x-tex">C_{MIM}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mord mathdefault mtight" style="margin-right:0.07847em;">I</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)，并将其作为IP的优势方向，可以表示为：</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq14.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>其中，MODE表示在MIM中计算采样模式的操作，即在MIM中出现次数最多的值。此外，DO代表主导方向。图4示出了用于计算具有不同旋转图像的主导取向的上述策略的可行性。给定一幅没有旋转的参考图像，其对应的传感图像没有旋转，并旋转90◦传感图像，我们在这些图像之间选择一对对应的IP，然后计算它们的优势方向。不难发现，所提出的策略的优势方向是相同的，这个例子初步表明了所提出的优势方向策略是可行的。</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图4.提出的计算优势取向的策略示意图。条形图表示IP周围本地区域的MIM直方图。(A)无旋转的参考图像块，(B)无旋转的传感图像块，以及©旋转90◦的旋转的传感图像块的主导方向。</p>
+</blockquote>
+<p>下面是对MIM的重构，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mrow><mi>M</mi><mi>I</mi><mi>M</mi></mrow></msub></mrow><annotation encoding="application/x-tex">C_{MIM}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mord mathdefault mtight" style="margin-right:0.07847em;">I</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>根据以下公式计算新的MIM：</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq15.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>实际上，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mi>I</mi><msub><mi>M</mi><mrow><mi>n</mi><mi>e</mi><mi>w</mi></mrow></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">MIM_{new}(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>表示通过循环移位logGabor卷积序列的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mrow><mi>M</mi><mi>I</mi><mi>M</mi></mrow></msub></mrow><annotation encoding="application/x-tex">C_{MIM}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mord mathdefault mtight" style="margin-right:0.07847em;">I</span><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>th层作为log-Gabor卷积序列的第一层而重新计算的新的MIM。最后，将重新计算的MIM按主方向旋转，得到具有旋转不变性的新MIM(RMIM)</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/eq16.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>为了更直观地验证所提出的RMIM的旋转不变性，我们进行了对比实验来比较MIM和RMIM的旋转不变性，如图5所示。图5(F)是通过逆时针旋转图5(A)30◦得到的；图5(B)和(G)分别是图5(A)和(F)的MIM；图5©和(H)分别是图5(A)和(F)的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mi>I</mi><msub><mi>M</mi><mrow><mi>n</mi><mi>e</mi><mi>w</mi></mrow></msub></mrow><annotation encoding="application/x-tex">MIM_{new}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>；图5(D)和(I)分别是图5(A)和(F)的RMIM。图5(E)表示图5(B)和(G)之间的MIM的差异；图5(J)表示图5(D)和(I)之间的RMIM的差异。图5(B)和(G)之间的MIM有显著差异，图5(E)的大多数值不接近零。然而，图5(J)的大多数值都接近于零，不难发现图5(D)和(I)之间的RMIM的相似性是明显的。这实质上表明，基于我们提出的优势取向快速分配策略生成的RMIM是旋转不变的。第三-C节还证明了RMLGs旋转不变性的更多评价。</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图5.MIM和RMIM的旋转不变性比较。(A)输入图像。(B)(A)的MIM。©(A)的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mi>I</mi><msub><mi>M</mi><mrow><mi>N</mi><mi>E</mi><mi>W</mi></mrow></msub></mrow><annotation encoding="application/x-tex">MIM_{NEW}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mord mathdefault mtight" style="margin-right:0.05764em;">E</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">W</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。(D)(A)的RMIM。(E)MIM错误图。(F)旋转30◦图像。(G)(F)的MIM。(H)(F)的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mi>I</mi><msub><mi>M</mi><mrow><mi>N</mi><mi>E</mi><mi>W</mi></mrow></msub></mrow><annotation encoding="application/x-tex">MIM_{NEW}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mord mathdefault mtight" style="margin-right:0.05764em;">E</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">W</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。(I)(F)的RMIM。(J)RMIM的误差图。</p>
+</blockquote>
+<ol start="2">
+<li>RMLG描述符表示：在构建具有旋转不变性的RMIM后，后续的关键步骤是利用RMIM生成唯一的特征描述。在特征描述符的构造中，合理的特征描述空间布局是至关重要的。人们已经提出了不同的空间布局来描述特征，其中最具代表性的是SIFT[29]中的正方形网格、GLOH[34]中的对数极坐标网格以及DAISY中的圆形网格[35]。图6显示了这些不同的空间布置。</li>
+</ol>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/fig6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>图6. 特征描述的三种不同空间排列。(A)SIFT。(B)GLOH。©DAISY。</p>
+</blockquote>
+<p>此外，结合图5(D)、(I)和(J)，我们可以很容易地发现所提出的RMIM的旋转不变性在边缘区域非常弱，其旋转不变性主要存在于RMIM映射中心点附近的圆形邻域内。因此，使用菊花式的空间排列(即圆形网格)来构建基于分布直方图技术的RMLG描述符可能会更有效。由于RMIM的取值范围从1到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">N_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">N_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>=6)，并且最终的特征向量是通过拼接所有直方图来获得的，因此特征向量的维度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mi>i</mi><mi>n</mi><mi>s</mi><mo>×</mo><msub><mi>N</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">Bins×N_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</p>
+<p>为了进一步验证上述猜想，我们使用上述空间排列(即SIFT样式、GLOH样式和DAISY样式)来构造在RMIM上具有不同空间排列的RMLG描述符。由于不同的空间排列构造的特征向量的维度也不同，为了与DAISY的空间排列进行公平的比较，我们对SIFT和GLOH的空间排列进行了改进，使所有生成的特征向量的维度都在150左右。</p>
+<p>具体地说，SIFT的初始和改进的空间布局是4×4和5×5正方形网格，因此可以利用RMIM的值从1到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">N_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">N_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>=6)来获得96维和150维的特征向量。而改进的GLOH空间排列是对Yu等人构型的参考。[45]得到144维特征向量。此外，通过将RMIM与DAISY的排列相结合的RMLG描述符是150维的特征向量。我们在三个不同的多模式数据集(光学-红外、光学-激光雷达和光学-合成孔径雷达)上对不同空间排列的RMLG描述符进行了比较实验，总共60对图像(这些数据集的更多细节将在III-A部分介绍)。表一给出了具有不同空间排列的RMLG描述符的平均正确匹配数(NCM)。显然，具有DAISY空间排列的RMLG描述符的匹配性能最好。</p>
+<p><img src="/2024/06/21/R2FD2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8%E5%92%8C%E6%97%8B%E8%BD%AC%E4%B8%8D%E5%8F%98%E7%89%B9%E5%BE%81%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%81%A5%E6%84%9F%E5%9B%BE%E5%83%8F%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%8C%B9%E9%85%8D/table1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>表1不同空间排列的RMLG描述符的平均匹配性能</p>
+</blockquote>
+<p>因此，最终通过应用DAISY的排列来构建RMLG，得到150维的特征向量，因为DAISY的空间排列被证明优于其他空间排列(例如，SIFT和GLOH)。此外，第三节将对区域MLG匹配性能进行更详细的分析。</p>
+<h2 id="23-r2fd2特征匹配"><a class="markdownIt-Anchor" href="#23-r2fd2特征匹配"></a> 2.3 R2FD2特征匹配</h2>
+<p>本文提出的R2FD2匹配方法由构造的MALG检测器和RMLG描述子组成。首先，利用所提出的MALG检测器从参考图像和传感图像中检测出具有高重复性的IP，然后利用所提出的RMLG描述子计算其局部不变特征。最后，使用常用的最近邻距离比(NNDR)[29]匹配策略来识别参考图像和感测图像对之间的初始对应，并执行快速样本一致性(FSC)[50]技术来去除离群点以确定可靠的对应。</p>
+<h1 id="4-结论"><a class="markdownIt-Anchor" href="#4-结论"></a> 4 结论</h1>
+<p>提出了一种新的用于MRSIM的特征匹配方法(R2FD2)，该方法同时使用了可重复的MALG检测器和旋转不变的RMLG描述子。首次将多通道自相关策略与logGabor小波相结合设计了MALG检测器，用于IP地址的提取。通过这种方式，MALG提取的IP通常具有较高的重复率，并且均匀分布在多模式图像中。然后，为了建立具有旋转不变性的RMIM，提出了一种基于优势方向的快速分配策略。随后，通过将旋转不变的RMIM与DAISY的空间排列相结合来进行RMLG描述符的特征表示。利用不同类型的磁共振成像数据集(光学-红外、光学-激光雷达和光学-SAR图像对)进行了定性和定量的实验，以评估我们的R2FD2的匹配性能。实验结果表明，R2FD2在所有准则(包括NCM、SR、RMSE和RT)上都优于五种最新的特征匹配方法(即HOSS、RIFT、RI-ALGH、MSHLMO和HOMP)。因此，我们的R2FD2能够可靠地实现快速和稳健的磁共振成像特征匹配。</p>
+<p>虽然R2FD2在多模式特征匹配中表现出对旋转和辐射差异的更好的适应性，但它对多模式图像之间的尺度失真很敏感，因为它没有解决尺度不变性问题。相应地，我们未来的研究将包括对这些局限性的更深入的探索。例如，建立合适的尺度空间对于实现尺度不变性具有重要意义，如共生尺度空间[53]、非线性扩散尺度空间[22]、高斯尺度空间[54]。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/">#多模态</a>
+      
+        <a href="/tags/%E9%81%A5%E6%84%9F/">#遥感</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/">#图像匹配</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/">#论文翻译</a>
+      
+        <a href="/tags/TGRS/">#TGRS</a>
+      
+        <a href="/tags/2024/">#2024</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配</div>
+      <div>http://example.com/2024/06/21/R2FD2：基于可重复特征检测器和旋转不变特征描述子的多模式遥感图像快速稳健匹配/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月21日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/20/ASTC%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%82%BB%E5%9F%9F%E8%87%AA%E7%9B%B8%E4%BC%BC%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86/" title="ASTC：基于邻域自相似三维卷积的多模式图像配准">
+                        <span class="hidden-mobile">ASTC：基于邻域自相似三维卷积的多模式图像配准</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
