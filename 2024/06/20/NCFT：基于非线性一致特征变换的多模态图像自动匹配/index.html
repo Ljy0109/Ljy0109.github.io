@@ -16,12 +16,12 @@
   <meta name="author" content="Mr.Yuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="多模态图像匹配算法NCFT（GRS Letter 2022)(拉跨，参数解释不清楚，但是滤波器的设计可能有参考价值)">
+    <meta name="description" content="可能有点用，多模态图像匹配算法NCFT（GRS Letter 2022)(拉跨，参数解释不清楚，但是滤波器的设计可能有参考价值)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NCFT：基于非线性一致特征变换的多模态图像自动匹配">
 <meta property="og:url" content="http://example.com/2024/06/20/NCFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D/index.html">
 <meta property="og:site_name" content="Blog of Mr.Yuan">
-<meta property="og:description" content="多模态图像匹配算法NCFT（GRS Letter 2022)(拉跨，参数解释不清楚，但是滤波器的设计可能有参考价值)">
+<meta property="og:description" content="可能有点用，多模态图像匹配算法NCFT（GRS Letter 2022)(拉跨，参数解释不清楚，但是滤波器的设计可能有参考价值)">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/06/20/NCFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D/title.jpg">
 <meta property="og:image" content="http://example.com/2024/06/20/NCFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D/fig1.jpg">
@@ -41,12 +41,13 @@
 <meta property="og:image" content="http://example.com/2024/06/20/NCFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D/eq13.jpg">
 <meta property="og:image" content="http://example.com/2024/06/20/NCFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D/eq14.jpg">
 <meta property="article:published_time" content="2024-06-20T08:21:00.000Z">
-<meta property="article:modified_time" content="2024-06-20T08:45:06.075Z">
+<meta property="article:modified_time" content="2024-06-23T06:25:37.842Z">
 <meta property="article:author" content="Mr.Yuan">
 <meta property="article:tag" content="多模态">
 <meta property="article:tag" content="图像匹配">
 <meta property="article:tag" content="2022">
 <meta property="article:tag" content="GRS Letter">
+<meta property="article:tag" content="可能有点用">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2024/06/20/NCFT%EF%BC%9A%E5%9F%BA%E4%BA%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E7%9A%84%E5%A4%9A%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D/title.jpg">
   
@@ -412,6 +413,8 @@
         <a href="/tags/2022/">#2022</a>
       
         <a href="/tags/GRS-Letter/">#GRS Letter</a>
+      
+        <a href="/tags/%E5%8F%AF%E8%83%BD%E6%9C%89%E7%82%B9%E7%94%A8/">#可能有点用</a>
       
     </div>
   
