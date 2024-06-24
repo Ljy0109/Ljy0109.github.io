@@ -1,0 +1,782 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <link rel="icon" href="/img/%E5%A4%B4%E5%83%8F1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mr.Yuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="可能有点用，多模态图像匹配算法MIRD 自相似系列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIRD：基于归一化自相似区域描述子的稳健多传感器图像匹配">
+<meta property="og:url" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/index.html">
+<meta property="og:site_name" content="Blog of Mr.Yuan">
+<meta property="og:description" content="可能有点用，多模态图像匹配算法MIRD 自相似系列">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/title.jpg">
+<meta property="og:image" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/fig1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq1.jpg">
+<meta property="og:image" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq2.jpg">
+<meta property="og:image" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq3.jpg">
+<meta property="og:image" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq4.jpg">
+<meta property="article:published_time" content="2024-06-23T07:10:00.000Z">
+<meta property="article:modified_time" content="2024-06-24T13:33:10.554Z">
+<meta property="article:author" content="Mr.Yuan">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="图像匹配">
+<meta property="article:tag" content="2023">
+<meta property="article:tag" content="自相似">
+<meta property="article:tag" content="可能有点用">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/title.jpg">
+  
+  
+  
+  <title>MIRD：基于归一化自相似区域描述子的稳健多传感器图像匹配 - Blog of Mr.Yuan</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.15.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.Yuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/%E8%88%B9.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MIRD：基于归一化自相似区域描述子的稳健多传感器图像匹配"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mr.Yuan
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-23 15:10" pubdate>
+          2024年6月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MIRD：基于归一化自相似区域描述子的稳健多传感器图像匹配</h1>
+            
+            <div class="markdown-body">
+              
+              <p><img src="/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/title.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h1 id="robust-multi-sensor-image-matching-based-on-normalized-self-similarity-region-descriptor"><a class="markdownIt-Anchor" href="#robust-multi-sensor-image-matching-based-on-normalized-self-similarity-region-descriptor"></a> Robust multi-sensor image matching based on normalized self-similarity region descriptor</h1>
+<h1 id="mird基于归一化自相似区域描述子的稳健多传感器图像匹配"><a class="markdownIt-Anchor" href="#mird基于归一化自相似区域描述子的稳健多传感器图像匹配"></a> MIRD：基于归一化自相似区域描述子的稳健多传感器图像匹配</h1>
+<p><a target="_blank" rel="noopener" href="https://kns.cnki.net/kcms2/article/abstract?v=f1ZyUc11mdpbvzRbaOuHSU0Gdd0TD3PWjTc92-AEhnG6iLiTbu11Zdo6OJpeVxFG5NGxBcI-uylLJpwj1EilnqFx63eANOKuWgeRPe6p8pxq1hHSCvWW6iccV0d7I8ZbqaueS4-gQyMMpgsdk0NeCg==&amp;uniplatform=NZKPT&amp;language=CHS">Robust multi-sensor image matching based on normalized self-similarity region descriptor - 中国知网 (cnki.net)</a></p>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h1>
+<p>多模式图像匹配在航空航天应用中具有重要意义，因为它可以充分利用遥感图像的数量和多样性所包含的互补和有价值的信息。然而，由于不同传感器之间存在显著的非线性辐射测量、几何差异和噪声，这仍然是一项具有挑战性的任务。为了提高异种图像匹配的性能，提出了一种归一化自相似区域描述子来提取一致的结构信息。我们首先基于相邻图像块之间的欧几里德距离构造逐点自相似区域描述子，以反映多模式图像的结构特性。然后，采用线性归一化方法形成与形态无关的区域描述符，有效区分多模式图像中的点、线、角点、平坦等结构特征。为了进一步提高匹配精度，采用夹角余弦相似性度量来利用多维特征描述子的方向向量信息。实验结果表明，与现有的匹配方法相比，该方法对多种多模式图像匹配具有更好的匹配精度和鲁棒性。MIRD能够有效地提取一致的几何结构特征，并利用非局部邻域图像块操作抑制相干斑噪声的影响，有效地应用于各种多模式图像匹配。</p>
+<p><strong>关键词</strong>：遥感；多模式图像匹配；模板匹配；特征描述子；相似性度量；合成孔径雷达</p>
+<h1 id="1-引言"><a class="markdownIt-Anchor" href="#1-引言"></a> 1 引言</h1>
+<p>搭载在航空平台或地球观测卫星上的多传感器1提供了大量的图像，这些图像已广泛应用于地球物理、3测绘、计算机视觉、4-5农业、6灾害监测和其他领域7。高精度、稳健的多模式图像匹配技术能够充分、高效地利用多传感器信息，已成为遥感领域的一个重要研究方向。</p>
+<p>合成孔径雷达(SAR)、光学图像、9图像和红外图像是常见的多模式遥感图像类型。合成孔径雷达是一种主动微波成像传感器，具有良好的穿透能力和全天候、全天时的观测能力。它主要是根据物体表面的介电常数和粗糙度成像的。合成孔径雷达图像通常含有大量的乘性相干斑噪声11，并且受到几何失真和辐射失真的影响。12光学图像是基于目标的光谱反射成像的，它包含了丰富的地物纹理信息。然而，图像质量容易受到天气的影响，在阴雨天气的情况下，图像质量会很差，甚至无法成像。红外传感器主要利用物体的热辐射特性进行成像。红外图像通常能显示目标的位置特征，但信噪比往往较低。不同的成像机制使得多传感器图像匹配更具挑战性。</p>
+<p>许多学者在多模式图像匹配领域做了大量的研究。13现有的图像匹配方法可以分为三类：基于特征的方法、基于模板的方法、基于17-18的方法和基于学习的方法。19-21几乎所有的匹配方法都包括特征提取和相似性度量的步骤。22基于特征的方法从图像中提取明显的特征，如边缘、角点或斑点，并利用它们在每幅图像中找到对应点来对齐两幅图像。K-近邻(KNN)通常被用作相似性度量。基于特征的方法在可变形匹配中具有更高的计算效率和更好的性能。23然而，在多模式图像匹配中，基于特征的方法的主要挑战之一是不同模式之间的特征表示的差异。不同的成像模式捕捉相同结构的不同方面，导致不同的图像特征。物体的外观也可能因医疗模式而异，因此很难找到相应的特征。</p>
+<p>基于模板的匹配方法提取全局特征，然后使用基于强度的相似性度量来找到对应关系，该度量将传感图像映射到参考图像的对应窗口。24全局特征提取方法是基于模板匹配的关键，直接影响算法的匹配精度。基于灰度的相似性度量计算两个图像窗口之间的灰度距离作为评价准则，搜索与匹配位置对应的极值。基于强度的方法包括绝对差和(SAD)、平方差和(SSD)、互信息(MI)、26-27和归一化互相关(NCC)。SAD和SSD使用图像之间的灰度欧几里德距离作为评价标准。相反，MI和NCC使用图像之间的亮度概率分布作为相似性度量。基于模板的方法的主要优点之一是其对图像变形和扭曲的稳健性。因为这些方法依赖于比较整个图像或图像块，所以它们对由于成像方式或其他因素的不同而可能发生的图像几何形状或外观的变化不那么敏感。另一方面，基于特征的方法可能难以匹配以某种方式扭曲或变换的特征。因此，基于模板的方法更适合于多模式图像匹配。随着人工智能以某种方式流行起来。因此，基于模板的方法更适合于多模式图像匹配。</p>
+<p>随着人工智能的普及，基于数据驱动学习的方法在一般视觉模式识别任务中取得了重大进展。深度学习方法也被应用于图像特征的识别、提取和分类。28基于学习的方法将图像匹配转化为模式识别方式，并通过评估深度特征的相似性来实现图像匹配。Merkle等人。提出了一种基于暹罗网络的同质特征提取方法，并将深度学习方法应用于图像的匹配中，29具有较好的匹配性能。一些研究人员对暹罗网络进行了进一步的研究，并将其应用于多模式图像匹配。张某等人。30与传统方法相比，在数据集较多且不需要人工设计特征提取方法的情况下，基于学习的方法具有更好的鲁棒性。然而，基于学习的方法匹配精度往往不高，需要与传统方法进行改进。而这些方法依赖于大量的训练数据集，而这些数据集由于无法获得大量的数据而不能广泛应用于军事等领域。</p>
+<p>在三种类型的图像匹配方法中，基于模板的匹配方法最适合在没有重要数据集和资源的情况下进行多模式图像匹配。本文重点研究了基于模板的匹配方法，以提高匹配的准确性和稳健性。基于模板的匹配方法提取多模式图像的全局特征，主要分为灰度级、梯度幅值、32-33个相位信息、34-35个或它们的组合。由于存在巨大的辐射差异，基于灰度强度的相似性度量不能直接应用于多模图像匹配。渐变信息突出显示结构细节，其中包含对象的轮廓信息。然而，它很容易受到噪音的影响。基于相位的度量方法也可以提取结构信息，但受角度模糊的影响，相似性度量的设计通常比较复杂。它依赖于连续的特征轮廓，很难描述弱纹理区域。</p>
+<p>为了进一步提高基于模板的图像匹配方法的性能，许多学者提出了最新的多模式图像匹配方法，并提出了一些能够有效地提取多模式图像之间一致的结构或纹理特征的相似性度量。色调映射匹配(MTM)36是NCC对于非线性映射的推广，其在非线性色调映射下执行得很好。这是一种NCC的快速计算方案，但不能适应SAR相干斑噪声。</p>
+<p>叶等人提出了一种新的描述子–定向相位一致性直方图(HOPC)37-38来描述模板匹配中图像的几何结构特征。该方法计算模板窗口中的相位一致性(PC)信息，将模板窗口分成由像HOG、39这样的单元格组成的块，并累加所有单元格和块的PC以构造HOPC描述符。此外，Ye et al.40-41做了进一步的研究，并设计了一种快速匹配方案来减少计算时间。HPC方法在272 X.Liu等人的基础上提出。在光学到SAR图像与快速NCC相似性度量的匹配中表现良好。然而，HOPC描述符的计算是复杂的。许多参数需要针对不同的图像进行调整，计算结果受参数的影响很大。与灰度特征相比，HOPC方法会丢失图像的细节信息。此外，文献40-41提出了一种基于方向梯度的通道特征表示方法(CFOG)，该方法在匹配性能和计算效率上都优于传统的基于方向梯度的图像特征表示方法。</p>
+<p>Heinrich等人。提出了一种用于可变形医学图像配准的独立于形态的邻域描述符(Mind)42。该方法基于一幅图像内小块图像的局部自相似性，通过提取局部邻域结构构造逐点描述子。Mind在多模式医学图像配准中表现良好，例如计算机断层扫描(CT)和磁共振成像(MRI)。思维对通道之间最显著的差异是健壮的，但忽略了方位和阶段信息。由于使用归一化灰度梯度，因此对噪声敏感，不适合光学到SAR图像的匹配。</p>
+<p>受思维特征提取方法的启发，为了利用局部自相似区域结构特征44，克服多模式图像噪声的影响，提出了一种用于多传感器图像匹配的独立于模式的区域描述子。本文的主要优势和创新点如下：</p>
+<ol>
+<li>提出了一种基于图像自相似结构特性的与形态无关的区域描述子。MIRD基于相邻图像块之间的欧氏距离构造逐点描述子，能够有效地提取一致的几何结构特征，并利用多模式图像之间的非局部相邻图像块操作来抑制噪声的影响。</li>
+<li>提出了一种线性归一化方法，使得MIRD能够有效地区分多模式图像中的点、线、角点和平坦区域的结构特征。</li>
+<li>为了有效地保留多维特征描述子的几何结构特征和方向信息，在MIRD中引入了余弦相似度量。</li>
+</ol>
+<p>该方法可以有效地应用于多模式图像匹配，包括光学-合成孔径雷达匹配、红外-光学匹配和光学-地图匹配。MIRD比四种最先进的方法，包括Mind、HOPC、CFOG和NCC具有更好的匹配精度和稳健性。</p>
+<h1 id="2-计算方案"><a class="markdownIt-Anchor" href="#2-计算方案"></a> 2 计算方案</h1>
+<p>在这一部分中，我们通过估计相邻图像块之间归一化的自相似特性，提出了一种用于多模式图像匹配的与模式无关的区域描述符(MIRD)。首先，基于相邻图像块之间的欧氏距离构造逐点自相似区域描述子(RD)。其次，采用线性归一化方法形成与形态无关的区域描述子，使归一化后的区域描述子能够有效区分多模式图像中的点、线、角、平等结构特征。此外，为了充分利用多维描述子，采用夹角余弦相似性度量对多模式图像进行匹配。提出的MIRD算法能够高效、准确地实现异源图像匹配。</p>
+<h2 id="21-多方向区域描述符"><a class="markdownIt-Anchor" href="#21-多方向区域描述符"></a> 2.1 多方向区域描述符</h2>
+<p>在这一部分中，我们的目标是找到一种能够有效区分多模式图像之间不同结构特征的图像描述符。利用图像结构的局部表示，提出了一种基于区域的自相似描述子来描述多通道图像的纹理和结构特征。邻域图像块对线、边、点、角点和平面等图像特征非常敏感。该方法利用多模式图像间多维特征向量的夹角余弦实现高精度的模板匹配。</p>
+<p>MIRD结构如图1所示。模板用于逐点计算邻域图像块的相似度，以形成描述符。模板大小可以根据图像进行调整，可设置为9×9、15×15、21×21像素块等，本文将其设置为9×9像素块。我们将以当前像素为中心的模板窗口(9×9像素)分成9个3×3像素块。在考虑离散扰动的情况下，选择合适的角度间隔来构造MIRD。在本文中，我们将区间取为45。，根据与中心块的局部空间关系(图1中的红色块)，将8个特征方向定义为具有正或负情况的R1至R4。同一方向上的正负块的计算使描述符能够区分不同的结构。</p>
+<p><img src="/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/fig1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>首先，需要构造局部区域梯度算子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(I,p,k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(I,p,k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>计算输入图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>的每个像素在第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>个方向上的区域梯度，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>r</mi><mi>k</mi></msub><mo>∈</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">r_k\in R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6891em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span>表示当前像素在第k个方向上的位移向量，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>∈</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">k∈N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.73354em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>∈</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">N∈\{1,2,3,4\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">4</span><span class="mclose">}</span></span></span></span>对应于四个方向R1-R4。该过程在区域块<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span>上操作，该区域块<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span>是以当前像素为中心的像素块邻域。对于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span>内的每个像素<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span></span></span></span>，运算符找到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span></span></span></span>与其在相应<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>r</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">r_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>方向像素块中的对应像素之间的平方差和(SSD)。在所提出的方法中，两个角间隔相差180。被认为是一个方向，标记为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>r</mi><mi>k</mi><mo>+</mo></msubsup></mrow><annotation encoding="application/x-tex">r^+_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1127699999999998em;vertical-align:-0.3013079999999999em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.811462em;"><span style="top:-2.3986920000000005em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.1031310000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3013079999999999em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>r</mi><mi>k</mi><mo>−</mo></msubsup></mrow><annotation encoding="application/x-tex">r^-_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1127699999999998em;vertical-align:-0.3013079999999999em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.811462em;"><span style="top:-2.3986920000000005em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.1031310000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3013079999999999em;"><span></span></span></span></span></span></span></span></span></span>。因此，可以将8维特征描述符压缩为4维特征描述符，从而在不丢失信息的情况下减少计算量。邻域块<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span>由以当前点像素为中心的所有像素组成。基于归一化自相似区域描述子273的稳健多传感器图像匹配</p>
+<p><img src="/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>定向距离运算符<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(I,p,k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>可以被认为是区域梯度运算符，因为它本质上计算当前像素块及其四个方向邻域像素块的SSD。</p>
+<p>多模式图像往往含有正态分布噪声，这会干扰对图像的准确分析和解释。为了缓解这一问题，使用高斯核作为过滤方法。</p>
+<p>本例中使用的高斯核具有与MIRD模板相同的大小(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn><mi>x</mi><mn>9</mn></mrow><annotation encoding="application/x-tex">9x9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mord mathdefault">x</span><span class="mord">9</span></span></span></span>像素)。在高斯核<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span>和定向距离运算符<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(I,p,k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>之间执行卷积运算。该操作包括在图像中的每个像素上滑动内核，并计算相邻像素的加权和。分配给每个相邻像素的权重取决于其与中心像素的距离，并由高斯核值确定。距离度量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>D</mi><mi>R</mi></msub></mrow><annotation encoding="application/x-tex">D_R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>以这种方式获得。</p>
+<p><img src="/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>通过使用每个方向距离度量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>D</mi><mi>R</mi></msub></mrow><annotation encoding="application/x-tex">D_R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的平均值来确定方差度量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(I,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span></p>
+<p><img src="/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>方差度量的操作可以降低图像描述符对空间变化噪声的敏感性。具有四个特征方向的区域描述符<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi><mi>D</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">RD(I,p,k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>可以由距离度量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>D</mi><mi>R</mi></msub></mrow><annotation encoding="application/x-tex">D_R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和方差度量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(I,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span>定义：</p>
+<p><img src="/2024/06/23/MIRD%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%BD%92%E4%B8%80%E5%8C%96%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%8C%BA%E5%9F%9F%E6%8F%8F%E8%BF%B0%E5%AD%90%E7%9A%84%E7%A8%B3%E5%81%A5%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/eq4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi><mi>D</mi><mo stretchy="false">(</mo><mi>I</mi><mo separator="true">,</mo><mi>p</mi><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">RD(I,p,k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>是一种基于图像局部自相似性概念的特征提取方法。该描述子捕获了图像的纹理结构信息，可用于识别和比较多模式图像之间的相似纹理。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" class="category-chain-item">论文翻译</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/">#多模态</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D/">#图像匹配</a>
+      
+        <a href="/tags/2023/">#2023</a>
+      
+        <a href="/tags/%E8%87%AA%E7%9B%B8%E4%BC%BC/">#自相似</a>
+      
+        <a href="/tags/%E5%8F%AF%E8%83%BD%E6%9C%89%E7%82%B9%E7%94%A8/">#可能有点用</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MIRD：基于归一化自相似区域描述子的稳健多传感器图像匹配</div>
+      <div>http://example.com/2024/06/23/MIRD：基于归一化自相似区域描述子的稳健多传感器图像匹配/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mr.Yuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月23日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/06/23/PSOC%EF%BC%9A%E4%B8%80%E7%A7%8D%E5%9F%BA%E4%BA%8E%E5%88%9D%E7%BA%A7%E7%BB%93%E6%9E%84%E5%8A%A0%E6%9D%83%E6%96%B9%E5%90%91%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%BF%AB%E9%80%9F%E7%A8%B3%E5%81%A5%E5%A4%9A%E6%A8%A1%E5%9B%BE%E5%83%8F%E5%8C%B9%E9%85%8D%E6%96%B0%E6%96%B9%E6%B3%95/" title="PSOC：一种基于初级结构加权方向一致性的快速稳健多模图像匹配新方法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PSOC：一种基于初级结构加权方向一致性的快速稳健多模图像匹配新方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/23/ASFD%EF%BC%9A%E5%A4%9A%E9%80%9A%E9%81%93%E9%81%A5%E6%84%9F%E5%BD%B1%E5%83%8F%E5%8C%B9%E9%85%8D%E4%B8%AD%E7%9A%84%E5%BD%A2%E6%80%81%E4%B8%8D%E5%8F%98%E7%BB%93%E6%9E%84%E7%89%B9%E5%BE%81%E8%A1%A8%E7%A4%BA/" title="ASFD：多通道遥感影像匹配中的形态不变结构特征表示">
+                        <span class="hidden-mobile">ASFD：多通道遥感影像匹配中的形态不变结构特征表示</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br> <span id="runtime_span"></span> <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new Date("5/1/2022 00:00:00");Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);runtime_span.innerHTML="小站已运行"+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
