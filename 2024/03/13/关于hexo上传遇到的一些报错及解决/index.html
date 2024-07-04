@@ -24,7 +24,7 @@
 <meta property="og:description" content="以下纪录了我使用hexo期间遇到的各种问题">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-13T13:35:00.000Z">
-<meta property="article:modified_time" content="2024-06-26T08:45:04.498Z">
+<meta property="article:modified_time" content="2024-07-04T08:30:31.055Z">
 <meta property="article:author" content="Mr.Yuan">
 <meta property="article:tag" content="hexo">
 <meta property="article:tag" content="blog">
@@ -229,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          2.7k 字
         
       </span>
     
@@ -240,7 +240,7 @@
         
         
         
-          15 分钟
+          23 分钟
         
       </span>
     
@@ -290,41 +290,43 @@
             
             <div class="markdown-body">
               
-              <h1 id="关于hexo上传遇到的一些报错及解决"><a class="markdownIt-Anchor" href="#关于hexo上传遇到的一些报错及解决"></a> 关于hexo上传遇到的一些报错及解决</h1>
+              <h1 id="关于hexo上传遇到的问题"><a class="markdownIt-Anchor" href="#关于hexo上传遇到的问题"></a> 关于hexo上传遇到的问题</h1>
+<h1 id="报错"><a class="markdownIt-Anchor" href="#报错"></a> 报错</h1>
 <ul>
-<li><code>(node:10540) Warning: Accessing non-existent property 'lineno' of module exports inside circular dependency</code></li>
-</ul>
+<li>
+<p><code>(node:10540) Warning: Accessing non-existent property 'lineno' of module exports inside circular dependency</code></p>
+<blockquote>
 <p>这个可能的原因是node.js的版本过高，查阅几篇文章说加三句配置文件即可</p>
 <p>在node_modules\nib\node_modules\stylus\lib\nodes\index.js里面</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">exports</span>.<span class="hljs-property">lineno</span> = <span class="hljs-literal">null</span>;<br><span class="hljs-built_in">exports</span>.<span class="hljs-property">column</span> = <span class="hljs-literal">null</span>;<br><span class="hljs-built_in">exports</span>.<span class="hljs-property">filename</span> = <span class="hljs-literal">null</span>;<br></code></pre></td></tr></table></figure>
-<ul>
-<li>hexo 报错 <code>err: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value err: Error [Nunjucks Error]: [Line 171, Column 179] unexpected token: &#125;&#125;</code></li>
-</ul>
+</blockquote>
+</li>
+<li>
+<p>hexo 报错 <code>err: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value err: Error [Nunjucks Error]: [Line 171, Column 179] unexpected token: &#125;&#125;</code></p>
+<blockquote>
 <p>原因可能是符号&quot;<code>&#123;&#125;</code>&quot;滥用、重复，网上解释说是Nunjucks引擎会把它解释为其它意思。</p>
 <p>当把<code>&#123;&#125;</code>放进代码块里面就不会报错了。。（还有一种解决方式是加<code>\</code>转义）</p>
-<ul>
-<li>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36667170/article/details/118163563">换电脑后怎么迁移hexo博客？_hexo换电脑了怎么办-CSDN博客</a></p>
+</blockquote>
 </li>
 <li>
 <p><code>hexo d</code>之后博客不更新</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vim">fatal: could not parse HEAD<br>Everything <span class="hljs-keyword">up</span>-<span class="hljs-keyword">to</span>-date<br>branch <span class="hljs-string">&#x27;master&#x27;</span> <span class="hljs-keyword">set</span> <span class="hljs-keyword">up</span> <span class="hljs-keyword">to</span> track <span class="hljs-string">&#x27;https://github.com/Ljy0109/Ljy0109.github.io.git/main&#x27;</span>.<br></code></pre></td></tr></table></figure>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs git">fatal: could not parse HEAD<br>Everything up-to-date<br>branch &#x27;master&#x27; set up to track &#x27;https://github.com/Ljy0109/Ljy0109.github.io.git/main&#x27;.<br></code></pre></td></tr></table></figure>
 <p>删除主目录下的<code>.deploy_git</code>文件夹</p>
-</li>
-<li>
-<p>[使用git分支保存hexo博客源码到github - 知乎 (<a target="_blank" rel="noopener" href="http://zhihu.com">zhihu.com</a>)](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/71544809#:~:text=%E8%80%8C%E6%88%91%E4%BB%AC%E7%94%A8hexo%E5%86%99%E5%8D%9A%E5%AE%A2%E6%97%B6%EF%BC%8C%E9%80%9A%E5%B8%B8%E6%98%AF%E4%B8%8Emd%E6%BA%90%E6%96%87%E4%BB%B6%E6%89%93%E4%BA%A4%E9%81%93%EF%BC%8C%E5%AF%B9%E4%BA%8Edeploy%E7%94%9F%E6%88%90%E7%9A%84master%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E5%B9%B6%E4%B8%8D%E9%9C%80%E8%A6%81%E6%88%91%E4%BB%AC%E5%85%B3%E6%B3%A8%EF%BC%8C%E5%9B%A0%E6%AD%A4%E5%8F%AF%E5%B0%86%E4%BB%93%E5%BA%93%E7%9A%84%E9%BB%98%E8%AE%A4%E5%88%86%E6%94%AF%E6%94%B9%E4%B8%BA%E4%BF%9D%E5%AD%98%E6%BA%90%E7%A0%81%E7%9A%84source%E5%88%86%E6%94%AF%EF%BC%8C%E8%BF%99%E6%A0%B7%E9%80%9A%E8%BF%87">https://zhuanlan.zhihu.com/p/71544809#:~:text=而我们用hexo写博客时，通常是与md源文件打交道，对于deploy生成的master分支代码并不需要我们关注，因此可将仓库的默认分支改为保存源码的source分支，这样通过</a> git clone 拉取的就是source分支代码了。 在仓库的主页面，通过Settings,-&gt; Branchs，可以看到 Default branch 的Tab，显示的默认分支是master，可以勾选source，然后update即可将默认分支设置为source，如下图：)</p>
+</blockquote>
 </li>
 <li>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yourstars/p/15533706.html">error: RPC failed; HTTP 400 curl 22 The requested URL returned error: 400 Fa… - Boom__Clap - 博客园 (cnblogs.com)</a></p>
-</li>
-</ul>
+<blockquote>
 <p>真实的错误原因：fatal: The remote end hung up unexpectedly</p>
-<p>方案一：</p>
+<p>方案：</p>
 <p>修改提交缓存区大小为5GB，或者更大的数字，该方式全局生效，一劳永逸</p>
 <p><code>git config --global http.postBuffer 5242880000</code></p>
-<ul>
+</blockquote>
+</li>
 <li>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40296909/article/details/134285451">解决使用git时遇到Failed to connect to github.com port 443 after 21090 ms: Couldn‘t connect to server_git couldn’t connect to server-CSDN博客</a></p>
+<blockquote>
 <p>如果能网页访问github，但是push失败，说明本机系统端口号和git端口号不一致。</p>
 <p>解决方法：</p>
 <p>如果挂着vpn：</p>
@@ -340,13 +342,36 @@
 <p>如果没挂vpn：</p>
 <p>还是一样的原因，两边端口不一致导致的，那么直接去掉git代理即可：</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">git config <span class="hljs-attr">--global</span> <span class="hljs-attr">--unset</span> http<span class="hljs-selector-class">.proxy</span><br>git config <span class="hljs-attr">--global</span> <span class="hljs-attr">--unset</span> https.proxy<br></code></pre></td></tr></table></figure>
+</blockquote>
 </li>
 <li>
 <p>Typora中英文字母的间距突然变大了</p>
+<blockquote>
 <p>示例: ａｂｃｄｅｆｇ</p>
 <p>原因：输入法的全角和半角进行了切换，切回来就行了</p>
 <p>方法一：同时按下Shift+空格键（在中文模式下）</p>
 <p>方法二：右击输入法，切换全角和半角</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="博客设置"><a class="markdownIt-Anchor" href="#博客设置"></a> 博客设置</h2>
+<ul>
+<li>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36667170/article/details/118163563">换电脑后怎么迁移hexo博客？_hexo换电脑了怎么办-CSDN博客</a></p>
+</li>
+<li>
+<p>[使用git分支保存hexo博客源码到github - 知乎 (<a target="_blank" rel="noopener" href="http://zhihu.com">zhihu.com</a>)](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/71544809#:~:text=%E8%80%8C%E6%88%91%E4%BB%AC%E7%94%A8hexo%E5%86%99%E5%8D%9A%E5%AE%A2%E6%97%B6%EF%BC%8C%E9%80%9A%E5%B8%B8%E6%98%AF%E4%B8%8Emd%E6%BA%90%E6%96%87%E4%BB%B6%E6%89%93%E4%BA%A4%E9%81%93%EF%BC%8C%E5%AF%B9%E4%BA%8Edeploy%E7%94%9F%E6%88%90%E7%9A%84master%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E5%B9%B6%E4%B8%8D%E9%9C%80%E8%A6%81%E6%88%91%E4%BB%AC%E5%85%B3%E6%B3%A8%EF%BC%8C%E5%9B%A0%E6%AD%A4%E5%8F%AF%E5%B0%86%E4%BB%93%E5%BA%93%E7%9A%84%E9%BB%98%E8%AE%A4%E5%88%86%E6%94%AF%E6%94%B9%E4%B8%BA%E4%BF%9D%E5%AD%98%E6%BA%90%E7%A0%81%E7%9A%84source%E5%88%86%E6%94%AF%EF%BC%8C%E8%BF%99%E6%A0%B7%E9%80%9A%E8%BF%87">https://zhuanlan.zhihu.com/p/71544809#:~:text=而我们用hexo写博客时，通常是与md源文件打交道，对于deploy生成的master分支代码并不需要我们关注，因此可将仓库的默认分支改为保存源码的source分支，这样通过</a> git clone 拉取的就是source分支代码了。 在仓库的主页面，通过Settings,-&gt; Branchs，可以看到 Default branch 的Tab，显示的默认分支是master，可以勾选source，然后update即可将默认分支设置为source，如下图：)</p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c311d31265e0">hexo页脚添加访客人数和总访问量 - 简书 (jianshu.com)</a></p>
+<blockquote>
+<p>一般显示站点访问量在页脚，所以我们选择在<code>footer.swig</code>中添加标签，同时我们还可以通过修改主题配置来方便选择是否显示访问量，步骤如下：首先，我们在next主题下的<code>_config.yml</code>中加入以下配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># visitors count</span><br><span class="hljs-attr">counter:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+<p>之后可以更改counter的值为false来隐藏页脚的访问量统计，然后，我们在<code>themes/next/layout/_partial/footer.swig</code>中添加以下代码：</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs jsp">&#123;% <span class="hljs-keyword">if</span> theme.footer.counter %&#125;<br>    &lt;script async src=<span class="hljs-string">&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;&lt;/script&gt;<br>    &lt;span id=<span class="hljs-string">&quot;busuanzi_container_site_pv&quot;</span>&gt;本站总访问量&lt;span id=<span class="hljs-string">&quot;busuanzi_value_site_pv&quot;</span>&gt;&lt;/span&gt;次&lt;/span&gt;<br>    &lt;span class=<span class="hljs-string">&quot;post-meta-divider&quot;</span>&gt;|&lt;/span&gt;<br>    &lt;span id=<span class="hljs-string">&quot;busuanzi_container_site_uv&quot;</span>&gt;本站访客数&lt;span id=<span class="hljs-string">&quot;busuanzi_value_site_uv&quot;</span>&gt;&lt;/span&gt;人&lt;/span&gt;<br>&#123;% endif %&#125;<br></code></pre></td></tr></table></figure>
+<p>这样便可以在底部显示访问量了，并且可以通过更改主题配置中的参数来选择是否显示访问量，只要引入<code>busuanzi.js</code>之后，即使<strong>不显示访问量也会统计</strong>。</p>
+<p>更新：使用fluid主题时，需要删除<code>&#123;% if theme.footer.counter %&#125;</code>和<code>&#123;% if theme.footer.counter %&#125;</code></p>
+</blockquote>
 </li>
 </ul>
 
@@ -565,12 +590,10 @@
   
   
   
-  {% if theme.footer.counter %}
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
     <span class="post-meta-divider">|</span>
     <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人</span>
-  {% endif %}
 </div>
 
   </footer>
