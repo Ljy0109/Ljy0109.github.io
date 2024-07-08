@@ -24,7 +24,7 @@
 <meta property="og:description" content="关于我在使用Git时常用的命令和遇到的问题">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-07T13:40:00.000Z">
-<meta property="article:modified_time" content="2024-06-25T13:08:29.942Z">
+<meta property="article:modified_time" content="2024-07-04T12:32:38.739Z">
 <meta property="article:author" content="Mr.Yuan">
 <meta property="article:tag" content="git">
 <meta property="article:tag" content="github">
@@ -72,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"bd2df45c9e90bd30125b0e7868b8939d","google":"G-465CRL1FFZ","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -229,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.7k 字
         
       </span>
     
@@ -292,6 +292,7 @@
             <div class="markdown-body">
               
               <h1 id="git常用命令"><a class="markdownIt-Anchor" href="#git常用命令"></a> Git常用命令</h1>
+<p><mark>注意事项第一条：每次修改本地文件时，记得先<code>git pull</code></mark></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42312323/article/details/107407674">git 提交本地到远程仓库——超详细_git提交到远程仓库命令-CSDN博客</a></p>
 <p>创建和初始化一个git仓库</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs git">echo &quot;# blog_backup&quot; &gt;&gt; README.md<br>git init<br>git add README.md<br>git commit -m &quot;first commit&quot;<br>git branch -M main<br>git remote add origin https://github.com/Ljy0109/blog_backup.git<br>git push -u origin main<br></code></pre></td></tr></table></figure>
@@ -596,7 +597,32 @@
 
 
   
+    <!-- Baidu Analytics -->
+    <script defer>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?bd2df45c9e90bd30125b0e7868b8939d";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
 
+  
+    <!-- Google Analytics -->
+    <script defer>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'G-465CRL1FFZ', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
   
 
   
